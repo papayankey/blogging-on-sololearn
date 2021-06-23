@@ -29,18 +29,22 @@ import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 const AppContext = createContext();
 const useAppContext = () => useContext(AppContext);
 
+const SPACE_ID = "jzi320sswukf";
+const ENVIRONMENT_ID = "master";
+const ACCESS_TOKEN =
+  "ea152cee3c2d857297230cc68e141647ee9cbc5bf7cd178fea6e2c58940f86ca";
+
 // contentful_client
 const client = createClient({
-  space: "jzi320sswukf",
-  environment: "master",
-  accessToken:
-    "ea152cee3c2d857297230cc68e141647ee9cbc5bf7cd178fea6e2c58940f86ca",
+  space: SPACE_ID,
+  environment: ENVIRONMENT_ID,
+  accessToken: ACCESS_TOKEN,
 });
 
 // articles scroll
-const scrollState = {
-  position: 0,
-};
+// const scrollState = {
+//   position: 0,
+// };
 
 // tablet breakpoint
 const tablet = "768px";
@@ -62,6 +66,12 @@ const GlobalStyles = createGlobalStyle`
     --blue600: #2563EB;
     --red50: #FEE2E2;
     --red500: #EF4444;
+    --tombrown: #fcca98;
+    --codify: #ff8700;
+    --blackboard: #262626;
+    --greyboard: #3a3a3a;
+    --coffee: #feead7;
+    --leafy: #529e52;
 
     /* semantic colors */
     --bg-0: var(--gray100);
@@ -111,15 +121,16 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .dark {
-    --bg-0: var(--gray800);
-    --bg-1: var(--gray700);
+    --bg-0: var(--blackboard);
+    --bg-1: var(--greyboard);
     --bg-2: var(--gray700);
-    --text-0: var(--gray400);
-    --text-1: var(--gray300);
+    --text-0: var(--tombrown);
+    --text-1: var(--coffee);
+    --text-3: var(--codify);
     --bdcolor: var(--gray700);
-    --clr-link: var(--blue400);
+    --clr-link: var(--leafy);
     --mark: transparent;
-    --mark-text: var(--red500);
+    --mark-text: var(--codify);
    }
 
   *,
@@ -324,7 +335,7 @@ const TextLink = ({ children, style, ...props }) => {
       as="a"
       href="#"
       color="var(--clr-link)"
-      style={{ textDecoration: "none", ...style }}
+      style={{ ...style }}
       {...props}
     >
       {children}
@@ -378,7 +389,7 @@ const ImageWrapper = styled(Box)`
   border-radius: 50%;
   overflow: hidden;
   position: relative;
-  border: 2px solid var(--blue400);
+  border: 3px solid var(--text-0);
 `;
 
 const MarkdownContent = styled.article`
@@ -446,10 +457,10 @@ const MarkdownContent = styled.article`
   }
 
   .info {
-    border: 1px solid var(--blue600);
-    color: var(--blue600);
-    font-style: italics;
-    border-radius: 4px;
+    border: 1px solid var(--codify);
+    color: var(--codify);
+    // font-style: italic;
+    // border-radius: 4px;
     padding: var(--space-3);
     font-size: 0.9rem;
     position: relative;
@@ -504,7 +515,7 @@ const SocialContact = ({ children, url, ...props }) => {
       href={url}
       target="_blank"
       rel="noreferrer"
-      color="var(--text-3)"
+      color="var(--text-0)"
       my="0"
       {...props}
     >
@@ -520,7 +531,6 @@ function Footer({ activeRoute }) {
   const [image, setImage] = useState(() => cached.profileImage.current);
   const [imageIsLoading, setImageIsLoading] = useState(false);
 
-
   // get profile image from contentful
   useEffect(() => {
     const fetchProfilePic = async () => {
@@ -530,7 +540,7 @@ function Footer({ activeRoute }) {
         setImage(assets.fields.file.url);
         setImageIsLoading(false);
       } catch (error) {}
-    }
+    };
 
     if (activeRoute !== Routes.HOME && !image.length) {
       fetchProfilePic();
@@ -631,10 +641,14 @@ const TopBar = styled(Box)`
     `}
 `;
 
+const capitalize = (v) => {
+  return v[0].toUpperCase() + v.slice(1);
+};
+
 var Routes = {
   HOME: "home",
   ARTICLES: "articles",
-  ALL_ARTICLES: "all-articles",
+  // ALL_ARTICLES: "all-articles",
   RESUME: "resume",
   ABOUT: "about",
   CONTACT: "contact",
@@ -684,15 +698,11 @@ function NavigationBar({
 
   const closeReadingMode = () => {
     if (isContentRoute) {
-      setActiveRoute(Routes.HOME);
+      setActiveRoute(Routes.ARTICLES);
       setIsPortfolio(false);
       return;
     }
     setIsReading(false);
-  };
-
-  const capitalize = (v) => {
-    return v[0].toUpperCase() + v.slice(1);
   };
 
   return (
@@ -713,7 +723,7 @@ function NavigationBar({
               </Flex>
             )}
             {!isReadingMode && (
-              <Brand onClick={() => setActiveRoute(Routes.HOME)}>Py</Brand>
+              <Brand onClick={() => setActiveRoute(Routes.HOME)}>YANKEY</Brand>
             )}{" "}
             {/* <i data-feather="sun"></i> */}
             {/* <i data-feather="moon"></i> */}
@@ -783,7 +793,7 @@ function Home({ setActiveRoute }) {
 
 const StrongTypography = ({ children, ...props }) => {
   return (
-    <Typography as="strong" color="var(--text-1)" {...props}>
+    <Typography as="strong" color="var(--text-0)" {...props}>
       {children}
     </Typography>
   );
@@ -804,7 +814,7 @@ function About({ setActiveRoute, activeRoute }) {
           About me
         </Heading>
         <Typography>
-          <StrongTypography>Py</StrongTypography>(Papa Yankey) is a tech blog of{" "}
+          <StrongTypography>YANKEY</StrongTypography>is a tech blog of{" "}
           <TextLink href="#">Benneth Yankey</TextLink>, a software engineer and
           high school biology teacher from Accra, Ghana.
         </Typography>
@@ -887,148 +897,34 @@ function Contact() {
 }
 
 const Filters = {
-  All: "All",
-  React: "React",
-  Node: "Node",
-  Vue: "Vue",
-  Javascript: "Javascript",
-  Git: "Git",
-  GraphQL: "GraphQL",
-  HTML: "HTML",
-  CSS: "CSS",
-  Typescrip: "Typescript",
-  Vim: "Vim",
+  New: "new",
+  React: "react",
+  Node: "node",
+  Go: "go",
+  Javascript: "javascript",
+  CSS: "css",
+  Typescript: "typescript",
+  NextJS: "nextjs",
+  GraphQL: "graphql",
+  "Computer Science": "computer science",
 };
 
-function AllArticles({ handleIsReading }) {
-  const { cached } = useAppContext();
-  const [isFetching, setIsFetching] = useState(false);
-  const [filteredEntries, setFilteredEntries] = useState(
-    () => cached.filteredEntries.current
-  );
-  const [sortedEntries, setSortedEntries] = useState(
-    () => cached.sortedEntries.current
-  );
-  // const [hasError, setHasError] = useState(false);
+const FilterIndicator = styled.div`
+  width: 10px;
+  height: 28px;
+  position: absolute;
+  top: -12px;
+  left: 0;
+  transform: rotate(45deg);
+`;
 
-
-  // filter entries by tag
-  const filterEntriesByTag = useCallback((tag) => {
-    function filterEntries(tag) {
-      let filtered = [];
-
-      if (cached.activeFilter.current === tag) {
-        filtered = sortedEntries;
-      } else {
-        for (let entry of sortedEntries) {
-          let fs = entry[1];
-          for (let { tags } of fs) {
-            if (tags.includes(cached.activeFilter.current.toLowerCase())) {
-              filtered.push(entry);
-            }
-          }
-        }
-      }
-
-      setFilteredEntries(filtered);
-      setIsFetching(false);
-      cached.activeFilter.current = tag;
-      cached.filteredEntries.current = filtered;
-    }
-
-    filterEntries(tag);
-}, [cached.activeFilter, cached.filteredEntries, sortedEntries])
-
-  const total = useRef(8);
-  const totalPerPage = useRef(6);
-  const skippedPages = useRef(0);
-  const hasMore = total.current % totalPerPage.current !== 0; 
-  const hasLess = skippedPages > 0
-
-  useEffect(() => {
-    function sortEntriesByYear(entries) {
-      const sorted = entries.reduce((accum, curr) => {
-        const pubYear = new Date(curr.published).getFullYear();
-        if (!accum[pubYear]) {
-          accum[pubYear] = [];
-        }
-        accum[pubYear].push(curr);
-        return accum;
-      }, {});
-      const sortedInDescOrder = Object.entries(sorted).reverse();
-      setSortedEntries(sortedInDescOrder);
-      filterEntriesByTag(Filters.All);
-    }
-
-    // TODO: add pagination
-    const fetchAllEntries = async () => {
-      console.log("fetching all entries");
-      setIsFetching(true);
-      let data = [];
-      try {
-        const entries = await client.getEntries({
-          content_type: "post",
-          order: "-fields.published",
-          limit: totalPerPage.current,
-          skip: skippedPages.current
-        });
-
-        // get total number of articles from contentful
-        if (!total.current.length) {
-          total.current = entries.total;
-        }
-
-        entries.items.forEach((entry) => data.push(entry.fields));
-        sortEntriesByYear(data);
-      } catch (error) {
-        // setHasError(true);
-      }
-    };
-
-    if (!cached.filteredEntries.current.length) {
-      fetchAllEntries();
-    }
-  }, [cached.filteredEntries, filterEntriesByTag]);
-
-  return (
-    <ArticlesWrapper as="section">
-      <Container>
-        <Fragment>
-          <ArticlesFilter toggleFilter={filterEntriesByTag} />
-          {isFetching && <ActivityIndicator my="calc(var--space-4) * 2)" />}
-          {filteredEntries.map((entry) => (
-            <FilteredEntries
-              key={entry[0]}
-              entry={entry}
-              handleIsReading={handleIsReading}
-            />
-          ))}
-          {!isFetching && (
-              <Flex justify="space-around">
-                <ButtonLink 
-                  as="button"
-                  style={{color: !hasLess && "inherit"}} 
-                >Previous</ButtonLink> 
-                <ButtonLink 
-                  as="button" {...!hasMore && "disabled"} 
-                  style={{color: !hasMore && "inherit"}}
-                >Next</ButtonLink> 
-           </Flex>
-          )}
-        </Fragment>
-      </Container>
-    </ArticlesWrapper>
-  );
-}
-
-function ArticlesFilter({ toggleFilter }) {
+function ArticlesFilter({ activeFilter, setActiveFilter }) {
   useEffect(() => {
     // feather.replace();
   }, []);
 
   return (
     <Flex direction="column" items="center">
-      <Heading as="h2">TAGS</Heading>
       <Flex
         wrap="wrap"
         justify="center"
@@ -1042,10 +938,17 @@ function ArticlesFilter({ toggleFilter }) {
             py="var(--space-1)"
             style={{
               border: "1px solid var(--bg-2)",
+              position: "relative",
+              overflow: "hidden",
             }}
-            onClick={() => toggleFilter(filter)}
+            onClick={() => setActiveFilter(filter)}
           >
             {filter}
+            <FilterIndicator
+              style={{
+                backgroundColor: activeFilter === filter && "var(--leafy)",
+              }}
+            />
           </Box>
         ))}
       </Flex>
@@ -1167,62 +1070,121 @@ function ActivityIndicator() {
   );
 }
 
-// Renders latest articles
-function RecentArticles({ setActiveRoute, handleIsReading }) {
+// Aricles displays recent articles and also
+// filters all articles by tags
+function Articles({ handleIsReading }) {
   const { cached } = useAppContext();
-  const [articles, setArticles] = useState(() => cached.recentArticles.current);
-  // const pageYOffset = usePageYOffset();
-  const [isFetching, setIsFetching] = useState(false);
+  const [isFetchingLatest, setIsFetchingLatest] = useState(false);
+  const [isFetchingByTag, setIsFetchingByTag] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [activeFilter, setActiveFilter] = useState(
+    () => cached.activeFilter.current
+  );
+  const [latestEntries, setLatestEntries] = useState(
+    () => cached.latestRef.current
+  );
+  const [sortedEntries, setSortedEntries] = useState(() =>
+    cached.sortedRef.current.get(activeFilter)
+  );
 
-  const fetchPostEntries = useCallback(async () => {
-    setIsFetching(true);
+  // const pageYOffset = usePageYOffset();
+
+  const getLatestEntries = useCallback(async () => {
+    setIsFetchingLatest(true);
     let source = [];
     try {
       const entries = await client.getEntries({
-        content_type: "post",
+        content_type: "blogPost",
         order: "-fields.published",
-        limit: 4,
+        limit: 5,
       });
       entries.items.forEach((entry) => source.push(entry.fields));
-      setArticles(source);
-      cached.recentArticles.current = source;
+      setLatestEntries(source);
+      cached.latestRef.current = source;
     } catch (error) {
       setHasError(true);
     }
-    setIsFetching(false);
-  }, [cached.recentArticles]);
+    setIsFetchingLatest(false);
+  }, [cached.latestRef]);
 
   // get recent articles
   useEffect(() => {
-    if (!cached.recentArticles.current.length) {
-      fetchPostEntries();
+    if (!cached.latestRef.current.length) {
+      console.log("getting latest entries...");
+      getLatestEntries();
     }
-  }, [fetchPostEntries, cached.recentArticles]);
+  }, [getLatestEntries, cached.latestRef]);
 
   // reset scroll
   useLayoutEffect(() => {
     // window.scrollTo(0, pageYOffset);
   });
 
-  const toggleAllArticles = () => {
-    scrollState.position = 0;
-    setActiveRoute(Routes.ALL_ARTICLES);
+  // sort article tag by year
+  function sortEntriesByYear(entries, tag) {
+    const sorted = entries.reduce((accum, curr) => {
+      const pubYear = new Date(curr.published).getFullYear();
+      if (!accum[pubYear]) {
+        accum[pubYear] = [];
+      }
+      accum[pubYear].push(curr);
+      return accum;
+    }, {});
+    const sortedInDescOrder = Object.entries(sorted).reverse();
+    setSortedEntries(sortedInDescOrder);
+    cached.sortedRef.current.set(tag, sortedInDescOrder);
+    setIsFetchingByTag(false);
+  }
+
+  // TODO: add pagination
+  const getEntriesByTag = async (tag) => {
+    let isSorted = cached.sortedRef.current.get(tag) || null;
+    if (isSorted) {
+      if (tag === Filters.new) {
+        setLatestEntries(cached.latestRef.current);
+      } else {
+        setSortedEntries(cached.sortedRef.current.get(tag));
+        setActiveFilter(tag);
+      }
+    } else {
+      setIsFetchingByTag(true);
+      let data = [];
+      try {
+        const entries = await client.getEntries({
+          content_type: "blogPost",
+          "metadata.tags.sys.id[all]": `${tag}`,
+          order: "-fields.published",
+        });
+        entries.items.forEach((entry) => data.push(entry.fields));
+        sortEntriesByYear(data, tag);
+        setActiveFilter(tag);
+        cached.activeFilter.current = tag;
+      } catch (error) {}
+    }
   };
+
+  // if (!cached.filteredEntries.current.length) {
+  //   fetchAllEntries();
+  // }
+
+  //   const toggleAllArticles = () => {
+  //     scrollState.position = 0;
+  //     setActiveRoute(Routes.ALL_ARTICLES);
+  //   };
 
   const refetchArticles = () => {
     setHasError(false);
-    fetchPostEntries();
-    setActiveRoute(Routes.ARTICLES);
+    getLatestEntries();
+    // setActiveRoute(Routes.ARTICLES);
   };
 
   return (
     <ArticlesWrapper
       as="section"
-      justify={(isFetching || hasError) && "center"}
+      justify={(isFetchingLatest || hasError) && "center"}
     >
-      <Container>
-        {isFetching && (
+      <Container style={{ overflow: "scroll" }}>
+        {isFetchingLatest && (
           <Fragment>
             <ActivityIndicator />
             <Typography style={{ textAlign: "center" }}>
@@ -1230,30 +1192,51 @@ function RecentArticles({ setActiveRoute, handleIsReading }) {
             </Typography>
           </Fragment>
         )}
-        {!isFetching && !hasError && articles.length && (
-          <Fragment>
-            <ButtonLink as="button" ml="auto">
+        <Fragment>
+          {!isFetchingLatest && !hasError && (
+            <Fragment>
+              <ArticlesFilter
+                activeFilter={activeFilter}
+                setActiveFilter={getEntriesByTag}
+              />
               <Heading
                 as="h4"
-                style={{ color: "var(--blue500)" }}
-                onClick={toggleAllArticles}
+                style={{
+                  marginTop: "50px",
+                  marginBottom: "20px",
+                  color: "var(--codify)",
+                }}
               >
-                View all
+                What is in {capitalize(activeFilter)}?
               </Heading>
-              <FiArrowRight style={{ marginLeft: "var(--space-1)" }} />
-            </ButtonLink>
-            {articles.map((post) => {
-              return (
-                <Article
-                  key={post.id}
-                  post={post}
-                  // pageYOffset={pageYOffset}
+            </Fragment>
+          )}
+          <Box mt="var(--space-4)">
+            {isFetchingByTag && <ActivityIndicator />}
+            {!isFetchingByTag &&
+              activeFilter !== Filters.New &&
+              sortedEntries.map((entry) => (
+                <FilteredEntries
+                  key={entry[0]}
+                  entry={entry}
                   handleIsReading={handleIsReading}
                 />
-              );
-            })}
-          </Fragment>
-        )}
+              ))}
+            {!isFetchingLatest &&
+              !isFetchingByTag &&
+              activeFilter === Filters.New &&
+              latestEntries.map((entry) => {
+                return (
+                  <Article
+                    key={entry.id}
+                    post={entry}
+                    // pageYOffset={pageYOffset}
+                    handleIsReading={handleIsReading}
+                  />
+                );
+              })}
+          </Box>
+        </Fragment>
         {/* offline content */}
         {hasError && (
           <Box style={{ textAlign: "center" }}>
@@ -1266,7 +1249,7 @@ function RecentArticles({ setActiveRoute, handleIsReading }) {
               justify="center"
               onClick={refetchArticles}
             >
-              TRY AGAIN
+              Try Again
             </ButtonLink>
           </Box>
         )}
@@ -1277,7 +1260,7 @@ function RecentArticles({ setActiveRoute, handleIsReading }) {
 
 const Tools = ({ children, ...props }) => {
   return (
-    <Flex gap="var(--space-2)" my="var(--space-4)" wrap="wrap">
+    <Flex gap="var(--space-2)" my="var(--space-4)" wrap="wrap" {...props}>
       {children}
     </Flex>
   );
@@ -1381,9 +1364,9 @@ function Router({ setActiveRoute, activeRoute, handleIsReading }) {
   const routes = () => {
     switch (activeRoute) {
       case Routes.ARTICLES:
-        return <RecentArticles {...getContentProps} />;
-      case Routes.ALL_ARTICLES:
-        return <AllArticles {...getContentProps} />;
+        return <Articles {...getContentProps} />;
+      // case Routes.ALL_ARTICLES:
+      //   return <AllArticles {...getContentProps} />;
       case Routes.RESUME:
         return <Resume />;
       case Routes.ABOUT:
@@ -1403,10 +1386,10 @@ function PostContent({ post }) {
   let { body, title, published } = post;
   const content = useRemarkable(body);
 
-  //   // Reset page scroll
-  //   useLayoutEffect(() => {
-  //     window.scrollTo(0, 0);
-  //   }, []);
+  // Reset page scroll
+  useLayoutEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
 
   return (
     <ContentWrapper pb="calc(var(--space-4) * 5)">
@@ -1420,13 +1403,14 @@ function PostContent({ post }) {
             <Time datetime={published}>{formatDate(published)}</Time>
           </Flex>
         </Flex>
-        <MarkdownContent
-          dangerouslySetInnerHTML={{ __html: content }}
-        />
+        <MarkdownContent dangerouslySetInnerHTML={{ __html: content }} />
       </Container>
     </ContentWrapper>
   );
 }
+
+// stores cached sorted entries by tag
+const sortedStore = new Map();
 
 export default function App() {
   const [isReading, setIsReading] = useState(false);
@@ -1435,12 +1419,11 @@ export default function App() {
   const [activeRoute, setActiveRoute] = useState(Routes.HOME);
 
   // caches
-  let recentArticles = useRef([]);
-  let filteredEntries = useRef([]);
-  let sortedEntries = useRef([]);
-  let activeFilter = useRef(Filters.All);
   let previousRoute = useRef("");
   let profileImage = useRef("");
+  let latestRef = useRef([]);
+  let sortedRef = useRef(sortedStore);
+  let activeFilter = useRef(Filters.New);
 
   const handleIsReading = (post) => {
     setPost(post);
@@ -1448,12 +1431,11 @@ export default function App() {
   };
 
   const cached = {
-    recentArticles,
-    filteredEntries,
-    sortedEntries,
-    activeFilter,
     previousRoute,
-    profileImage
+    profileImage,
+    latestRef,
+    sortedRef,
+    activeFilter
   };
 
   const commonProps = { activeRoute, setActiveRoute };
@@ -1467,11 +1449,7 @@ export default function App() {
   const routerProps = { ...commonProps, handleIsReading };
 
   return (
-    <AppContext.Provider
-      value={{
-        cached,
-      }}
-    >
+    <AppContext.Provider value={{ cached }}>
       <Layout>
         <GlobalStyles />
         <NavigationBar {...navbarProps} />
