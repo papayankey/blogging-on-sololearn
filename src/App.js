@@ -14,6 +14,7 @@ import { createClient } from "contentful";
 import styled, { keyframes, createGlobalStyle, css } from "styled-components";
 import { Remarkable } from "remarkable";
 import hljs from "highlight.js";
+import "highlight.js/styles/agate.css";
 
 // icons
 import {
@@ -40,11 +41,6 @@ const client = createClient({
   environment: ENVIRONMENT_ID,
   accessToken: ACCESS_TOKEN,
 });
-
-// articles scroll
-// const scrollState = {
-//   position: 0,
-// };
 
 // tablet breakpoint
 const tablet = "768px";
@@ -73,7 +69,7 @@ const GlobalStyles = createGlobalStyle`
     --coffee: #feead7;
     --leafy: #529e52;
 
-    /* semantic colors */
+    // Light theme
     --bg-0: var(--gray100);
     --bg-1: var(--white);
     --bg-2: var(--gray400);
@@ -84,7 +80,8 @@ const GlobalStyles = createGlobalStyle`
     --bdcolor: var(--gray500);
     --mark: var(--red50);
     --mark-text: var(--red500);
-
+    --snippet-bg: var(--blackboard);
+   
     /* fonts */
     --fallbacks:  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     --font-brand: 'Dancing Script', var(--fallbacks);
@@ -119,19 +116,6 @@ const GlobalStyles = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-
-  .dark {
-    --bg-0: var(--blackboard);
-    --bg-1: var(--greyboard);
-    --bg-2: var(--gray700);
-    --text-0: var(--tombrown);
-    --text-1: var(--coffee);
-    --text-3: var(--codify);
-    --bdcolor: var(--gray700);
-    --clr-link: var(--leafy);
-    --mark: transparent;
-    --mark-text: var(--codify);
-   }
 
   *,
   *::before,
@@ -169,6 +153,21 @@ const GlobalStyles = createGlobalStyle`
     color: var(--text-0);
     background-color: var(--bg-0);
   }
+ 
+   // Dark theme
+  .dark {
+    --bg-0: var(--blackboard);
+    --bg-1: var(--greyboard);
+    --bg-2: var(--gray700);
+    --text-0: var(--tombrown);
+    --text-1: var(--coffee);
+    --text-3: var(--codify);
+    --bdcolor: var(--gray700);
+    --clr-link: var(--leafy);
+    --mark: transparent;
+    --mark-text: var(--codify);
+    --snippet-bg: var(--greyboard);
+   }
 `;
 
 // navbar height
@@ -246,20 +245,25 @@ const Flex = styled(Box)`
 
 const HomeWrapper = ({ children, ...props }) => {
   return (
-    <Flex style={{ flex: 1 }} {...props}>
+    <Flex
+      style={{ minHeight: `calc(100vh - ${NAVBAR_HEIGHT} - 80px)` }}
+      {...props}
+    >
       {children}
     </Flex>
   );
 };
 
-const ArticlesWrapper = ({ children, ...props }) => {
+const ArticlesWrapper = ({ children, style, ...props }) => {
   return (
     <Flex
       justify="flex-start"
       direction="column"
       pt="calc(var(--space-4) * 1.5)"
       pb="calc(var(--space-4) * 5)"
-      style={{ minHeight: "calc(100vh - 300px)" }}
+      pl="var(--space-3)"
+      pr="var(--space-3)"
+      style={{ minHeight: "calc(100vh - 300px)", ...style }}
       {...props}
     >
       {children}
@@ -395,19 +399,13 @@ const ImageWrapper = styled(Box)`
 const MarkdownContent = styled.article`
   margin-top: calc(var(--space-4) * 3);
 
-  ul,
-  ol,
-  li::before {
-    padding: var(--space-0) var(--space-3);
-  }
-
   p + p {
     margin-top: var(--space-3);
   }
 
   ul,
   ol {
-    margin-left: var(--space-4);
+    margin-left: var(--space-3);
     line-height: var(--line-height-4);
   }
 
@@ -427,7 +425,7 @@ const MarkdownContent = styled.article`
     padding: calc(var(--space-4) * 1.5);
     line-height: var(--line-height-2);
     color: var(--white);
-    background-color: var(--gray700);
+    background-color: var(--snippet-bg);
     margin: var(--space-4) 0;
     border-radius: 4px;
     min-width: 100%;
@@ -435,10 +433,11 @@ const MarkdownContent = styled.article`
   }
 
   mark {
-    background-color: var(--mark);
+    font-weight: bold;
     color: var(--mark-text);
     padding: 2px;
     border-radius: 2px;
+
     code {
       font-family: var(--font-body);
     }
@@ -459,22 +458,20 @@ const MarkdownContent = styled.article`
   .info {
     border: 1px solid var(--codify);
     color: var(--codify);
-    // font-style: italic;
-    // border-radius: 4px;
     padding: var(--space-3);
     font-size: 0.9rem;
     position: relative;
   }
 `;
 
-// useRemarkable converts markdown to html contentsj
+// useRemarkable converts markdown to html contents
 function useRemarkable(props) {
   const md = new Remarkable({
     html: true,
     highlight: function (str, lang) {
       if (lang && hljs.getLanguage(lang)) {
         try {
-          return hljs.highlight(lang, str).value;
+          return hljs.highlight(str, { language: lang }).value;
         } catch (error) {}
       }
 
@@ -490,20 +487,22 @@ function useRemarkable(props) {
   return md.render(props);
 }
 
-// function usePageYOffset() {
-//   const [pageYOffset, setPageYOffset] = useState(0);
+// usePageScroll dynamically reads changes to
+// how much page has been scrolled
+function usePageScroll() {
+  const [offsetTop, setOffsetTop] = useState(0);
 
-//   const handlePageYOffset = () => {
-//     setPageYOffset(window.pageYOffset);
-//   };
+  useEffect(() => {
+    const handleOffsetTop = () => {
+      setOffsetTop(window.pageYOffset);
+    };
 
-//   useEffect(() => {
-//     window.addEventListener("scroll", handlePageYOffset);
-//     return () => window.removeEventListener("scroll", handlePageYOffset);
-//   }, [pageYOffset]);
+    window.addEventListener("scroll", handleOffsetTop);
+    return () => window.removeEventListener("scroll", handleOffsetTop);
+  }, [offsetTop]);
 
-//   return pageYOffset;
-// }
+  return offsetTop;
+}
 
 const SocialContact = ({ children, url, ...props }) => {
   let render = Children.map(children, (child) => {
@@ -530,55 +529,71 @@ function Footer({ activeRoute }) {
   const { cached } = useAppContext();
   const [image, setImage] = useState(() => cached.profileImage.current);
   const [imageIsLoading, setImageIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  const fetchProfilePic = useCallback(async () => {
+    setImageIsLoading(true);
+    try {
+      const assets = await client.getAsset(IMAGE_ASSETS);
+      setImage(assets.fields.file.url);
+      setImageIsLoading(false);
+    } catch (error) {
+      setImageIsLoading(false);
+      setHasError(true);
+    }
+  }, []);
 
   // get profile image from contentful
   useEffect(() => {
-    const fetchProfilePic = async () => {
-      setImageIsLoading(true);
-      try {
-        const assets = await client.getAsset(IMAGE_ASSETS);
-        setImage(assets.fields.file.url);
-        setImageIsLoading(false);
-      } catch (error) {}
-    };
-
-    if (activeRoute !== Routes.HOME && !image.length) {
+    if (!image.length !== 0) {
       fetchProfilePic();
     }
-  }, [activeRoute, image]);
+  }, [fetchProfilePic, image]);
+
+  // fetch image at 5s interval if
+  // fetching failed on first try
+  useEffect(() => {
+    let timer;
+    if (image.length === 0) {
+      timer = setInterval(() => {
+        fetchProfilePic();
+      }, 20000);
+    } else {
+      return () => clearInterval(timer);
+    }
+  }, [fetchProfilePic, image]);
 
   return (
     <FooterWrapper
       style={{ padding: activeRoute === Routes.HOME && "var(--space-4)" }}
     >
       <Container>
-        {activeRoute !== Routes.HOME && (
-          <ImageWrapper>
-            {imageIsLoading && !image.length && <ActivityIndicator mx="auto" />}
-            {!imageIsLoading && image.length && (
-              <Box
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                }}
-              >
-                <img
-                  src={`https:${image}`}
-                  alt={"Portrait of Benneth Yankey"}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                  }}
-                />
-              </Box>
-            )}
-          </ImageWrapper>
-        )}
+        <ImageWrapper>
+          {imageIsLoading && !image.length && <ActivityIndicator mx="auto" />}
+          <Box
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+            }}
+          >
+            <img
+              src={`https:${image}`}
+              alt={hasError ? "YANKEY" : ""}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                position: hasError && "relative",
+                top: 28,
+                left: 11,
+              }}
+            />
+          </Box>
+        </ImageWrapper>
         <Flex
           justify="center"
-          my={activeRoute !== Routes.HOME ? "var(--space-4)" : "0"}
+          my="var(--space-4)"
           gap="var(--space-4)"
           color="var(--gray500)"
         >
@@ -595,18 +610,13 @@ function Footer({ activeRoute }) {
             <FaTwitter />
           </SocialContact>
         </Flex>
-        {activeRoute !== Routes.HOME && (
-          <Fragment>
-            <Typography my="0">
-              Built with <TextLink>React</TextLink> &{" "}
-              <TextLink>Styled-Components</TextLink>
-            </Typography>
-            <Typography my="0">
-              &copy; 2019 &ndash; {new Date().getFullYear()} &middot; Benneth
-              Yankey
-            </Typography>
-          </Fragment>
-        )}
+        <Typography my="0">
+          Built with <TextLink>React</TextLink> &{" "}
+          <TextLink>Styled-Components</TextLink>
+        </Typography>
+        <Typography my="0">
+          &copy; 2019 &ndash; {new Date().getFullYear()} &middot; Benneth Yankey
+        </Typography>
       </Container>
     </FooterWrapper>
   );
@@ -648,7 +658,6 @@ const capitalize = (v) => {
 var Routes = {
   HOME: "home",
   ARTICLES: "articles",
-  // ALL_ARTICLES: "all-articles",
   RESUME: "resume",
   ABOUT: "about",
   CONTACT: "contact",
@@ -665,6 +674,7 @@ function NavigationBar({
   setIsPortfolio,
   isPortfolio,
 }) {
+  const { cached } = useAppContext();
   const root = useRef();
   const [isLight, setIsLight] = useState(false);
   const isContentRoute = [Routes.RESUME, Routes.ABOUT, Routes.CONTACT].includes(
@@ -703,6 +713,7 @@ function NavigationBar({
       return;
     }
     setIsReading(false);
+    window.scrollTo(0, cached.pageYOffset.current);
   };
 
   return (
@@ -759,7 +770,6 @@ function Home({ setActiveRoute }) {
   return (
     <HomeWrapper as="section" items="center">
       <Container>
-        {/* <Typography>Hello, I'm</Typography> */}
         <Box style={{ textAlign: "center" }}>
           <Heading as="h1" my="0">
             BENNETH YANKEY
@@ -768,8 +778,7 @@ function Home({ setActiveRoute }) {
             Software Engineer
           </Heading>
           <Typography style={{ textAlign: "center" }}>
-            Hello and welcome, I am Benneth Yankey, a software engineer from
-            Ghana.
+            Hi, I am Benneth Yankey, a software engineer from Ghana.
           </Typography>
           <Typography>
             I created this site to share and document everything I have learned
@@ -814,7 +823,7 @@ function About({ setActiveRoute, activeRoute }) {
           About me
         </Heading>
         <Typography>
-          <StrongTypography>YANKEY</StrongTypography>is a tech blog of{" "}
+          <StrongTypography>YANKEY </StrongTypography>is a tech blog of{" "}
           <TextLink href="#">Benneth Yankey</TextLink>, a software engineer and
           high school biology teacher from Accra, Ghana.
         </Typography>
@@ -956,6 +965,7 @@ function ArticlesFilter({ activeFilter, setActiveFilter }) {
   );
 }
 
+// formats date
 const formatDate = (dateString) => {
   const ordinals = {
     one: "st",
@@ -1087,7 +1097,8 @@ function Articles({ handleIsReading }) {
     cached.sortedRef.current.get(activeFilter)
   );
 
-  // const pageYOffset = usePageYOffset();
+  // gets page scroll number and caches
+  cached.pageYOffset.current = usePageScroll();
 
   const getLatestEntries = useCallback(async () => {
     setIsFetchingLatest(true);
@@ -1101,24 +1112,18 @@ function Articles({ handleIsReading }) {
       entries.items.forEach((entry) => source.push(entry.fields));
       setLatestEntries(source);
       cached.latestRef.current = source;
+      setIsFetchingLatest(false);
     } catch (error) {
       setHasError(true);
     }
-    setIsFetchingLatest(false);
   }, [cached.latestRef]);
 
   // get recent articles
   useEffect(() => {
     if (!cached.latestRef.current.length) {
-      console.log("getting latest entries...");
       getLatestEntries();
     }
   }, [getLatestEntries, cached.latestRef]);
-
-  // reset scroll
-  useLayoutEffect(() => {
-    // window.scrollTo(0, pageYOffset);
-  });
 
   // sort article tag by year
   function sortEntriesByYear(entries, tag) {
@@ -1145,6 +1150,7 @@ function Articles({ handleIsReading }) {
       } else {
         setSortedEntries(cached.sortedRef.current.get(tag));
         setActiveFilter(tag);
+        cached.activeFilter.current = tag;
       }
     } else {
       setIsFetchingByTag(true);
@@ -1163,19 +1169,9 @@ function Articles({ handleIsReading }) {
     }
   };
 
-  // if (!cached.filteredEntries.current.length) {
-  //   fetchAllEntries();
-  // }
-
-  //   const toggleAllArticles = () => {
-  //     scrollState.position = 0;
-  //     setActiveRoute(Routes.ALL_ARTICLES);
-  //   };
-
   const refetchArticles = () => {
     setHasError(false);
     getLatestEntries();
-    // setActiveRoute(Routes.ARTICLES);
   };
 
   return (
@@ -1183,77 +1179,72 @@ function Articles({ handleIsReading }) {
       as="section"
       justify={(isFetchingLatest || hasError) && "center"}
     >
-      <Container style={{ overflow: "scroll" }}>
-        {isFetchingLatest && (
-          <Fragment>
-            <ActivityIndicator />
-            <Typography style={{ textAlign: "center" }}>
-              Fetching articles...
-            </Typography>
-          </Fragment>
-        )}
+      {isFetchingLatest && !hasError && (
+        <Box>
+          <ActivityIndicator />
+          <Typography style={{ textAlign: "center" }}>
+            Fetching articles...
+          </Typography>
+        </Box>
+      )}
+      {!isFetchingLatest && !hasError && latestEntries.length !== 0 && (
         <Fragment>
-          {!isFetchingLatest && !hasError && (
-            <Fragment>
-              <ArticlesFilter
-                activeFilter={activeFilter}
-                setActiveFilter={getEntriesByTag}
-              />
-              <Heading
-                as="h4"
-                style={{
-                  marginTop: "50px",
-                  marginBottom: "20px",
-                  color: "var(--codify)",
-                }}
-              >
-                What is in {capitalize(activeFilter)}?
-              </Heading>
-            </Fragment>
-          )}
-          <Box mt="var(--space-4)">
-            {isFetchingByTag && <ActivityIndicator />}
-            {!isFetchingByTag &&
-              activeFilter !== Filters.New &&
-              sortedEntries.map((entry) => (
-                <FilteredEntries
-                  key={entry[0]}
-                  entry={entry}
-                  handleIsReading={handleIsReading}
-                />
-              ))}
-            {!isFetchingLatest &&
-              !isFetchingByTag &&
-              activeFilter === Filters.New &&
-              latestEntries.map((entry) => {
-                return (
-                  <Article
-                    key={entry.id}
-                    post={entry}
-                    // pageYOffset={pageYOffset}
-                    handleIsReading={handleIsReading}
-                  />
-                );
-              })}
-          </Box>
+          <ArticlesFilter
+            activeFilter={activeFilter}
+            setActiveFilter={getEntriesByTag}
+          />
+          <Heading
+            as="h4"
+            style={{
+              marginTop: "50px",
+              marginBottom: "20px",
+              color: "var(--codify)",
+            }}
+          >
+            What is in {capitalize(activeFilter)}?
+          </Heading>
         </Fragment>
-        {/* offline content */}
-        {hasError && (
-          <Box style={{ textAlign: "center" }}>
-            <StrongTypography my="0">
-              Oops, unable to fetch articles
-            </StrongTypography>
-            <Typography my="0">The request could not be completed</Typography>
-            <ButtonLink
-              mt="var(--space-2)"
-              justify="center"
-              onClick={refetchArticles}
-            >
-              Try Again
-            </ButtonLink>
-          </Box>
-        )}
-      </Container>
+      )}
+      <Box mt="var(--space-4)">
+        {isFetchingByTag && <ActivityIndicator />}
+        {!isFetchingByTag &&
+          activeFilter !== Filters.New &&
+          sortedEntries.map((entry) => (
+            <FilteredEntries
+              key={entry[0]}
+              entry={entry}
+              handleIsReading={handleIsReading}
+            />
+          ))}
+        {!isFetchingLatest &&
+          !isFetchingByTag &&
+          activeFilter === Filters.New &&
+          latestEntries.map((entry) => {
+            return (
+              <Article
+                key={entry.id}
+                post={entry}
+                handleIsReading={handleIsReading}
+              />
+            );
+          })}
+      </Box>
+      {/* offline content */}
+      {hasError && (
+        <Box style={{ textAlign: "center" }}>
+          <StrongTypography my="0">
+            Oops, unable to fetch articles
+          </StrongTypography>
+          <Typography my="0">The request could not be completed</Typography>
+          <ButtonLink
+            mt="var(--space-2)"
+            justify="center"
+            onClick={refetchArticles}
+          >
+            Try Again
+          </ButtonLink>
+        </Box>
+      )}
     </ArticlesWrapper>
   );
 }
@@ -1300,6 +1291,7 @@ function Resume() {
         <Tools>
           {[
             "Javascript",
+            "Typescript",
             "React",
             "HTML",
             "CSS",
@@ -1314,6 +1306,8 @@ function Resume() {
           {[
             "SQL",
             "Node",
+            "NoSQL",
+            "Golang",
             "Git & Github",
             "Bootstrap",
             "Tailwind",
@@ -1350,23 +1344,22 @@ function Resume() {
 
 // handle pages
 function Router({ setActiveRoute, activeRoute, handleIsReading }) {
+  const { cached } = useAppContext();
   const getContentProps = { activeRoute, setActiveRoute, handleIsReading };
   const getAboutProps = { setActiveRoute, activeRoute };
 
-  // useEffect(() => {
-  //   if (activeRoute === Routes.ARTICLES) {
-  //     window.scrollTo(0, scrollState.position);
-  //   } else {
-  //     window.scrollTo(0, 0);
-  //   }
-  // }, [activeRoute]);
+  useLayoutEffect(() => {
+    if (activeRoute === Routes.ARTICLES) {
+      window.scrollTo(0, cached.pageYOffset.current);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [activeRoute, cached.pageYOffset]);
 
   const routes = () => {
     switch (activeRoute) {
       case Routes.ARTICLES:
         return <Articles {...getContentProps} />;
-      // case Routes.ALL_ARTICLES:
-      //   return <AllArticles {...getContentProps} />;
       case Routes.RESUME:
         return <Resume />;
       case Routes.ABOUT:
@@ -1386,10 +1379,10 @@ function PostContent({ post }) {
   let { body, title, published } = post;
   const content = useRemarkable(body);
 
-  // Reset page scroll
+  // reset layout scroll to top
   useLayoutEffect(() => {
-      window.scrollTo(0, 0);
-    }, []);
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <ContentWrapper pb="calc(var(--space-4) * 5)">
@@ -1409,9 +1402,7 @@ function PostContent({ post }) {
   );
 }
 
-// stores cached sorted entries by tag
-const sortedStore = new Map();
-
+// App is the root of the whole application
 export default function App() {
   const [isReading, setIsReading] = useState(false);
   const [isPortfolio, setIsPortfolio] = useState(false);
@@ -1422,8 +1413,9 @@ export default function App() {
   let previousRoute = useRef("");
   let profileImage = useRef("");
   let latestRef = useRef([]);
-  let sortedRef = useRef(sortedStore);
+  let sortedRef = useRef(new Map());
   let activeFilter = useRef(Filters.New);
+  let pageYOffset = useRef(0);
 
   const handleIsReading = (post) => {
     setPost(post);
@@ -1435,7 +1427,8 @@ export default function App() {
     profileImage,
     latestRef,
     sortedRef,
-    activeFilter
+    activeFilter,
+    pageYOffset,
   };
 
   const commonProps = { activeRoute, setActiveRoute };
