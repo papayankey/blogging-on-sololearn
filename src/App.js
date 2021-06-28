@@ -246,7 +246,7 @@ const Flex = styled(Box)`
 const HomeWrapper = ({ children, ...props }) => {
   return (
     <Flex
-      style={{ minHeight: `calc(100vh - ${NAVBAR_HEIGHT} - 80px)` }}
+      style={{ minHeight: `calc(100vh - ${NAVBAR_HEIGHT} - 100px)` }}
       {...props}
     >
       {children}
@@ -550,16 +550,17 @@ function Footer({ activeRoute }) {
     }
   }, [fetchProfilePic, image]);
 
-  // fetch image at 5s interval if
-  // fetching failed on first try
+  // retry to get profile image
   useEffect(() => {
+    let delay = 10000;
     let timer;
     if (image.length === 0) {
-      timer = setInterval(() => {
+      timer = setTimeout(function getPic() {
         fetchProfilePic();
-      }, 20000);
+        timer = setTimeout(getPic, delay);
+      }, delay);
     } else {
-      return () => clearInterval(timer);
+      return () => clearTimeout(timer);
     }
   }, [fetchProfilePic, image]);
 
@@ -771,20 +772,17 @@ function Home({ setActiveRoute }) {
     <HomeWrapper as="section" items="center">
       <Container>
         <Box style={{ textAlign: "center" }}>
+          <Typography>Hi, I'm</Typography>
           <Heading as="h1" my="0">
             BENNETH YANKEY
           </Heading>
           <Heading as="h4" my="0">
             Software Engineer
           </Heading>
-          <Typography style={{ textAlign: "center" }}>
-            Hi, I am Benneth Yankey, a software engineer from Ghana.
-          </Typography>
           <Typography>
             I created this site to share and document everything I have learned
             and learning with you and the world!
           </Typography>
-          <Typography>Like to know more about me?</Typography>
           <ButtonLink as="button" mx="auto">
             <Typography
               as="span"
@@ -1023,7 +1021,7 @@ function FilteredEntries({ entry, handleIsReading }) {
   };
 
   return (
-    <Box my="calc(var(--space-4) * 2)">
+    <Box>
       <Heading as="h2">{entry[0]}</Heading>
       <Box my="var(--space-4)">
         {entry[1].map((field, idx) => {
@@ -1197,15 +1195,13 @@ function Articles({ handleIsReading }) {
             as="h4"
             style={{
               marginTop: "50px",
-              marginBottom: "20px",
-              color: "var(--codify)",
             }}
           >
             What is in {capitalize(activeFilter)}?
           </Heading>
         </Fragment>
       )}
-      <Box mt="var(--space-4)">
+      <Box>
         {isFetchingByTag && <ActivityIndicator />}
         {!isFetchingByTag &&
           activeFilter !== Filters.New &&
