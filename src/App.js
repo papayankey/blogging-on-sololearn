@@ -48,39 +48,16 @@ const tablet = "768px";
 // global_styles
 const GlobalStyles = createGlobalStyle`
   html {
-    /* colors */
-    --white:   #FFFFFF;
-    --gray100: #F4F4F5;
-    --gray300: #D4D4D8;
-    --gray400: #A1A1AA;
-    --gray500: #71717A;
-    --gray600: #52525B;
-    --gray700: #3F3F46;
-    --gray800: #27272A;
-    --gray900: #18181B;
-    --blue400: #60A5FA;
-    --blue600: #2563EB;
-    --red50: #FEE2E2;
-    --red500: #EF4444;
-    --tombrown: #fcca98;
-    --codify: #ff8700;
-    --blackboard: #262626;
-    --greyboard: #3a3a3a;
-    --coffee: #feead7;
-    --leafy: #529e52;
-
-    // Light theme
-    --bg-0: var(--gray100);
-    --bg-1: var(--white);
-    --bg-2: var(--gray400);
-    --text-0: var(--gray600);
-    --text-1: var(--gray700);
-    --text-2: var(--gray700);
-    --clr-link: var(--blue600);
-    --bdcolor: var(--gray500);
-    --mark: var(--red50);
-    --mark-text: var(--red500);
-    --snippet-bg: var(--blackboard);
+    // Light colors
+    --bg-0: #F4F4F5;
+    --bg-1: #FFFFFF;
+    --bg-2: #A1A1AA;
+    --bg-3: #262626;
+    --txt-0: #52525B;
+    --txt-1: #3F3F46;
+    --txt-2: #3F3F46;
+    --txt-3: #2563EB;
+    --txt-4: #EF4444;
    
     /* fonts */
     --fallbacks:  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -150,23 +127,22 @@ const GlobalStyles = createGlobalStyle`
 
   body {
     line-height: var(--line-height-3);
-    color: var(--text-0);
+    color: var(--txt-0);
     background-color: var(--bg-0);
   }
  
-   // Dark theme
+   // Dark colors
   .dark {
-    --bg-0: var(--blackboard);
-    --bg-1: var(--greyboard);
-    --bg-2: var(--gray700);
-    --text-0: var(--tombrown);
-    --text-1: var(--coffee);
-    --text-3: var(--codify);
-    --bdcolor: var(--gray700);
-    --clr-link: var(--leafy);
-    --mark: transparent;
-    --mark-text: var(--codify);
-    --snippet-bg: var(--greyboard);
+    --bg-0: #262626;
+    --bg-1: #3A3A3A;
+    --bg-2: #3A3A3A;
+    --bg-3: #3A3A3A;
+    --txt-0: #FCCA98;
+    --txt-1: #FEEAD7;
+    --txt-3: #FF8700;
+    --txt-3: #529E52;
+    --txt-4: transparent;
+    --txt-4: #FF8700;
    }
 `;
 
@@ -278,7 +254,7 @@ const ButtonLink = styled(Flex)`
   appearance: none;
   border: none;
   background-color: transparent;
-  color: var(--clr-link);
+  color: var(--txt-3);
 `;
 
 const Typography = ({ children, ...props }) => {
@@ -320,8 +296,8 @@ const Loader = styled.div`
   height: 1rem;
   border-radius: 50%;
   border: 3px solid var(--bg-1);
-  border-top-color: var(--text-3);
-  border-right-color: var(--text-3);
+  border-top-color: var(--txt-3);
+  border-right-color: var(--txt-3);
   animation: ${spin} 1s linear infinite;
 `;
 
@@ -338,7 +314,7 @@ const TextLink = ({ children, style, ...props }) => {
     <Typography
       as="a"
       href="#"
-      color="var(--clr-link)"
+      color="var(--txt-3)"
       style={{ ...style }}
       {...props}
     >
@@ -377,7 +353,7 @@ const Time = styled.time`
 const Heading = ({ children, style, ...props }) => {
   return (
     <Typography
-      color="var(--text-1)"
+      color="var(--txt-1)"
       style={{ fontFamily: "var(--font-title)", ...style }}
       {...props}
     >
@@ -393,7 +369,7 @@ const ImageWrapper = styled(Box)`
   border-radius: 50%;
   overflow: hidden;
   position: relative;
-  border: 3px solid var(--text-0);
+  border: 3px solid var(--txt-0);
 `;
 
 const MarkdownContent = styled.article`
@@ -413,7 +389,7 @@ const MarkdownContent = styled.article`
   h4 {
     font-family: var(--font-title);
     margin: calc(var(--space-4) * 2) 0 var(--space-4);
-    color: var(--text-1);
+    color: var(--txt-1);
   }
 
   h3 + h4 {
@@ -425,7 +401,7 @@ const MarkdownContent = styled.article`
     padding: calc(var(--space-4) * 1.5);
     line-height: var(--line-height-2);
     color: var(--white);
-    background-color: var(--snippet-bg);
+    background-color: var(--bg-3);
     margin: var(--space-4) 0;
     border-radius: 4px;
     min-width: 100%;
@@ -434,7 +410,7 @@ const MarkdownContent = styled.article`
 
   mark {
     font-weight: bold;
-    color: var(--mark-text);
+    color: var(--txt-4);
     padding: 2px;
     border-radius: 2px;
 
@@ -514,7 +490,7 @@ const SocialContact = ({ children, url, ...props }) => {
       href={url}
       target="_blank"
       rel="noreferrer"
-      color="var(--text-0)"
+      color="var(--txt-0)"
       my="0"
       {...props}
     >
@@ -725,7 +701,7 @@ function NavigationBar({
             {isReadingMode && (
               <Flex
                 items="center"
-                color="var(--text-1)"
+                color="var(--txt-1)"
                 onClick={closeReadingMode}
               >
                 <FiChevronLeft size={24} />
@@ -756,7 +732,7 @@ function NavigationBar({
               key={i}
               onClick={() => handleRouteToggle(v)}
               py="var(--space-3)"
-              color="var(--text-1)"
+              color="var(--txt-1)"
             >
               {capitalize(v)}
             </NavItem>
@@ -800,7 +776,7 @@ function Home({ setActiveRoute }) {
 
 const StrongTypography = ({ children, ...props }) => {
   return (
-    <Typography as="strong" color="var(--text-0)" {...props}>
+    <Typography as="strong" color="var(--txt-0)" {...props}>
       {children}
     </Typography>
   );
@@ -953,7 +929,7 @@ function ArticlesFilter({ activeFilter, setActiveFilter }) {
             {filter}
             <FilterIndicator
               style={{
-                backgroundColor: activeFilter === filter && "var(--leafy)",
+                backgroundColor: activeFilter === filter && "var(--txt-3)",
               }}
             />
           </Box>
@@ -1035,7 +1011,7 @@ function FilteredEntries({ entry, handleIsReading }) {
               <Typography
                 my="0"
                 mt="0"
-                color="var(--text-1)"
+                color="var(--txt-1)"
                 onClick={() => handleOpenArticle(field)}
               >
                 {title}
@@ -1260,7 +1236,7 @@ const Tool = styled.p`
 
 const SubHeading = ({ children, ...props }) => {
   return (
-    <Heading as="h4" color="var(--text-0)" {...props}>
+    <Heading as="h4" color="var(--txt-0)" {...props}>
       {children}
     </Heading>
   );
