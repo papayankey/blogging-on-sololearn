@@ -506,6 +506,7 @@ function Footer({ activeRoute }) {
   const [image, setImage] = useState(() => cached.profileImage.current);
   const [imageIsLoading, setImageIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const fetchCount = useRef(0);
 
   const fetchProfilePic = useCallback(async () => {
     setImageIsLoading(true);
@@ -519,24 +520,30 @@ function Footer({ activeRoute }) {
     }
   }, []);
 
-  // get profile image from contentful
+  // retrieve profile image from
+  // contentful assets
   useEffect(() => {
-    if (!image.length !== 0) {
-      fetchProfilePic();
-    }
-  }, [fetchProfilePic, image]);
-
-  // retry to get profile image
-  useEffect(() => {
-    let delay = 10000;
     let timer;
+    const delay = 10000;
+
     if (image.length === 0) {
+      fetchProfilePic();
+      return;
+    }
+
+    function clearTimer() {
+      fetchCount.current = 0;
+      clearTimeout(timer);
+    }
+
+    if (fetchCount.current <= 3) {
       timer = setTimeout(function getPic() {
+        fetchCount.current += 1;
         fetchProfilePic();
         timer = setTimeout(getPic, delay);
       }, delay);
     } else {
-      return () => clearTimeout(timer);
+      return clearTimer();
     }
   }, [fetchProfilePic, image]);
 
@@ -556,14 +563,14 @@ function Footer({ activeRoute }) {
           >
             <img
               src={`https:${image}`}
-              alt={hasError ? "YANKEY" : ""}
+              alt={hasError && "YANKEY"}
               style={{
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
-                position: hasError && "relative",
-                top: 28,
-                left: 11,
+                position: hasError ? "relative" : "static",
+                top: hasError ? 28 : 0,
+                left: hasError ? 11 : 0,
               }}
             />
           </Box>
@@ -893,12 +900,11 @@ const Filters = {
 };
 
 const FilterIndicator = styled.div`
-  width: 10px;
-  height: 28px;
+  width: 4px;
+  height: 50%;
   position: absolute;
-  top: -12px;
+  top: 0;
   left: 0;
-  transform: rotate(45deg);
 `;
 
 function ArticlesFilter({ activeFilter, setActiveFilter }) {
@@ -1032,7 +1038,7 @@ function Article({ post, handleIsReading }) {
   });
 
   return (
-    <Box mt="calc(var(--space-4) * 2)" onClick={() => handleIsReading(post)}>
+    <Box mb="calc(var(--space-4) * 2)" onClick={() => handleIsReading(post)}>
       <Heading as="h3">{title}</Heading>
       <Typography>{summary}</Typography>
       <ButtonLink as="button" justify="space-between">
@@ -1292,7 +1298,7 @@ function Resume() {
         </Tools>
         <SubHeading>Familiar with:</SubHeading>
         <Tools>
-          {["MongoDB", "Webpack", "Eslint", "SSH", "Prettier"].map(
+          {["Java", "MongoDB", "Webpack", "Eslint", "SSH", "Prettier"].map(
             (item, idx) => (
               <Tool key={idx}>{item}</Tool>
             )
