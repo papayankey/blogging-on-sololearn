@@ -87,7 +87,13 @@ const config = {
     shadows: {
       1: "0 1px 2px lightgrey",
       2: "0 2px 4px lightgrey",
-      3: "0 4px 8px lightgrey"
+      3: "0 4px 8px lightgrey",
+    },
+    fontSizes: {
+      1: "10px",
+      2: "12px",
+      3: "14px",
+      4: "16px",
     },
     zIndices: {
       1: 100,
@@ -152,7 +158,7 @@ const darkTheme = theme("dark", {
 const globalStyles = global({
   ":root": {
     boxSizing: "border-box",
-    // fontSize: "100%",
+    fontSize: "$4",
     fontFamily: "$fonts$body",
     fontWeight: "$normal",
     "-webkit-font-smoothing": "antialiased",
@@ -213,6 +219,11 @@ const Text = styled("p", {
   my: "$3",
 });
 
+const Title = styled("h2", {
+  mb: "$4",
+  textAlign: "center",
+});
+
 const Strong = styled("strong", {
   color: "$text0",
 });
@@ -271,9 +282,8 @@ const Brand = styled("div", {
 
 const Wrapper = styled(Flex, {
   minHeight: `calc(100vh - ${NAVBAR_HEIGHT})`,
-  mt: `${NAVBAR_HEIGHT}`,
-  pt: "$2",
-  pb: "$8",
+  py: "$9",
+  bgcolor: "$bg0",
 });
 
 const Time = styled("time", {
@@ -282,10 +292,15 @@ const Time = styled("time", {
   fontSize: "0.8rem",
 });
 
-const Heading = styled("h1", {
+const Heading = styled("h3", {
   color: "$text1",
-  fontFamily: "$fonts$title",
-  my: 0,
+  fontFamily: "$title",
+  my: "$5",
+});
+
+const SubHeading = styled("h4", {
+  color: "$text0",
+  fontFamily: "$title",
 });
 
 const Image = styled("img", {
@@ -308,11 +323,12 @@ const Layout = styled(Flex, {
 });
 
 const TopBar = styled(Box, {
-  top: 0,
-  left: 0,
   minWidth: "100%",
-  zIndex: "$3",
   boxShadow: "0 2px 0 rgba(0, 0, 0, 0.05)",
+  bgcolor: "white",
+  left: 0,
+  top: 0,
+  zIndex: "$3",
 });
 
 const MarkdownContent = styled("article", {
@@ -333,15 +349,17 @@ const MarkdownContent = styled("article", {
     mt: "$1",
   },
   pre: {
-    fontSize: "0.9rem",
+    fontSize: "$3",
     p: "$5",
     lineHeight: "$2",
     color: "white",
     bgcolor: "$bg3",
     margin: "$4 0",
     borderRadius: "4px",
-    minWidth: "100%",
+    width: "100%",
     overflow: "auto",
+    position: "relative",
+    zIndex: "$1",
   },
   mark: {
     fontWeight: "$bold",
@@ -353,7 +371,7 @@ const MarkdownContent = styled("article", {
     },
   },
   "& #post-img": {
-    margin: "$8 0",
+    my: "$8",
     "& img": {
       width: "100%",
     },
@@ -368,6 +386,26 @@ const MarkdownContent = styled("article", {
     padding: "$3",
     fontSize: "0.9rem",
     position: "relative",
+  },
+});
+
+const Card = styled(Flex, {
+  direction: "column",
+  bgcolor: "white",
+  p: "$3",
+  boxShadow: "$1",
+  color: "$text1",
+  borderRadius: "4px",
+});
+
+const Pill = styled(Box, {
+  px: "$2",
+  py: "$1",
+  bgcolor: "$bg0",
+  borderRadius: "99999px",
+  mb: "$2",
+  "&:not(:last-of-type)": {
+    mr: "$2",
   },
 });
 
@@ -648,6 +686,7 @@ function NavigationBar({
           css={{
             justify: "center",
             items: "center",
+            py: "$1",
             overflowX: "auto",
           }}
         >
@@ -680,7 +719,7 @@ function Home({ setActiveRoute }) {
       css={{
         minHeight: `calc(100vh - ${NAVBAR_HEIGHT} - 120px)`,
         items: "center",
-        bgcolor: "rgba(0,0,0,0.05)",
+        bgcolor: "$bg0",
       }}
     >
       <Container>
@@ -691,8 +730,8 @@ function Home({ setActiveRoute }) {
           }}
         >
           <Text>Hi, I'm</Text>
-          <Heading>BENNETH YANKEY</Heading>
-          <Heading as="h4">Software Engineer</Heading>
+          <Heading css={{ m: 0 }}>BENNETH YANKEY</Heading>
+          <SubHeading>Software Engineer</SubHeading>
           <Text css={{ textAlign: "center" }}>
             I created this site to share and document everything I have learned
             and learning with you and the world!
@@ -720,9 +759,7 @@ function About({ setActiveRoute, activeRoute }) {
   return (
     <Wrapper>
       <Container>
-        <Heading as="h2" css={{ textAlign: "center" }}>
-          About me
-        </Heading>
+        <Title>About me</Title>
         <Text>
           <Strong>YANKEY </Strong>is a tech blog of{" "}
           <Link href="#">Benneth Yankey</Link>, a software engineer and high
@@ -765,9 +802,7 @@ function Contact() {
   return (
     <Wrapper>
       <Container>
-        <Heading as="h2" css={{ textAlign: "center" }}>
-          Contact me
-        </Heading>
+        <Title>Contact me</Title>
         <Text>Thanks for your interest in getting in touch with me.</Text>
         <Text>
           Please contact me via the appropriate medium, but keep in mind that
@@ -829,31 +864,27 @@ function ArticlesFilter({ activeFilter, setActiveFilter }) {
           mt: "$4",
         }}
       >
-        {Object.values(Filters).map((filter, idx) => (
-          <Box
-            key={idx}
-            css={{
-              px: "$2",
-              py: "$1",
-              border: "1px solid",
-              position: "relative",
-              overflow: "hidden",
-              mb: "$2",
-              "&:not(:last-of-type)": {
-                mr: "$2",
-              },
-              "&:hover": {
-                cursor: "pointer"
-              },
-              borderColor: activeFilter === filter ? "transparent" : "lightgrey",
-              bgcolor: activeFilter === filter ? "white" : "transparent",
-              boxShadow: activeFilter === filter ? "$1" : "none"
-            }}
-            onClick={() => setActiveFilter(filter)}
-          >
-            {filter}
-          </Box>
-        ))}
+        {Object.values(Filters).map((filter, idx) => {
+          let isActive = activeFilter === filter;
+          return (
+            <Pill
+              key={idx}
+              css={{
+                border: "1px solid",
+                "&:hover": {
+                  cursor: "pointer",
+                },
+                borderColor:
+                  isActive ? "transparent" : "lightgrey",
+                bgcolor: isActive ? "white" : "transparent",
+                boxShadow: isActive ? "$1" : "none",
+              }}
+              onClick={() => setActiveFilter(filter)}
+            >
+              {filter}
+            </Pill>
+          );
+        })}
       </Flex>
     </Flex>
   );
@@ -891,19 +922,6 @@ const formatDate = (dateString) => {
     .join("");
 };
 
-const FilteredEntry = styled(Flex, {
-  direction: "column",
-  "@bp1": {
-    direction: "row",
-    justify: "space-between",
-    items: "center",
-    [`& ${Time}`]: {
-      order: 2,
-      justifySelf: "flex-end",
-    },
-  },
-});
-
 function FilteredEntries({ entry, handleIsReading }) {
   useEffect(() => {
     // feather.replace();
@@ -920,23 +938,24 @@ function FilteredEntries({ entry, handleIsReading }) {
         {entry[1].map((field, idx) => {
           const { published, title } = field;
           return (
-            <FilteredEntry
+            <Card
               key={idx}
               css={{
-                mt: idx !== 0 && "$3",
+                mb: "$2",
+                "& time": {
+                  fontSize: "$3",
+                  color: "grey",
+                },
               }}
             >
-              <Time datetime={published}>{formatDate(published)}</Time>
+              <time datetime={published}>{formatDate(published)}</time>
               <Text
                 onClick={() => handleOpenArticle(field)}
-                css={{
-                  m: 0,
-                  color: "$text1",
-                }}
+                css={{ m: 0, mt: "$1" }}
               >
                 {title}
               </Text>
-            </FilteredEntry>
+            </Card>
           );
         })}
       </Box>
@@ -952,29 +971,23 @@ function Article({ post, handleIsReading }) {
   });
 
   return (
-    <Box
+    <Card
       css={{
-        mb: "$5",
-        bgcolor: "white",
-        py: "$6",
-        borderRadius: "5px",
-        boxShadow: "$1",
-        overflow: "hidden"
+        mb: "$3",
+        py: "$5",
       }}
       onClick={() => handleIsReading(post)}
     >
-      <Container>
-        <Heading as="h4">{title}</Heading>
-        <Text>{summary}</Text>
-        <ButtonLink as="button" css={{ justify: "space-between" }}>
-          {/* Read <i data-feather='arrow-right'></i> */}
-          <Text as="span" css={{ my: 0 }}>
-            Read more
-          </Text>
-          <FiArrowRight style={{ ml: "var(--space-1)" }} />
-        </ButtonLink>
-      </Container>
-    </Box>
+      <Heading as="h4" css={{m: 0}}>{title}</Heading>
+      <Text>{summary}</Text>
+      <ButtonLink as="button">
+        {/* Read <i data-feather='arrow-right'></i> */}
+        <Text as="span" css={{ my: 0 }}>
+          Read more
+        </Text>
+        <FiArrowRight style={{ ml: "var(--space-1)" }} />
+      </ButtonLink>
+    </Card>
   );
 }
 
@@ -1104,8 +1117,10 @@ function Articles({ handleIsReading }) {
             activeFilter={activeFilter}
             setActiveFilter={getEntriesByTag}
           />
-          <Heading as="h3" css={{ my: "$8" }}>
-            {activeFilter === Filters.New ? <Fragment>Latest Articles</Fragment> : (
+          <Heading as="h3" css={{ my: "$8", color: "grey" }}>
+            {activeFilter === Filters.New ? (
+              <Fragment>Latest Articles</Fragment>
+            ) : (
               <Fragment>All articles in {capitalize(activeFilter)}?</Fragment>
             )}
           </Heading>
@@ -1157,88 +1172,95 @@ function Articles({ handleIsReading }) {
   );
 }
 
-const Tools = styled(Flex, {
-  flexGap: "$2",
-  my: "$4",
-  flexWrap: "wrap",
-});
-
-const Tool = styled("p", {
-  border: "1px solid $2",
-  padding: "$1 $2",
-});
-
-const SubHeading = ({ children, ...props }) => {
-  return (
-    <Heading as="h4" css={{ color: "$text0" }} {...props}>
-      {children}
-    </Heading>
-  );
-};
-
 function Resume() {
   return (
     <Wrapper>
       <Container>
-        <Heading as="h2" css={{ textAlign: "center", marginBottom: "$4" }}>
-          Resume
-        </Heading>
-        <Heading as="h3">Work Experience</Heading>
-        <SubHeading>Content Creator</SubHeading>
-        <p>
-          I create concise code snippets, tips and tricks in javascript and more
-        </p>
-        <Heading as="h3">Technical Skills</Heading>
-        <SubHeading>Proficient in:</SubHeading>
-        <Tools>
-          {[
-            "Javascript",
-            "Typescript",
-            "React",
-            "HTML",
-            "CSS",
-            "Styled-Component",
-            "Material-UI",
-          ].map((item, idx) => (
-            <Tool key={idx}>{item}</Tool>
-          ))}
-        </Tools>
-        <SubHeading>Experienced in:</SubHeading>
-        <Tools>
-          {[
-            "SQL",
-            "Node",
-            "NoSQL",
-            "Golang",
-            "Git & Github",
-            "Bootstrap",
-            "Tailwind",
-            "Postgres",
-            "SQLite",
-            "SASS",
-          ].map((item, idx) => (
-            <Tool key={idx}>{item}</Tool>
-          ))}
-        </Tools>
-        <SubHeading>Familiar with:</SubHeading>
-        <Tools>
-          {["Java", "MongoDB", "Webpack", "Eslint", "SSH", "Prettier"].map(
-            (item, idx) => (
-              <Tool key={idx}>{item}</Tool>
-            )
-          )}
-        </Tools>
-        <Heading as="h3">Education</Heading>
-        <p>University of Cape Coast, Ghana</p>
-        <p className="content-platform">
-          Department of Molecular Biology & Biotechnology
-        </p>
-        <Heading as="h3">Hobbies</Heading>
-        <Tools>
-          {["Teaching", "Gaming", "Reading"].map((item, idx) => (
-            <Tool key={idx}>{item}</Tool>
-          ))}
-        </Tools>
+        <Title>Resume</Title>
+        <Heading>Work Experience</Heading>
+        <Card>
+          <SubHeading>Content Creator</SubHeading>
+          <Text>
+            I create concise code snippets, tips and tricks in javascript and
+            more
+          </Text>
+        </Card>
+        <Heading>Technical Skills</Heading>
+        <Card css={{ mb: "$4" }}>
+          <SubHeading>Proficient in:</SubHeading>
+          <Flex
+            css={{
+              mt: "$4",
+              flexWrap: "wrap",
+            }}
+          >
+            {[
+              "Javascript",
+              "Typescript",
+              "React",
+              "HTML",
+              "CSS",
+              "Styled-Component",
+              "Material-UI",
+            ].map((item, idx) => (
+              <Pill key={idx}>{item}</Pill>
+            ))}
+          </Flex>
+        </Card>
+        <Card css={{ mb: "$4" }}>
+          <SubHeading>Experienced in:</SubHeading>
+          <Flex
+            css={{
+              mt: "$4",
+              flexWrap: "wrap",
+            }}
+          >
+            {[
+              "SQL",
+              "Node",
+              "NoSQL",
+              "Golang",
+              "Git & Github",
+              "Bootstrap",
+              "Tailwind",
+              "Postgres",
+              "SQLite",
+              "SASS",
+            ].map((item, idx) => (
+              <Pill key={idx}>{item}</Pill>
+            ))}
+          </Flex>
+        </Card>
+        <Card css={{ mb: "$4" }}>
+          <SubHeading>Familiar with:</SubHeading>
+          <Flex
+            css={{
+              mt: "$4",
+              flexWrap: "wrap",
+            }}
+          >
+            {["Java", "MongoDB", "Webpack", "Eslint", "SSH", "Prettier"].map(
+              (item, idx) => (
+                <Pill key={idx}>{item}</Pill>
+              )
+            )}
+          </Flex>
+        </Card>
+        <Heading>Education</Heading>
+        <Card css={{ mb: "$4" }}>
+          <SubHeading>University of Cape Coast, Ghana</SubHeading>
+          <Text className="content-platform">
+            Department of Molecular Biology & Biotechnology
+          </Text>
+        </Card>
+        <Heading>Hobbies</Heading>
+        <Card>
+          <Flex>
+            {["Teaching", "Gaming", "Reading"].map((item, idx) => (
+              <Pill key={idx}>{item}</Pill>
+            ))}
+          </Flex>
+        </Card>
       </Container>
     </Wrapper>
   );
@@ -1287,7 +1309,7 @@ function PostContent({ post }) {
   }, []);
 
   return (
-    <Wrapper css={{ pb: "$12" }}>
+    <Wrapper css={{ pb: "$12", pt: "calc($12 * 2)" }}>
       <Container>
         <Flex css={{ direction: "column", items: "center", justify: "center" }}>
           <Heading as="h2" css={{ mt: "$2", textAlign: "center" }}>
