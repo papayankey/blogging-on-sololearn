@@ -9,7 +9,6 @@ import {
   useRef,
 } from "react";
 import { createClient } from "contentful";
-// import styled, {keyframes, createGlobalStyle, css} from 'styled-components';
 import { createCss } from "@stitches/react";
 import { Remarkable } from "remarkable";
 import hljs from "highlight.js";
@@ -57,7 +56,7 @@ const config = {
       bold: 600,
     },
     colors: {
-      bg0: "#F4F4F5",
+      bg0: "rgba(0, 0, 0, 0.05)",
       bg1: "#FFFFFF",
       bg2: "#A1A1AA",
       bg3: "#262626",
@@ -84,6 +83,11 @@ const config = {
       2: 1.25,
       3: 1.5,
       4: 1.75,
+    },
+    shadows: {
+      1: "0 1px 2px lightgrey",
+      2: "0 2px 4px lightgrey",
+      3: "0 4px 8px lightgrey"
     },
     zIndices: {
       1: 100,
@@ -148,7 +152,7 @@ const darkTheme = theme("dark", {
 const globalStyles = global({
   ":root": {
     boxSizing: "border-box",
-    fontSize: "100%",
+    // fontSize: "100%",
     fontFamily: "$fonts$body",
     fontWeight: "$normal",
     "-webkit-font-smoothing": "antialiased",
@@ -169,7 +173,7 @@ const globalStyles = global({
   body: {
     lineHeight: "$3",
     color: "$text0",
-    bcolor: "#F3F2EF",
+    bcolor: "$bg0",
   },
   "nav ul": {
     listStyle: "none",
@@ -195,21 +199,6 @@ const Flex = styled(Box, {
   display: "flex",
 });
 
-const HomeWrapper = styled(Flex, {
-  minHeight: `calc(100vh - ${NAVBAR_HEIGHT} - 100px)`,
-  items: "center",
-  borderBottom: "8px solid $bg0",
-});
-
-const ArticlesWrapper = styled(Flex, {
-  justify: "flex-start",
-  direction: "column",
-  pt: "$5",
-  pb: "$9",
-  px: "$3",
-  minHeight: "calc(100vh - 300px)",
-});
-
 const ButtonLink = styled(Flex, {
   items: "center",
   fontSize: "100%",
@@ -220,7 +209,7 @@ const ButtonLink = styled(Flex, {
   color: "$text3",
 });
 
-const Typography = styled("p", {
+const Text = styled("p", {
   my: "$3",
 });
 
@@ -266,6 +255,7 @@ const FooterWrapper = styled("footer", {
   px: 0,
   py: "$4",
   bgcolor: "$bg1",
+  boxShadow: "0 -1px 2px lightgrey",
 });
 
 const Link = styled("a", {
@@ -279,11 +269,11 @@ const Brand = styled("div", {
   letterSpacing: "1px",
 });
 
-const ContentWrapper = styled(Flex, {
+const Wrapper = styled(Flex, {
+  minHeight: `calc(100vh - ${NAVBAR_HEIGHT})`,
   mt: `${NAVBAR_HEIGHT}`,
   pt: "$2",
   pb: "$8",
-  minHeight: `calc(100vh - ${NAVBAR_HEIGHT})`,
 });
 
 const Time = styled("time", {
@@ -317,30 +307,12 @@ const Layout = styled(Flex, {
   minHeight: "100vh",
 });
 
-const NavList = styled(Flex, {
-  borderTop: "8px solid $bg0",
-  borderBottom: "8px solid $bg0",
-  overflowX: "auto",
-});
-
-const NavItem = styled("div", {
-  letterSpacing: "1px",
-});
-
 const TopBar = styled(Box, {
-  bgcolor: "$bg1",
   top: 0,
   left: 0,
-  minWidth: "100vw",
+  minWidth: "100%",
   zIndex: "$3",
-});
-
-const FilterIndicator = styled("div", {
-  width: "4px",
-  height: "50%",
-  position: "absolute",
-  top: 0,
-  left: 0,
+  boxShadow: "0 2px 0 rgba(0, 0, 0, 0.05)",
 });
 
 const MarkdownContent = styled("article", {
@@ -559,12 +531,12 @@ function Footer({ activeRoute }) {
             <FaTwitter />
           </Social>
         </Flex>
-        <Typography css={{ my: 0 }}>
+        <Text css={{ my: 0 }}>
           Built with <Link>React</Link> & <Link>Styled-Components</Link>
-        </Typography>
-        <Typography css={{ my: 0 }}>
+        </Text>
+        <Text css={{ my: 0 }}>
           &copy; 2019 &ndash; {new Date().getFullYear()} &middot; Benneth Yankey
-        </Typography>
+        </Text>
       </Container>
     </FooterWrapper>
   );
@@ -608,8 +580,8 @@ function NavigationBar({
 
   // Automatic theme switch
   useEffect(() => {
-    root.current = document.documentElement;
-    root.current.classList.add("dark");
+    // root.current = document.documentElement;
+    // root.current.classList.add("dark");
   }, []);
 
   // Toggle theme Light / Dark
@@ -618,7 +590,7 @@ function NavigationBar({
     setIsLight((prevTheme) => !prevTheme);
   };
 
-  const handleRouteToggle = (route) => {
+  const toggleRoute = (route) => {
     if (isContentRoute) {
       setIsPortfolio(true);
     }
@@ -636,7 +608,7 @@ function NavigationBar({
   };
 
   return (
-    <header>
+    <Box as="header" css={{ boxShadow: "$1" }}>
       <TopBar css={{ position: isReading ? "fixed" : "static" }}>
         <Container>
           <Flex
@@ -655,9 +627,9 @@ function NavigationBar({
                 onClick={closeReadingMode}
               >
                 <FiChevronLeft size={24} />
-                <Typography as="span" css={{ my: 0 }}>
+                <Text as="span" css={{ my: 0 }}>
                   Back
-                </Typography>
+                </Text>
               </Flex>
             )}
             {!isReadingMode && (
@@ -671,58 +643,69 @@ function NavigationBar({
         </Container>
       </TopBar>
       {!isReadingMode && (
-        <NavList
+        <Flex
+          as="nav"
           css={{
             justify: "center",
             items: "center",
-            bgcolor: "$bg1",
+            overflowX: "auto",
           }}
         >
           {navItems.map((v, i) => (
-            <NavItem
+            <Box
               key={i}
-              onClick={() => handleRouteToggle(v)}
+              onClick={() => toggleRoute(v)}
               css={{
-                py: "$3",
+                letterSpacing: "1.2px",
+                p: "$2",
                 color: "$text1",
-                "&:not(:last-of-type)": {
-                  mr: "$5",
+                "&:hover": {
+                  bgcolor: "$bg0",
                 },
               }}
             >
               {capitalize(v)}
-            </NavItem>
+            </Box>
           ))}
-        </NavList>
+        </Flex>
       )}
-    </header>
+    </Box>
   );
 }
 
 function Home({ setActiveRoute }) {
   return (
-    <HomeWrapper as="section">
+    <Flex
+      as="section"
+      css={{
+        minHeight: `calc(100vh - ${NAVBAR_HEIGHT} - 120px)`,
+        items: "center",
+        bgcolor: "rgba(0,0,0,0.05)",
+      }}
+    >
       <Container>
-        <Box css={{ textAlign: "center" }}>
-          <Typography>Hi, I'm</Typography>
+        <Flex
+          css={{
+            direction: "column",
+            items: "center",
+          }}
+        >
+          <Text>Hi, I'm</Text>
           <Heading>BENNETH YANKEY</Heading>
           <Heading as="h4">Software Engineer</Heading>
-          <Typography>
+          <Text css={{ textAlign: "center" }}>
             I created this site to share and document everything I have learned
             and learning with you and the world!
-          </Typography>
+          </Text>
           <ButtonLink as="button" css={{ mx: "auto" }}>
-            <Typography
-              as="span"
-              onClick={() => setActiveRoute(Routes.CONTACT)}
-            >
+            <Text as="span" onClick={() => setActiveRoute(Routes.CONTACT)}>
               Get to know me better
-            </Typography>
+            </Text>
             <FiArrowRight style={{ marginLeft: "var(--space-1)" }} />
           </ButtonLink>
-        </Box>
+        </Flex>
       </Container>
-    </HomeWrapper>
+    </Flex>
   );
 }
 
@@ -735,91 +718,87 @@ function About({ setActiveRoute, activeRoute }) {
   };
 
   return (
-    <ContentWrapper>
+    <Wrapper>
       <Container>
         <Heading as="h2" css={{ textAlign: "center" }}>
           About me
         </Heading>
-        <Typography>
+        <Text>
           <Strong>YANKEY </Strong>is a tech blog of{" "}
           <Link href="#">Benneth Yankey</Link>, a software engineer and high
           school biology teacher from Accra, Ghana.
-        </Typography>
-        <Typography>
+        </Text>
+        <Text>
           He is passionate about software development and solving problems. He
           programs mostly in Javascript (Typescript) and Go.
-        </Typography>
-        <Typography>
+        </Text>
+        <Text>
           His primary machine is Lenovo Ideapad running Fedora Linux. Vim is his
           text editor of choice.
-        </Typography>
+        </Text>
         <Heading as="h3">Other Interests</Heading>
-        <Typography>
-          Aside programming here are other areas of his interest:
-        </Typography>
-        <Typography>
+        <Text>Aside programming here are other areas of his interest:</Text>
+        <Text>
           <Strong>Teaching: </Strong>
           He likes to share and impact knowledge. He has been teaching Biology
           to high school pupils for past 5 years and counting. He aids pupils to
           understand and appreciate the beauty of nature.
-        </Typography>
-        <Typography>
+        </Text>
+        <Text>
           <Strong>Gaming: </Strong>
           He loves and has been gaming since he was 5, playing SEGA. He
           currently owns a PS4 Console and enjoys playing FIFA.
-        </Typography>
+        </Text>
         <Heading as="h3">Get in touch</Heading>
-        <Typography>
+        <Text>
           You can contact him via{" "}
           <Link onClick={handleRouteToggle}>contact page</Link>. He is happy to
           respond to projects discussion, collaborations and corrections or
           suggestions of any material.
-        </Typography>
+        </Text>
       </Container>
-    </ContentWrapper>
+    </Wrapper>
   );
 }
 
 function Contact() {
   return (
-    <ContentWrapper>
+    <Wrapper>
       <Container>
         <Heading as="h2" css={{ textAlign: "center" }}>
           Contact me
         </Heading>
-        <Typography>
-          Thanks for your interest in getting in touch with me.
-        </Typography>
-        <Typography>
+        <Text>Thanks for your interest in getting in touch with me.</Text>
+        <Text>
           Please contact me via the appropriate medium, but keep in mind that
           I'll only respond to legit messages.
-        </Typography>
+        </Text>
         <Heading as="h3">Email</Heading>
-        <Typography>
+        <Text>
           My email address is{" "}
           <Link href="mailto: yankeybenneth@gmail.com">
             yankeybenneth@gmail.com
           </Link>
           . This is the best way to grab my attention in minute literally.
-        </Typography>
+        </Text>
         <Heading as="h3">Instagram</Heading>
-        <Typography>
+        <Text>
           I use instagram primarily to share things including tips and tricks
           with the tech community. Kindly follow me{" "}
           <Link href="https://www.instagram.com/papayankey_">here</Link>. If you
           want to ask a question, Instagram is the right medium and will
           definitely respond ASAP.
-        </Typography>
+        </Text>
         <Heading as="h3">What I will respond to</Heading>
-        <Typography>
+        <Text>
           I will definitely respond and be very happy to discuss with you on
           projects and collaborations. Any questions about contents produced on
           this blog will also get a response.
-        </Typography>
+        </Text>
         <Heading as="h3">What I won't respond to</Heading>
-        <Typography>I won't respond if message is unclear enough.</Typography>
+        <Text>I won't respond if message is unclear enough.</Text>
       </Container>
-    </ContentWrapper>
+    </Wrapper>
   );
 }
 
@@ -856,22 +835,23 @@ function ArticlesFilter({ activeFilter, setActiveFilter }) {
             css={{
               px: "$2",
               py: "$1",
-              border: "1px solid $bg2",
+              border: "1px solid",
               position: "relative",
               overflow: "hidden",
               mb: "$2",
               "&:not(:last-of-type)": {
                 mr: "$2",
               },
+              "&:hover": {
+                cursor: "pointer"
+              },
+              borderColor: activeFilter === filter ? "transparent" : "lightgrey",
+              bgcolor: activeFilter === filter ? "white" : "transparent",
+              boxShadow: activeFilter === filter ? "$1" : "none"
             }}
             onClick={() => setActiveFilter(filter)}
           >
             {filter}
-            <FilterIndicator
-              css={{
-                bgcolor: activeFilter === filter ? "$text3" : null,
-              }}
-            />
           </Box>
         ))}
       </Flex>
@@ -947,7 +927,7 @@ function FilteredEntries({ entry, handleIsReading }) {
               }}
             >
               <Time datetime={published}>{formatDate(published)}</Time>
-              <Typography
+              <Text
                 onClick={() => handleOpenArticle(field)}
                 css={{
                   m: 0,
@@ -955,7 +935,7 @@ function FilteredEntries({ entry, handleIsReading }) {
                 }}
               >
                 {title}
-              </Typography>
+              </Text>
             </FilteredEntry>
           );
         })}
@@ -972,16 +952,28 @@ function Article({ post, handleIsReading }) {
   });
 
   return (
-    <Box css={{ py: "$7", borderBottom: "8px solid $bg0"}} onClick={() => handleIsReading(post)}>
-      <Heading as="h3">{title}</Heading>
-      <Typography>{summary}</Typography>
-      <ButtonLink as="button" css={{ justify: "space-between" }}>
-        {/* Read <i data-feather='arrow-right'></i> */}
-        <Typography as="span" css={{ my: 0 }}>
-          Read more
-        </Typography>
-        <FiArrowRight style={{ marginLeft: "var(--space-1)" }} />
-      </ButtonLink>
+    <Box
+      css={{
+        mb: "$5",
+        bgcolor: "white",
+        py: "$6",
+        borderRadius: "5px",
+        boxShadow: "$1",
+        overflow: "hidden"
+      }}
+      onClick={() => handleIsReading(post)}
+    >
+      <Container>
+        <Heading as="h4">{title}</Heading>
+        <Text>{summary}</Text>
+        <ButtonLink as="button" css={{ justify: "space-between" }}>
+          {/* Read <i data-feather='arrow-right'></i> */}
+          <Text as="span" css={{ my: 0 }}>
+            Read more
+          </Text>
+          <FiArrowRight style={{ ml: "var(--space-1)" }} />
+        </ButtonLink>
+      </Container>
     </Box>
   );
 }
@@ -1089,57 +1081,67 @@ function Articles({ handleIsReading }) {
   };
 
   return (
-    <ArticlesWrapper as="section">
+    <Flex
+      as="section"
+      css={{
+        minHeight: "calc(100vh - 300px)",
+        justify: "flex-start",
+        direction: "column",
+        pt: "$5",
+        pb: "$9",
+        bgcolor: "$bg0",
+      }}
+    >
       {isFetchingLatest && !hasError && (
-        <Box>
+        <Container>
           <ActivityIndicator />
-          <Typography css={{ textAlign: "center" }}>
-            Fetching articles...
-          </Typography>
-        </Box>
+          <Text css={{ textAlign: "center" }}>Fetching articles...</Text>
+        </Container>
       )}
       {!isFetchingLatest && !hasError && latestEntries.length !== 0 && (
-        <Fragment>
+        <Container>
           <ArticlesFilter
             activeFilter={activeFilter}
             setActiveFilter={getEntriesByTag}
           />
-          <Heading as="h4" css={{ mt: "$9" }}>
-            What is in {capitalize(activeFilter)}?
+          <Heading as="h3" css={{ my: "$8" }}>
+            {activeFilter === Filters.New ? <Fragment>Latest Articles</Fragment> : (
+              <Fragment>All articles in {capitalize(activeFilter)}?</Fragment>
+            )}
           </Heading>
-        </Fragment>
+        </Container>
       )}
       <Box>
-        {isFetchingByTag && <ActivityIndicator />}
-        {!isFetchingByTag &&
-          activeFilter !== Filters.New &&
-          sortedEntries.map((entry) => (
-            <FilteredEntries
-              key={entry[0]}
-              entry={entry}
-              handleIsReading={handleIsReading}
-            />
-          ))}
-        {!isFetchingLatest &&
-          !isFetchingByTag &&
-          activeFilter === Filters.New &&
-          latestEntries.map((entry) => {
-            return (
-              <Article
-                key={entry.id}
-                post={entry}
+        <Container>
+          {isFetchingByTag && <ActivityIndicator />}
+          {!isFetchingByTag &&
+            activeFilter !== Filters.New &&
+            sortedEntries.map((entry) => (
+              <FilteredEntries
+                key={entry[0]}
+                entry={entry}
                 handleIsReading={handleIsReading}
               />
-            );
-          })}
+            ))}
+          {!isFetchingLatest &&
+            !isFetchingByTag &&
+            activeFilter === Filters.New &&
+            latestEntries.map((entry) => {
+              return (
+                <Article
+                  key={entry.id}
+                  post={entry}
+                  handleIsReading={handleIsReading}
+                />
+              );
+            })}
+        </Container>
       </Box>
       {/* offline content */}
       {hasError && (
         <Box css={{ textAlign: "center" }}>
           <Strong css={{ my: 0 }}>Oops, unable to fetch articles</Strong>
-          <Typography css={{ my: 0 }}>
-            The request could not be completed
-          </Typography>
+          <Text css={{ my: 0 }}>The request could not be completed</Text>
           <ButtonLink
             css={{
               mt: "$2",
@@ -1151,7 +1153,7 @@ function Articles({ handleIsReading }) {
           </ButtonLink>
         </Box>
       )}
-    </ArticlesWrapper>
+    </Flex>
   );
 }
 
@@ -1176,7 +1178,7 @@ const SubHeading = ({ children, ...props }) => {
 
 function Resume() {
   return (
-    <ContentWrapper>
+    <Wrapper>
       <Container>
         <Heading as="h2" css={{ textAlign: "center", marginBottom: "$4" }}>
           Resume
@@ -1238,7 +1240,7 @@ function Resume() {
           ))}
         </Tools>
       </Container>
-    </ContentWrapper>
+    </Wrapper>
   );
 }
 
@@ -1285,7 +1287,7 @@ function PostContent({ post }) {
   }, []);
 
   return (
-    <ContentWrapper css={{ pb: "$12" }}>
+    <Wrapper css={{ pb: "$12" }}>
       <Container>
         <Flex css={{ direction: "column", items: "center", justify: "center" }}>
           <Heading as="h2" css={{ mt: "$2", textAlign: "center" }}>
@@ -1298,7 +1300,7 @@ function PostContent({ post }) {
         </Flex>
         <MarkdownContent dangerouslySetInnerHTML={{ __html: content }} />
       </Container>
-    </ContentWrapper>
+    </Wrapper>
   );
 }
 
