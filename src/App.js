@@ -30,16 +30,12 @@ import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 const AppContext = createContext();
 const useAppContext = () => useContext(AppContext);
 
-const SPACE_ID = "jzi320sswukf";
-const ENVIRONMENT_ID = "master";
-const ACCESS_TOKEN =
-  "ea152cee3c2d857297230cc68e141647ee9cbc5bf7cd178fea6e2c58940f86ca";
 
 // contentful_client
 const client = createClient({
-  space: SPACE_ID,
-  environment: ENVIRONMENT_ID,
-  accessToken: ACCESS_TOKEN,
+  space: process.env.REACT_APP_SPACE_ID,
+  environment: process.env.REACT_APP_ENVIRONMENT_ID,
+  accessToken: process.env.REACT_APP_ACCESS_TOKEN,
 });
 
 // stitches config
@@ -1425,11 +1421,3 @@ export default function App() {
     </AppContext.Provider>
   );
 }
-
-// // contentful
-// const client = contentful.createClient({
-//   space: 'jzi320sswukf',
-//   environment: 'master',
-//   accessToken:
-//     'ea152cee3c2d857297230cc68e141647ee9cbc5bf7cd178fea6e2c58940f86ca',
-// });
