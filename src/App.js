@@ -199,6 +199,8 @@ const globalStyles = global({
 // navbar height
 const NAVBAR_HEIGHT = "64px";
 
+// =============== STITCHES COMPONENTS ================= //
+
 const Box = styled("div");
 
 const Flex = styled(Box, {
@@ -228,7 +230,7 @@ const Strong = styled("strong", {
   color: "$text0",
 });
 
-const Container = styled("div", {
+const Container = styled(Box, {
   size: "100%",
   margin: "0 auto",
   px: "$3",
@@ -250,7 +252,7 @@ const spin = keyframes({
   "100%": { transform: "rotate(360deg)" },
 });
 
-const Loader = styled("div", {
+const Loader = styled(Box, {
   size: "1rem",
   borderRadius: "50%",
   border: "3px solid $bg1",
@@ -273,7 +275,7 @@ const Link = styled("a", {
   color: "$text3",
 });
 
-const Brand = styled("div", {
+const Brand = styled(Box, {
   fontSize: "1.1rem",
   fontFamily: "$fonts$title",
   fontWeight: "$bold",
@@ -298,20 +300,21 @@ const Heading = styled("h3", {
   my: "$5",
 });
 
-const SubHeading = styled("h4", {
+const SubHeading = styled(Heading, {
+  m: 0,
   color: "$text0",
-  fontFamily: "$title",
+  fontSize: "100%",
 });
 
-const Image = styled("img", {
-  size: "100%",
-  objectFit: "cover",
-});
+// const Image = styled("img", {
+//   size: "100%",
+//   objectFit: "cover",
+// });
 
-const ImageWrapper = styled("div", {
+const ImageWrapper = styled(Box, {
   margin: "0 auto",
   size: "80px",
-  borderRadius: "50%",
+  borderRadius: "99999px",
   overflow: "hidden",
   position: "relative",
   border: "3px solid $text0",
@@ -398,6 +401,10 @@ const Card = styled(Flex, {
   borderRadius: "4px",
 });
 
+const ResumeCard = styled(Card, {
+  mb: "$4",
+});
+
 const Pill = styled(Box, {
   px: "$2",
   py: "$1",
@@ -408,6 +415,21 @@ const Pill = styled(Box, {
     mr: "$2",
   },
 });
+
+const Social = styled(Link, {
+  my: 0,
+  color: "$text0",
+  "&:not(:last-of-type)": {
+    mr: "$4",
+  },
+  "& *": {
+    size: 24,
+  },
+});
+
+// =============== END STITCHES COMPONENTS ================ //
+
+
 
 // useRemarkable converts markdown to html contents
 function useRemarkable(props) {
@@ -432,8 +454,7 @@ function useRemarkable(props) {
   return md.render(props);
 }
 
-// usePageScroll dynamically reads changes to
-// how much page has been scrolled
+// usePageScroll keeps track of articles page scroll
 function usePageScroll() {
   const [offsetTop, setOffsetTop] = useState(0);
 
@@ -449,64 +470,62 @@ function usePageScroll() {
   return offsetTop;
 }
 
-const Social = styled(Link, {
-  my: 0,
-  color: "$text0",
-  "&:not(:last-of-type)": {
-    mr: "$4",
-  },
-  "& *": {
-    size: 24,
-  },
-});
-
 const IMAGE_ASSETS = "2dmBvE3pqzChaplVyTqdtw";
+const IMAGE_STATUS = {
+  LOADING: "loading",
+  LOADED: "loaded",
+  FAILED: "failed",
+};
 
 function Footer({ activeRoute }) {
   const { cached } = useAppContext();
   const [image, setImage] = useState(() => cached.profileImage.current);
-  const [imageIsLoading, setImageIsLoading] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const fetchCount = useRef(0);
+  const [imageStatus, setImageStatus] = useState(IMAGE_STATUS.LOADING);
+  const count = useRef(1);
 
   const fetchProfilePic = useCallback(async () => {
-    setImageIsLoading(true);
     try {
       const assets = await client.getAsset(IMAGE_ASSETS);
-      setImage(assets.fields.file.url);
-      setImageIsLoading(false);
-    } catch (error) {
-      setImageIsLoading(false);
-      setHasError(true);
+      const url = assets.fields.file.url;
+      setImage(url);
+      setImageStatus(IMAGE_STATUS.LOADED);
+      cached.profileImage.current = url;
+      count.current = 0;
+    } catch (e) {
+      setImageStatus(IMAGE_STATUS.FAILED);
     }
-  }, []);
+  }, [cached.profileImage]);
 
-  // retrieve profile image from
-  // contentful assets
+  const onImageLoaded = () => {
+    setImageStatus(IMAGE_STATUS.LOADED);
+  };
+
+  const onImageError = () => {
+    setImageStatus(IMAGE_STATUS.FAILED);
+  };
+
+  // get profile image
   useEffect(() => {
-    let timer;
-    const delay = 10000;
-
-    if (image.length === 0) {
+    if (imageStatus === IMAGE_STATUS.LOADING) {
       fetchProfilePic();
       return;
     }
 
-    function clearTimer() {
-      fetchCount.current = 0;
-      clearTimeout(timer);
+    let timer;
+    if (imageStatus === IMAGE_STATUS.FAILED) {
+      if (count.current <= 3) {
+        timer = setTimeout(function getPic() {
+          count.current += 1;
+          fetchProfilePic();
+        }, 10000);
+      } 
     }
 
-    if (fetchCount.current <= 3) {
-      timer = setTimeout(function getPic() {
-        fetchCount.current += 1;
-        fetchProfilePic();
-        timer = setTimeout(getPic, delay);
-      }, delay);
-    } else {
-      return clearTimer();
-    }
-  }, [fetchProfilePic, image]);
+    // clean up! timer
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [fetchProfilePic, imageStatus]);
 
   return (
     <FooterWrapper
@@ -516,32 +535,44 @@ function Footer({ activeRoute }) {
     >
       <Container>
         <ImageWrapper>
-          {imageIsLoading && !image.length && (
+          {imageStatus === IMAGE_STATUS.LOADING && (
             <ActivityIndicator css={{ mx: "auto" }} />
           )}
-          {/* TODO: Image loading*/}
-          <Box
+          <Flex
             css={{
+              size: "100%",
               position: "absolute",
               top: 0,
               left: 0,
             }}
           >
-            <Image
-              src={`https:${image}`}
-              alt={hasError ? "YANKEY" : ""}
-              position={hasError ? "relative" : "static"}
-              top={hasError ? 28 : 0}
-              left={hasError ? 11 : 0}
-            />
-          </Box>
+            {imageStatus === IMAGE_STATUS.FAILED && (
+              <Text css={{ m: "auto"}}>
+                YANKEY
+              </Text>
+            )}
+            {imageStatus === IMAGE_STATUS.LOADED && (
+              <Box
+                as="img"
+                src={`https:${image}`}
+                alt="YANKEY"
+                onLoad={onImageLoaded}
+                onError={onImageError}
+                css={{
+                  size: "100%",
+                  objectFit: "cover",
+                }}
+              />
+            )}
+          </Flex>
         </ImageWrapper>
         <Flex
           css={{
             justify: "center",
             my: "$4",
-            flexGap: "$4",
-            color: "grey", // change to grey500
+            "& *:not(:last-of-type)": {
+              mr: "$5",
+            },
           }}
         >
           <Social
@@ -874,8 +905,7 @@ function ArticlesFilter({ activeFilter, setActiveFilter }) {
                 "&:hover": {
                   cursor: "pointer",
                 },
-                borderColor:
-                  isActive ? "transparent" : "lightgrey",
+                borderColor: isActive ? "transparent" : "lightgrey",
                 bgcolor: isActive ? "white" : "transparent",
                 boxShadow: isActive ? "$1" : "none",
               }}
@@ -933,7 +963,9 @@ function FilteredEntries({ entry, handleIsReading }) {
 
   return (
     <Box>
-      <Heading as="h2">{entry[0]}</Heading>
+      <Heading as="h2" css={{ mt: 0 }}>
+        {entry[0]}
+      </Heading>
       <Box css={{ my: "$4" }}>
         {entry[1].map((field, idx) => {
           const { published, title } = field;
@@ -948,7 +980,7 @@ function FilteredEntries({ entry, handleIsReading }) {
                 },
               }}
             >
-              <time datetime={published}>{formatDate(published)}</time>
+              <time dateTime={published}>{formatDate(published)}</time>
               <Text
                 onClick={() => handleOpenArticle(field)}
                 css={{ m: 0, mt: "$1" }}
@@ -978,14 +1010,16 @@ function Article({ post, handleIsReading }) {
       }}
       onClick={() => handleIsReading(post)}
     >
-      <Heading as="h4" css={{m: 0}}>{title}</Heading>
+      <Heading as="h4" css={{ m: 0 }}>
+        {title}
+      </Heading>
       <Text>{summary}</Text>
       <ButtonLink as="button">
         {/* Read <i data-feather='arrow-right'></i> */}
         <Text as="span" css={{ my: 0 }}>
           Read more
         </Text>
-        <FiArrowRight style={{ ml: "var(--space-1)" }} />
+        <FiArrowRight style={{ ml: "$1" }} />
       </ButtonLink>
     </Card>
   );
@@ -1117,7 +1151,7 @@ function Articles({ handleIsReading }) {
             activeFilter={activeFilter}
             setActiveFilter={getEntriesByTag}
           />
-          <Heading as="h3" css={{ my: "$8", color: "grey" }}>
+          <Heading as="h4" css={{ my: "$8", fontWeight: "$normal" }}>
             {activeFilter === Filters.New ? (
               <Fragment>Latest Articles</Fragment>
             ) : (
@@ -1178,16 +1212,27 @@ function Resume() {
       <Container>
         <Title>Resume</Title>
         <Heading>Work Experience</Heading>
-        <Card>
-          <SubHeading>Content Creator</SubHeading>
-          <Text>
-            I create concise code snippets, tips and tricks in javascript and
-            more
+        <ResumeCard>
+          <Text
+            css={{
+              fontSize: "$2",
+              m: 0,
+              mb: "$1",
+              color: "$text0",
+              fontFamily: "$title",
+            }}
+          >
+            2019 &middot; Present
           </Text>
-        </Card>
+          <SubHeading>Content Creator</SubHeading>
+          <Text css={{ m: 0, mt: "$2" }}>
+            I create concise programming articles, code snippets, tips and
+            tricks
+          </Text>
+        </ResumeCard>
         <Heading>Technical Skills</Heading>
-        <Card css={{ mb: "$4" }}>
-          <SubHeading>Proficient in:</SubHeading>
+        <ResumeCard>
+          <SubHeading>Proficient in</SubHeading>
           <Flex
             css={{
               mt: "$4",
@@ -1206,9 +1251,9 @@ function Resume() {
               <Pill key={idx}>{item}</Pill>
             ))}
           </Flex>
-        </Card>
-        <Card css={{ mb: "$4" }}>
-          <SubHeading>Experienced in:</SubHeading>
+        </ResumeCard>
+        <ResumeCard>
+          <SubHeading>Experienced in</SubHeading>
           <Flex
             css={{
               mt: "$4",
@@ -1230,9 +1275,9 @@ function Resume() {
               <Pill key={idx}>{item}</Pill>
             ))}
           </Flex>
-        </Card>
-        <Card css={{ mb: "$4" }}>
-          <SubHeading>Familiar with:</SubHeading>
+        </ResumeCard>
+        <ResumeCard>
+          <SubHeading>Familiar with</SubHeading>
           <Flex
             css={{
               mt: "$4",
@@ -1245,60 +1290,40 @@ function Resume() {
               )
             )}
           </Flex>
-        </Card>
+        </ResumeCard>
         <Heading>Education</Heading>
-        <Card css={{ mb: "$4" }}>
-          <SubHeading>University of Cape Coast, Ghana</SubHeading>
-          <Text className="content-platform">
+        <ResumeCard>
+          <Text
+            css={{
+              fontSize: "$2",
+              m: 0,
+              mb: "$1",
+              color: "$text0",
+              fontFamily: "$title",
+            }}
+          >
+            2008 &middot; 2012
+          </Text>
+          <SubHeading>University of Cape Coast</SubHeading>
+          <Text css={{ m: 0, mt: "$2" }}>
             Department of Molecular Biology & Biotechnology
           </Text>
-        </Card>
+        </ResumeCard>
         <Heading>Hobbies</Heading>
-        <Card>
-          <Flex>
+        <ResumeCard>
+          <Flex css={{ direction: "row" }}>
             {["Teaching", "Gaming", "Reading"].map((item, idx) => (
-              <Pill key={idx}>{item}</Pill>
+              <Pill css={{ mb: 0 }} key={idx}>
+                {item}
+              </Pill>
             ))}
           </Flex>
-        </Card>
+        </ResumeCard>
       </Container>
     </Wrapper>
   );
 }
 
-// handle pages
-function Router({ setActiveRoute, activeRoute, handleIsReading }) {
-  const { cached } = useAppContext();
-  const getContentProps = { activeRoute, setActiveRoute, handleIsReading };
-  const getAboutProps = { setActiveRoute, activeRoute };
-
-  useLayoutEffect(() => {
-    if (activeRoute === Routes.ARTICLES) {
-      window.scrollTo(0, cached.pageYOffset.current);
-    } else {
-      window.scrollTo(0, 0);
-    }
-  }, [activeRoute, cached.pageYOffset]);
-
-  const routes = () => {
-    switch (activeRoute) {
-      case Routes.ARTICLES:
-        return <Articles {...getContentProps} />;
-      case Routes.RESUME:
-        return <Resume />;
-      case Routes.ABOUT:
-        return <About {...getAboutProps} />;
-      case Routes.CONTACT:
-        return <Contact />;
-      default:
-        return <Home {...getContentProps} />;
-    }
-  };
-
-  return <Fragment>{routes()}</Fragment>;
-}
-
-// Post contents
 function PostContent({ post }) {
   let { body, title, published } = post;
   const content = useRemarkable(body);
@@ -1316,7 +1341,7 @@ function PostContent({ post }) {
             {title}
           </Heading>
           <Flex css={{ items: "center", mt: "$2" }}>
-            <FiCalendar size={18} style={{ marginRight: "var(--space-2)" }} />
+            <FiCalendar size={18} style={{ mr: "$2" }} />
             <Time datetime={published}>{formatDate(published)}</Time>
           </Flex>
         </Flex>
@@ -1326,7 +1351,7 @@ function PostContent({ post }) {
   );
 }
 
-// App is the root of the whole application
+// Root app
 export default function App() {
   const [isReading, setIsReading] = useState(false);
   const [isPortfolio, setIsPortfolio] = useState(false);
@@ -1346,6 +1371,7 @@ export default function App() {
     setIsReading(true);
   };
 
+  // cached contents
   const cached = {
     previousRoute,
     profileImage,
@@ -1355,23 +1381,45 @@ export default function App() {
     pageYOffset,
   };
 
-  const commonProps = { activeRoute, setActiveRoute };
-  const navbarProps = {
-    ...commonProps,
+  const getArticlesProps = () => ({
+    activeRoute,
+    setActiveRoute,
+    handleIsReading,
+  });
+
+  const getNavbarProps = () => ({
+    activeRoute,
+    setActiveRoute,
     setIsReading,
     isReading,
     isPortfolio,
     setIsPortfolio,
+  });
+
+  const router = (route) => {
+    switch (route) {
+      case Routes.ARTICLES:
+        return <Articles {...getArticlesProps()} />;
+      case Routes.RESUME:
+        return <Resume />;
+      case Routes.ABOUT:
+        return (
+          <About activeRoute={activeRoute} setActiveRoute={setActiveRoute} />
+        );
+      case Routes.CONTACT:
+        return <Contact />;
+      default:
+        return <Home {...getArticlesProps()} />;
+    }
   };
-  const routerProps = { ...commonProps, handleIsReading };
 
   return (
     <AppContext.Provider value={{ cached }}>
       <Layout as="main">
         {globalStyles()}
-        <NavigationBar {...navbarProps} />
+        <NavigationBar {...getNavbarProps()} />
         {isReading && <PostContent post={post} />}
-        {!isReading && <Router {...routerProps} />}
+        {!isReading && router(activeRoute)}
         <Footer activeRoute={activeRoute} />
       </Layout>
     </AppContext.Provider>
