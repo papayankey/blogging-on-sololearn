@@ -30,7 +30,6 @@ import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 const AppContext = createContext();
 const useAppContext = () => useContext(AppContext);
 
-
 // contentful_client
 const client = createClient({
   space: process.env.REACT_APP_SPACE_ID,
@@ -194,6 +193,7 @@ const globalStyles = global({
 
 // navbar height
 const NAVBAR_HEIGHT = "64px";
+const MEDIUM_SCREEN_HEIGHT = "720";
 
 // =============== STITCHES COMPONENTS ================= //
 
@@ -203,13 +203,12 @@ const Flex = styled(Box, {
   display: "flex",
 });
 
-const ButtonLink = styled(Flex, {
-  items: "center",
-  fontSize: "100%",
-  padding: 0,
+const ButtonLink = styled("button", {
   appearance: "none",
   border: "none",
   bgcolor: "transparent",
+  fontSize: "100%",
+  padding: 0,
   color: "$text3",
 });
 
@@ -425,8 +424,6 @@ const Social = styled(Link, {
 
 // =============== END STITCHES COMPONENTS ================ //
 
-
-
 // useRemarkable converts markdown to html contents
 function useRemarkable(props) {
   const md = new Remarkable({
@@ -514,7 +511,7 @@ function Footer({ activeRoute }) {
           count.current += 1;
           fetchProfilePic();
         }, 10000);
-      } 
+      }
     }
 
     // clean up! timer
@@ -543,9 +540,7 @@ function Footer({ activeRoute }) {
             }}
           >
             {imageStatus === IMAGE_STATUS.FAILED && (
-              <Text css={{ m: "auto"}}>
-                YANKEY
-              </Text>
+              <Text css={{ m: "auto" }}>YANKEY</Text>
             )}
             {imageStatus === IMAGE_STATUS.LOADED && (
               <Box
@@ -739,12 +734,21 @@ function NavigationBar({
   );
 }
 
+
 function Home({ setActiveRoute }) {
+ const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    setHeight(window.innerHeight);
+  }, [])
+
   return (
     <Flex
       as="section"
       css={{
-        minHeight: `calc(100vh - ${NAVBAR_HEIGHT} - 120px)`,
+        minHeight: `calc(100vh - ${NAVBAR_HEIGHT} - ${
+          height >= MEDIUM_SCREEN_HEIGHT ? "0px" : "120px"
+        })`,
         items: "center",
         bgcolor: "$bg0",
       }}
