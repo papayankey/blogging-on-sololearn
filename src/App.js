@@ -203,13 +203,15 @@ const Flex = styled(Box, {
   display: "flex",
 });
 
-const ButtonLink = styled("button", {
+const Button = styled("button", {
   appearance: "none",
   border: "none",
   bgcolor: "transparent",
   fontSize: "100%",
-  padding: 0,
+  py: "$1",
+  pr: "$2",
   color: "$text3",
+  textAlign: "left",
 });
 
 const Text = styled("p", {
@@ -734,23 +736,24 @@ function NavigationBar({
   );
 }
 
-
 function Home({ setActiveRoute }) {
- const [height, setHeight] = useState(0);
+  const [height, setHeight] = useState(0);
 
   useEffect(() => {
     setHeight(window.innerHeight);
-  }, [])
+  }, []);
 
   return (
     <Flex
       as="section"
       css={{
-        minHeight: `calc(100vh - ${NAVBAR_HEIGHT} - ${
-          height >= MEDIUM_SCREEN_HEIGHT ? "0px" : "120px"
-        })`,
+        minHeight:
+          height >= MEDIUM_SCREEN_HEIGHT
+            ? 0
+            : `calc(100vh - ${NAVBAR_HEIGHT} - 120px)`,
         items: "center",
         bgcolor: "$bg0",
+        flex: height >= MEDIUM_SCREEN_HEIGHT ? 1 : "none"
       }}
     >
       <Container>
@@ -767,12 +770,12 @@ function Home({ setActiveRoute }) {
             I created this site to share and document everything I have learned
             and learning with you and the world!
           </Text>
-          <ButtonLink as="button" css={{ mx: "auto" }}>
+          <Button css={{ mx: "auto" }}>
             <Text as="span" onClick={() => setActiveRoute(Routes.CONTACT)}>
               Get to know me better
             </Text>
             <FiArrowRight style={{ marginLeft: "var(--space-1)" }} />
-          </ButtonLink>
+          </Button>
         </Flex>
       </Container>
     </Flex>
@@ -1014,13 +1017,7 @@ function Article({ post, handleIsReading }) {
         {title}
       </Heading>
       <Text>{summary}</Text>
-      <ButtonLink as="button">
-        {/* Read <i data-feather='arrow-right'></i> */}
-        <Text as="span" css={{ my: 0 }}>
-          Read more
-        </Text>
-        <FiArrowRight style={{ ml: "$1" }} />
-      </ButtonLink>
+      <Button>Read more . . .</Button>
     </Card>
   );
 }
@@ -1191,7 +1188,7 @@ function Articles({ handleIsReading }) {
         <Box css={{ textAlign: "center" }}>
           <Strong css={{ my: 0 }}>Oops, unable to fetch articles</Strong>
           <Text css={{ my: 0 }}>The request could not be completed</Text>
-          <ButtonLink
+          <Button
             css={{
               mt: "$2",
               justify: "center",
@@ -1199,7 +1196,7 @@ function Articles({ handleIsReading }) {
             onClick={refetchArticles}
           >
             Try Again
-          </ButtonLink>
+          </Button>
         </Box>
       )}
     </Flex>
