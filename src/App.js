@@ -19,7 +19,6 @@ import {
   FiCalendar,
   FiSun,
   FiChevronLeft,
-  FiArrowRight,
   FiMoon,
 } from "react-icons/fi";
 import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
@@ -43,8 +42,8 @@ const config = {
     fonts: {
       fallback:
         "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
-      title: "Montserrat, $fallback",
-      body: "Inter, $fallback",
+      title: "Inter, $fallback",
+      body: "Roboto, $fallback",
     },
     fontWeights: {
       normal: 400,
@@ -89,6 +88,7 @@ const config = {
       2: "12px",
       3: "14px",
       4: "16px",
+      5: "18px",
     },
     zIndices: {
       1: 100,
@@ -153,8 +153,7 @@ const darkTheme = theme("dark", {
 const globalStyles = global({
   ":root": {
     boxSizing: "border-box",
-    fontSize: "$4",
-    fontFamily: "$fonts$body",
+    fontFamily: "$body",
     fontWeight: "$normal",
     "-webkit-font-smoothing": "antialiased",
     "-moz-osx-font-smoothing": "grayscale",
@@ -174,6 +173,8 @@ const globalStyles = global({
   body: {
     lineHeight: "$3",
     color: "$text0",
+    fontSize: "$4",
+    fontFamily: "$body",
     bcolor: "$bg0",
   },
   "nav ul": {
@@ -207,7 +208,8 @@ const Button = styled("button", {
   appearance: "none",
   border: "none",
   bgcolor: "transparent",
-  fontSize: "100%",
+  fontSize: "$3",
+  m: 0,
   py: "$1",
   pr: "$2",
   color: "$text3",
@@ -215,12 +217,15 @@ const Button = styled("button", {
 });
 
 const Text = styled("p", {
+  fontSize: "$4",
   my: "$3",
 });
 
 const Title = styled("h2", {
   mb: "$4",
   textAlign: "center",
+  textTransform: "uppercase",
+  letterSpacing: "1.2px"
 });
 
 const Strong = styled("strong", {
@@ -272,9 +277,8 @@ const Link = styled("a", {
   color: "$text3",
 });
 
-const Brand = styled(Box, {
-  fontSize: "1.1rem",
-  fontFamily: "$fonts$title",
+const Brand = styled("h3", {
+  fontFamily: "$title",
   fontWeight: "$bold",
   letterSpacing: "1px",
 });
@@ -295,12 +299,14 @@ const Heading = styled("h3", {
   color: "$text1",
   fontFamily: "$title",
   my: "$5",
+  fontSize: "$5"
 });
 
 const SubHeading = styled(Heading, {
   m: 0,
   color: "$text0",
   fontSize: "100%",
+  fontFamily: "$title"
 });
 
 // const Image = styled("img", {
@@ -525,7 +531,7 @@ function Footer({ activeRoute }) {
   return (
     <FooterWrapper
       css={{
-        p: activeRoute === Routes.HOME && "$4",
+        p: "$5"
       }}
     >
       <Container>
@@ -593,10 +599,10 @@ function Footer({ activeRoute }) {
             <FaTwitter />
           </Social>
         </Flex>
-        <Text css={{ my: 0 }}>
+        <Text css={{ my: 0, fontSize: "$3" }}>
           Built with <Link>React</Link> & <Link>Styled-Components</Link>
         </Text>
-        <Text css={{ my: 0 }}>
+        <Text css={{ my: 0, fontSize: "$3" }}>
           &copy; 2019 &ndash; {new Date().getFullYear()} &middot; Benneth Yankey
         </Text>
       </Container>
@@ -719,10 +725,12 @@ function NavigationBar({
               key={i}
               onClick={() => toggleRoute(v)}
               css={{
-                letterSpacing: "1.2px",
+                fontSize: "$3",
+                textTransform: "uppercase",
+                letterSpacing: "1.5px",
                 p: "$2",
                 color: "$text1",
-                "&:hover": {
+                "&:hover, &:active": {
                   bgcolor: "$bg0",
                 },
               }}
@@ -935,12 +943,14 @@ const formatDate = (dateString) => {
     other: "th",
   };
 
+  // create formater
   let formatter = new Intl.DateTimeFormat("en", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
 
+  // transform formater
   return formatter
     .formatToParts(new Date(dateString))
     .map(({ type, value }) => {
@@ -999,12 +1009,9 @@ function FilteredEntries({ entry, handleIsReading }) {
   );
 }
 
-function Article({ post, handleIsReading }) {
-  const { title, summary } = post;
-
-  useEffect(() => {
-    // feather.replace();
-  });
+function Article({post, handleIsReading}) {
+  const {title, summary, published} = post;
+  let date = formatDate(published);
 
   return (
     <Card
@@ -1014,9 +1021,27 @@ function Article({ post, handleIsReading }) {
       }}
       onClick={() => handleIsReading(post)}
     >
-      <Heading as="h4" css={{ m: 0 }}>
+      <Text
+        css={{
+          m: 0,
+          letterSpacing: "0.5px",
+          fontSize: "$1",
+          color: "grey",
+          fontFamily: "$title",
+        }}
+      >
+        {date.toUpperCase()}
+      </Text>
+      <Text
+        css={{
+          m: 0,
+          fontFamily: "$title",
+          fontWeight: "$bold",
+          letterSpacing: "0.5px",
+        }}
+      >
         {title}
-      </Heading>
+      </Text>
       <Text>{summary}</Text>
       <Button>Read more . . .</Button>
     </Card>
@@ -1340,7 +1365,7 @@ function PostContent({ post }) {
           </Heading>
           <Flex css={{ items: "center", mt: "$2" }}>
             <FiCalendar size={18} style={{ mr: "$2" }} />
-            <Time datetime={published}>{formatDate(published)}</Time>
+            <Time dateTime={published}>{formatDate(published)}</Time>
           </Flex>
         </Flex>
         <MarkdownContent dangerouslySetInnerHTML={{ __html: content }} />
