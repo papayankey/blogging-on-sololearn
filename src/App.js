@@ -184,7 +184,7 @@ const globalStyles = global({
     p: 0,
     fontSize: "100%",
     verticalAlign: "baseline",
-    background: "transparent",
+    // background: "transparent",
   },
   "input, select": {
     verticalAlign: "middle",
@@ -753,7 +753,7 @@ function Home({ setActiveRoute }) {
             : `calc(100vh - ${NAVBAR_HEIGHT} - 120px)`,
         items: "center",
         bgcolor: "$bg0",
-        flex: height >= MEDIUM_SCREEN_HEIGHT ? 1 : "none"
+        flex: height >= MEDIUM_SCREEN_HEIGHT ? 1 : "none",
       }}
     >
       <Container>
@@ -770,12 +770,13 @@ function Home({ setActiveRoute }) {
             I created this site to share and document everything I have learned
             and learning with you and the world!
           </Text>
-          <Button css={{ mx: "auto" }}>
-            <Text as="span" onClick={() => setActiveRoute(Routes.CONTACT)}>
-              Get to know me better
-            </Text>
-            <FiArrowRight style={{ marginLeft: "var(--space-1)" }} />
-          </Button>
+          <Link
+            href="#"
+            css={{ mx: "auto" }}
+            onClick={() => setActiveRoute(Routes.CONTACT)}
+          >
+            Get to know me better
+          </Link>
         </Flex>
       </Container>
     </Flex>
