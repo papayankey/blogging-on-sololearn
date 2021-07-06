@@ -15,12 +15,7 @@ import hljs from "highlight.js";
 import "highlight.js/styles/agate.css";
 
 // icons
-import {
-  FiCalendar,
-  FiSun,
-  FiChevronLeft,
-  FiMoon,
-} from "react-icons/fi";
+import { FiCalendar, FiSun, FiChevronLeft, FiMoon } from "react-icons/fi";
 import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 
 // ======================================================= //
@@ -89,6 +84,7 @@ const config = {
       3: "14px",
       4: "16px",
       5: "18px",
+      6: "24px",
     },
     zIndices: {
       1: 100,
@@ -225,7 +221,7 @@ const Title = styled("h2", {
   mb: "$4",
   textAlign: "center",
   textTransform: "uppercase",
-  letterSpacing: "1.2px"
+  letterSpacing: "1.2px",
 });
 
 const Strong = styled("strong", {
@@ -299,14 +295,14 @@ const Heading = styled("h3", {
   color: "$text1",
   fontFamily: "$title",
   my: "$5",
-  fontSize: "$5"
+  fontSize: "$5",
 });
 
 const SubHeading = styled(Heading, {
   m: 0,
   color: "$text0",
   fontSize: "100%",
-  fontFamily: "$title"
+  fontFamily: "$title",
 });
 
 // const Image = styled("img", {
@@ -531,7 +527,7 @@ function Footer({ activeRoute }) {
   return (
     <FooterWrapper
       css={{
-        p: "$5"
+        p: "$5",
       }}
     >
       <Container>
@@ -1009,8 +1005,8 @@ function FilteredEntries({ entry, handleIsReading }) {
   );
 }
 
-function Article({post, handleIsReading}) {
-  const {title, summary, published} = post;
+function Article({ post, handleIsReading }) {
+  const { title, summary, published } = post;
   let date = formatDate(published);
 
   return (
@@ -1359,15 +1355,26 @@ function PostContent({ post }) {
   return (
     <Wrapper css={{ pb: "$12", pt: "calc($12 * 2)" }}>
       <Container>
-        <Flex css={{ direction: "column", items: "center", justify: "center" }}>
-          <Heading as="h2" css={{ mt: "$2", textAlign: "center" }}>
+        <Card css={{ items: "center", justify: "center", py: "$5" }}>
+          <Time
+            dateTime={published}
+            css={{ color: "grey", textAlign: "center", fontSize: "$2" }}
+          >
+            {formatDate(published).toUpperCase()}
+          </Time>
+          <Heading
+            as="h2"
+            css={{
+              m: 0,
+              mt: "$2",
+              letterSpacing: "1.2px",
+              textTransform: "uppercase",
+              textAlign: "center",
+            }}
+          >
             {title}
           </Heading>
-          <Flex css={{ items: "center", mt: "$2" }}>
-            <FiCalendar size={18} style={{ mr: "$2" }} />
-            <Time dateTime={published}>{formatDate(published)}</Time>
-          </Flex>
-        </Flex>
+        </Card>
         <MarkdownContent dangerouslySetInnerHTML={{ __html: content }} />
       </Container>
     </Wrapper>
