@@ -36,12 +36,13 @@ const config = {
   theme: {
     fonts: {
       fallback:
-        "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
-      title: "Inter, $fallback",
+        "-apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+      title: "'Encode Sans SC', $fallback",
       body: "Roboto, $fallback",
     },
     fontWeights: {
       normal: 400,
+      medium: 500,
       bold: 600,
     },
     colors: {
@@ -181,7 +182,6 @@ const globalStyles = global({
     p: 0,
     fontSize: "100%",
     verticalAlign: "baseline",
-    // background: "transparent",
   },
   "input, select": {
     verticalAlign: "middle",
@@ -768,7 +768,7 @@ function Home({ setActiveRoute }) {
           }}
         >
           <Text>Hi, I'm</Text>
-          <Heading css={{ m: 0 }}>BENNETH YANKEY</Heading>
+          <Heading css={{ m: 0, fontSize: "$6" }}>BENNETH YANKEY</Heading>
           <SubHeading>Software Engineer</SubHeading>
           <Text css={{ textAlign: "center" }}>
             I created this site to share and document everything I have learned
