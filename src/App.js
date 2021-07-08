@@ -15,7 +15,7 @@ import hljs from "highlight.js";
 import "highlight.js/styles/agate.css";
 
 // icons
-import { FiCalendar, FiSun, FiChevronLeft, FiMoon } from "react-icons/fi";
+import { FiSun, FiChevronLeft, FiMoon } from "react-icons/fi";
 import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 
 // ======================================================= //
@@ -37,24 +37,38 @@ const config = {
     fonts: {
       fallback:
         "-apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
-      title: "'Encode Sans SC', $fallback",
+      title: "'Lato', $fallback",
       body: "Roboto, $fallback",
     },
     fontWeights: {
       normal: 400,
-      medium: 500,
-      bold: 600,
+      bold: 700,
     },
     colors: {
-      bg0: "rgba(0, 0, 0, 0.05)",
-      bg1: "#FFFFFF",
-      bg2: "#A1A1AA",
-      bg3: "#262626",
-      text0: "#52525B",
-      text1: "#3F3F46",
-      text2: "#3F3F46",
-      text3: "#2563EB",
-      text4: "#EF4444",
+      gray1: "rgb(252, 252, 252)",
+      gray2: "rgb(248, 248, 248)",
+      gray3: "rgb(243, 243, 243)",
+      gray4: "rgb(237, 237, 237)",
+      gray5: "rgb(232, 232, 232)",
+      gray6: "rgb(226, 226, 226)",
+      gray7: "rgb(219, 219, 219)",
+      gray8: "rgb(199, 199, 199)",
+      gray9: "rgb(143, 143, 143)",
+      gray10: "rgb(133, 133, 133)",
+      gray11: "rgb(111, 111, 111)",
+      gray12: "rgb(23, 23, 23)",
+      blue1: "rgb(251, 253, 255)",
+      blue2: "rgb(245, 250, 255)",
+      blue3: "rgb(237, 246, 255)",
+      blue4: "rgb(225, 240, 255)",
+      blue5: "rgb(206, 231, 254)",
+      blue6: "rgb(183, 217, 248)",
+      blue7: "rgb(150, 199, 242)",
+      blue8: "rgb(94, 176, 239)",
+      blue9: "rgb(0, 145, 255)",
+      blue10: "rgb(0, 120, 241)",
+      blue11: "rgb(0, 106, 220)",
+      blue12: "rgb(0, 37, 77)",
     },
     space: {
       1: "5px",
@@ -132,18 +146,8 @@ const config = {
 const { styled, keyframes, global, theme } = createCss(config);
 
 // dark theme
-const darkTheme = theme("dark", {
-  colors: {
-    bg0: "#262626",
-    bg1: "#3A3A3A",
-    bg2: "#3A3A3A",
-    bg3: "#3A3A3A",
-    text0: "#FCCA98",
-    text1: "#FEEAD7",
-    text2: "#FF8700",
-    text3: "#529E52",
-    text4: "#FF8700",
-  },
+const darkTheme = theme("dark-ui", {
+  colors: {},
 });
 
 // global styles
@@ -169,10 +173,10 @@ const globalStyles = global({
     },
   body: {
     lineHeight: "$3",
-    color: "$text0",
+    color: "$gray12",
     fontSize: "$4",
     fontFamily: "$body",
-    bcolor: "$bg0",
+    bcolor: "$gray2",
   },
   "nav ul": {
     listStyle: "none",
@@ -287,8 +291,9 @@ const Wrapper = styled(Flex, {
 
 const Time = styled("time", {
   width: "100%",
-  fontFamily: "$fonts$title",
-  fontSize: "0.8rem",
+  fontFamily: "$title",
+  fontSize: "$1",
+  color: "grey",
 });
 
 const Heading = styled("h3", {
@@ -519,9 +524,11 @@ function Footer({ activeRoute }) {
     }
 
     // clean up! timer
-    return () => {
-      clearTimeout(timer);
-    };
+    if (timer) {
+      return () => {
+        clearTimeout(timer);
+      };
+    }
   }, [fetchProfilePic, imageStatus]);
 
   return (
@@ -767,8 +774,8 @@ function Home({ setActiveRoute }) {
             items: "center",
           }}
         >
-          <Text>Hi, I'm</Text>
-          <Heading css={{ m: 0, fontSize: "$6" }}>BENNETH YANKEY</Heading>
+          <Text css={{ m: 0 }}>Hi, I'm</Text>
+          <Heading css={{ m: 0, fontSize: "$6" }}>Benneth Yankey</Heading>
           <SubHeading>Software Engineer</SubHeading>
           <Text css={{ textAlign: "center" }}>
             I created this site to share and document everything I have learned
@@ -930,15 +937,6 @@ function ArticlesFilter({ activeFilter, setActiveFilter }) {
 
 // formats date
 const formatDate = (dateString) => {
-  const ordinals = {
-    one: "st",
-    two: "nd",
-    few: "rd",
-    many: "th",
-    zero: "th",
-    other: "th",
-  };
-
   // create formater
   let formatter = new Intl.DateTimeFormat("en", {
     day: "numeric",
@@ -950,14 +948,15 @@ const formatDate = (dateString) => {
   return formatter
     .formatToParts(new Date(dateString))
     .map(({ type, value }) => {
-      if (type === "day") {
-        let number = Number(value);
-        let ordinal = new Intl.PluralRules("en-US", { type: "ordinal" }).select(
-          number
-        );
-        return `${number}${ordinals[ordinal]}`;
+      switch (type) {
+        case "day":
+          let number = Number(value);
+          return number < 10 ? `0${number}` : number;
+        case "month":
+          return value.toUpperCase();
+        default:
+          return value;
       }
-      return value;
     })
     .join("");
 };
@@ -984,13 +983,9 @@ function FilteredEntries({ entry, handleIsReading }) {
               key={idx}
               css={{
                 mb: "$2",
-                "& time": {
-                  fontSize: "$3",
-                  color: "grey",
-                },
               }}
             >
-              <time dateTime={published}>{formatDate(published)}</time>
+              <Time dateTime={published}>{formatDate(published)}</Time>
               <Text
                 onClick={() => handleOpenArticle(field)}
                 css={{ m: 0, mt: "$1" }}
@@ -1358,7 +1353,7 @@ function PostContent({ post }) {
         <Card css={{ items: "center", justify: "center", py: "$5" }}>
           <Time
             dateTime={published}
-            css={{ color: "grey", textAlign: "center", fontSize: "$2" }}
+            css={{ textAlign: "center", fontSize: "$2" }}
           >
             {formatDate(published).toUpperCase()}
           </Time>
