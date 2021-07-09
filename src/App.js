@@ -37,7 +37,7 @@ const config = {
     fonts: {
       fallback:
         "-apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
-      title: "'Lato', $fallback",
+      title: "Lato, $fallback",
       body: "Roboto, $fallback",
     },
     fontWeights: {
@@ -89,9 +89,9 @@ const config = {
       4: 1.75,
     },
     shadows: {
-      1: "0 1px 2px lightgrey",
-      2: "0 2px 4px lightgrey",
-      3: "0 4px 8px lightgrey",
+      1: "0 1px 2px $colors$gray7",
+      2: "0 2px 4px $colors$gray7",
+      3: "0 4px 8px $colors$gray7",
     },
     fontSizes: {
       1: "10px",
@@ -176,7 +176,7 @@ const globalStyles = global({
     color: "$gray12",
     fontSize: "$4",
     fontFamily: "$body",
-    bcolor: "$gray2",
+    bgcolor: "$gray3",
   },
   "nav ul": {
     listStyle: "none",
@@ -211,6 +211,7 @@ const Button = styled("button", {
   fontSize: "$3",
   m: 0,
   py: "$1",
+  pl: 0,
   pr: "$2",
   color: "$text3",
   textAlign: "left",
@@ -225,7 +226,7 @@ const Title = styled("h2", {
   mb: "$4",
   textAlign: "center",
   textTransform: "uppercase",
-  letterSpacing: "1.2px",
+  letterSpacing: "2px",
 });
 
 const Strong = styled("strong", {
@@ -255,11 +256,12 @@ const spin = keyframes({
 });
 
 const Loader = styled(Box, {
-  size: "1rem",
-  borderRadius: "50%",
-  border: "3px solid $bg1",
-  borderTopColor: "$text3",
-  borderRightColor: "$text3",
+  size: "30px",
+  borderRadius: "99999px",
+  border: "3px solid $colors$gray6",
+  borderTopColor: "$colors$gray9",
+  borderBottomColor: "$colors$gray9",
+  borderRightColor: "$colors$gray9",
   animation: `${spin} 1s linear infinite`,
 });
 
@@ -269,12 +271,12 @@ const FooterWrapper = styled("footer", {
   textAlign: "center",
   px: 0,
   py: "$4",
-  bgcolor: "$bg1",
-  boxShadow: "0 -1px 2px lightgrey",
+  bgcolor: "white",
+  boxShadow: "0 -2px 4px $colors$gray7",
 });
 
 const Link = styled("a", {
-  color: "$text3",
+  color: "$blue11",
 });
 
 const Brand = styled("h3", {
@@ -290,14 +292,12 @@ const Wrapper = styled(Flex, {
 });
 
 const Time = styled("time", {
-  width: "100%",
   fontFamily: "$title",
-  fontSize: "$1",
-  color: "grey",
+  fontSize: "$2",
+  color: "$gray11",
 });
 
 const Heading = styled("h3", {
-  color: "$text1",
   fontFamily: "$title",
   my: "$5",
   fontSize: "$5",
@@ -305,9 +305,8 @@ const Heading = styled("h3", {
 
 const SubHeading = styled(Heading, {
   m: 0,
-  color: "$text0",
-  fontSize: "100%",
   fontFamily: "$title",
+  color: "$gray11",
 });
 
 // const Image = styled("img", {
@@ -321,7 +320,7 @@ const ImageWrapper = styled(Box, {
   borderRadius: "99999px",
   overflow: "hidden",
   position: "relative",
-  border: "3px solid $text0",
+  border: "3px solid $gray8",
 });
 
 const Layout = styled(Flex, {
@@ -331,7 +330,6 @@ const Layout = styled(Flex, {
 
 const TopBar = styled(Box, {
   minWidth: "100%",
-  boxShadow: "0 2px 0 rgba(0, 0, 0, 0.05)",
   bgcolor: "white",
   left: 0,
   top: 0,
@@ -348,9 +346,8 @@ const MarkdownContent = styled("article", {
     lineHeight: "$4",
   },
   "h3,h4": {
-    fontFamily: "$fonts$title",
+    fontFamily: "$title",
     margin: "$8 0 $4",
-    color: "$text1",
   },
   "h3 + h4": {
     mt: "$1",
@@ -360,9 +357,9 @@ const MarkdownContent = styled("article", {
     p: "$5",
     lineHeight: "$2",
     color: "white",
-    bgcolor: "$bg3",
+    bgcolor: "$gray12",
     margin: "$4 0",
-    borderRadius: "4px",
+    borderRadius: "8px",
     width: "100%",
     overflow: "auto",
     position: "relative",
@@ -370,7 +367,6 @@ const MarkdownContent = styled("article", {
   },
   mark: {
     fontWeight: "$bold",
-    color: "$text4",
     p: "2px",
     borderRadius: "2px",
     "& code": {
@@ -388,10 +384,10 @@ const MarkdownContent = styled("article", {
     top: "-2.2em",
   },
   "& .info": {
-    border: "1px solid green",
-    color: "green",
+    border: "1px solid $colors$blue11",
+    borderRadius: "4px",
+    color: "$blue11",
     padding: "$3",
-    fontSize: "0.9rem",
     position: "relative",
   },
 });
@@ -400,8 +396,7 @@ const Card = styled(Flex, {
   direction: "column",
   bgcolor: "white",
   p: "$3",
-  boxShadow: "$1",
-  color: "$text1",
+  boxShadow: "$2",
   borderRadius: "4px",
 });
 
@@ -412,7 +407,7 @@ const ResumeCard = styled(Card, {
 const Pill = styled(Box, {
   px: "$2",
   py: "$1",
-  bgcolor: "$bg0",
+  bgcolor: "$gray5",
   borderRadius: "99999px",
   mb: "$2",
   "&:not(:last-of-type)": {
@@ -422,7 +417,7 @@ const Pill = styled(Box, {
 
 const Social = styled(Link, {
   my: 0,
-  color: "$text0",
+  color: "$gray9",
   "&:not(:last-of-type)": {
     mr: "$4",
   },
@@ -479,7 +474,7 @@ const IMAGE_STATUS = {
   FAILED: "failed",
 };
 
-function Footer({ activeRoute }) {
+function Footer() {
   const { cached } = useAppContext();
   const [image, setImage] = useState(() => cached.profileImage.current);
   const [imageStatus, setImageStatus] = useState(IMAGE_STATUS.LOADING);
@@ -602,10 +597,10 @@ function Footer({ activeRoute }) {
             <FaTwitter />
           </Social>
         </Flex>
-        <Text css={{ my: 0, fontSize: "$3" }}>
-          Built with <Link>React</Link> & <Link>Styled-Components</Link>
+        <Text css={{ my: 0, fontSize: "$3", color: "$gray11" }}>
+          Built with React & Stitches JS
         </Text>
-        <Text css={{ my: 0, fontSize: "$3" }}>
+        <Text css={{ my: 0, fontSize: "$3", color: "$gray11" }}>
           &copy; 2019 &ndash; {new Date().getFullYear()} &middot; Benneth Yankey
         </Text>
       </Container>
@@ -679,8 +674,13 @@ function NavigationBar({
   };
 
   return (
-    <Box as="header" css={{ boxShadow: "$1" }}>
-      <TopBar css={{ position: isReading ? "fixed" : "static" }}>
+    <Box as="header" css={{ boxShadow: "$gray8" }}>
+      <TopBar
+        css={{
+          position: isReading ? "fixed" : "static",
+          boxShadow: isReading ? "$2" : "none",
+        }}
+      >
         <Container>
           <Flex
             css={{
@@ -719,8 +719,9 @@ function NavigationBar({
           css={{
             justify: "center",
             items: "center",
-            py: "$1",
+            height: 50,
             overflowX: "auto",
+            bgcolor: "$gray2",
           }}
         >
           {navItems.map((v, i) => (
@@ -732,9 +733,8 @@ function NavigationBar({
                 textTransform: "uppercase",
                 letterSpacing: "1.5px",
                 p: "$2",
-                color: "$text1",
                 "&:hover, &:active": {
-                  bgcolor: "$bg0",
+                  bgcolor: "$gray4",
                 },
               }}
             >
@@ -775,7 +775,9 @@ function Home({ setActiveRoute }) {
           }}
         >
           <Text css={{ m: 0 }}>Hi, I'm</Text>
-          <Heading css={{ m: 0, fontSize: "$6" }}>Benneth Yankey</Heading>
+          <Heading css={{ m: 0, fontSize: "$6", letterSpacing: "1.2px" }}>
+            BENNETH YANKEY
+          </Heading>
           <SubHeading>Software Engineer</SubHeading>
           <Text css={{ textAlign: "center" }}>
             I created this site to share and document everything I have learned
@@ -807,19 +809,18 @@ function About({ setActiveRoute, activeRoute }) {
       <Container>
         <Title>About me</Title>
         <Text>
-          <Strong>YANKEY </Strong>is a tech blog of{" "}
-          <Link href="#">Benneth Yankey</Link>, a software engineer and high
-          school biology teacher from Accra, Ghana.
+          This is a tech blog of <Link href="#">Benneth Yankey</Link>, a
+          software engineer and high school biology teacher from Accra, Ghana.
         </Text>
         <Text>
           He is passionate about software development and solving problems. He
-          programs mostly in Javascript (Typescript) and Go.
+          programs mostly in JavaScript (TypeScript), Go and Java.
         </Text>
         <Text>
-          His primary machine is Lenovo Ideapad running Fedora Linux. Vim is his
-          text editor of choice.
+          His primary machine is Lenovo Ideapad running Fedora Linux. His editor
+          of choice, Vim, always hacking the juices out of it.
         </Text>
-        <Heading as="h3">Other Interests</Heading>
+        <Heading css={{mb: 0}}>Other Interests</Heading>
         <Text>Aside programming here are other areas of his interest:</Text>
         <Text>
           <Strong>Teaching: </Strong>
@@ -832,7 +833,7 @@ function About({ setActiveRoute, activeRoute }) {
           He loves and has been gaming since he was 5, playing SEGA. He
           currently owns a PS4 Console and enjoys playing FIFA.
         </Text>
-        <Heading as="h3">Get in touch</Heading>
+        <Heading css={{mb: 0}}>Get in touch</Heading>
         <Text>
           You can contact him via{" "}
           <Link onClick={handleRouteToggle}>contact page</Link>. He is happy to
@@ -849,12 +850,14 @@ function Contact() {
     <Wrapper>
       <Container>
         <Title>Contact me</Title>
-        <Text>Thanks for your interest in getting in touch with me.</Text>
-        <Text>
+        <Text css={{ m: 0 }}>
+          Thanks for your interest in getting in touch with me.
+        </Text>
+        <Text css={{ m: 0 }}>
           Please contact me via the appropriate medium, but keep in mind that
           I'll only respond to legit messages.
         </Text>
-        <Heading as="h3">Email</Heading>
+        <Heading css={{ mb: 0 }}>Email</Heading>
         <Text>
           My email address is{" "}
           <Link href="mailto: yankeybenneth@gmail.com">
@@ -862,7 +865,7 @@ function Contact() {
           </Link>
           . This is the best way to grab my attention in minute literally.
         </Text>
-        <Heading as="h3">Instagram</Heading>
+        <Heading css={{ mb: 0 }}>Instagram</Heading>
         <Text>
           I use instagram primarily to share things including tips and tricks
           with the tech community. Kindly follow me{" "}
@@ -870,13 +873,13 @@ function Contact() {
           want to ask a question, Instagram is the right medium and will
           definitely respond ASAP.
         </Text>
-        <Heading as="h3">What I will respond to</Heading>
+        <Heading css={{ mb: 0 }}>What I will respond to</Heading>
         <Text>
           I will definitely respond and be very happy to discuss with you on
           projects and collaborations. Any questions about contents produced on
           this blog will also get a response.
         </Text>
-        <Heading as="h3">What I won't respond to</Heading>
+        <Heading css={{ mb: 0 }}>What I won't respond to</Heading>
         <Text>I won't respond if message is unclear enough.</Text>
       </Container>
     </Wrapper>
@@ -916,13 +919,8 @@ function ArticlesFilter({ activeFilter, setActiveFilter }) {
             <Pill
               key={idx}
               css={{
-                border: "1px solid",
-                "&:hover": {
-                  cursor: "pointer",
-                },
-                borderColor: isActive ? "transparent" : "lightgrey",
-                bgcolor: isActive ? "white" : "transparent",
-                boxShadow: isActive ? "$1" : "none",
+                bgcolor: isActive ? "white" : "$gray5",
+                boxShadow: isActive ? "$2" : "none"
               }}
               onClick={() => setActiveFilter(filter)}
             >
@@ -972,7 +970,7 @@ function FilteredEntries({ entry, handleIsReading }) {
 
   return (
     <Box>
-      <Heading as="h2" css={{ mt: 0 }}>
+      <Heading css={{ m: 0, fontSize: "$6" }}>
         {entry[0]}
       </Heading>
       <Box css={{ my: "$4" }}>
@@ -1016,8 +1014,8 @@ function Article({ post, handleIsReading }) {
         css={{
           m: 0,
           letterSpacing: "0.5px",
-          fontSize: "$1",
-          color: "grey",
+          fontSize: "$2",
+          color: "$gray11",
           fontFamily: "$title",
         }}
       >
@@ -1028,13 +1026,22 @@ function Article({ post, handleIsReading }) {
           m: 0,
           fontFamily: "$title",
           fontWeight: "$bold",
-          letterSpacing: "0.5px",
+          letterSpacing: "0.8px",
+          fontSize: "$5",
         }}
       >
         {title}
       </Text>
       <Text>{summary}</Text>
-      <Button>Read more . . .</Button>
+      <Pill
+        css={{
+          mb: 0,
+          maxWidth: "max-content",
+          "&:hover, &:active": { bgcolor: "$gray6" },
+        }}
+      >
+        Read on
+      </Pill>
     </Card>
   );
 }
@@ -1180,11 +1187,14 @@ function Articles({ handleIsReading }) {
           {!isFetchingByTag &&
             activeFilter !== Filters.New &&
             sortedEntries.map((entry) => (
-              <FilteredEntries
-                key={entry[0]}
-                entry={entry}
-                handleIsReading={handleIsReading}
-              />
+              <Fragment key={entry[0]}>
+                <FilteredEntries
+                  entry={entry}
+                  handleIsReading={handleIsReading}
+                />
+                {/** spacer */}
+                <Box css={{my: "$8"}}/>{" "}
+              </Fragment>
             ))}
           {!isFetchingLatest &&
             !isFetchingByTag &&
@@ -1232,16 +1242,16 @@ function Resume() {
               fontSize: "$2",
               m: 0,
               mb: "$1",
-              color: "$text0",
+              color: "$gray11",
               fontFamily: "$title",
             }}
           >
             2019 &middot; Present
           </Text>
-          <SubHeading>Content Creator</SubHeading>
+          <SubHeading css={{ color: "$gray12" }}>Content Creator</SubHeading>
           <Text css={{ m: 0, mt: "$2" }}>
             I create concise programming articles, code snippets, tips and
-            tricks
+            tricks in wide variety of languages, libraries and tools
           </Text>
         </ResumeCard>
         <Heading>Technical Skills</Heading>
@@ -1312,13 +1322,15 @@ function Resume() {
               fontSize: "$2",
               m: 0,
               mb: "$1",
-              color: "$text0",
+              color: "$gray11",
               fontFamily: "$title",
             }}
           >
             2008 &middot; 2012
           </Text>
-          <SubHeading>University of Cape Coast</SubHeading>
+          <SubHeading css={{ color: "$gray12" }}>
+            University of Cape Coast
+          </SubHeading>
           <Text css={{ m: 0, mt: "$2" }}>
             Department of Molecular Biology & Biotechnology
           </Text>
@@ -1338,7 +1350,7 @@ function Resume() {
   );
 }
 
-function PostContent({ post }) {
+function PostContent({post}) {
   let { body, title, published } = post;
   const content = useRemarkable(body);
 
