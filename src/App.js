@@ -316,11 +316,11 @@ const SubHeading = styled(Heading, {
 
 const ImageWrapper = styled(Box, {
   margin: "0 auto",
-  size: "80px",
-  borderRadius: "99999px",
+  size: 80,
+  borderRadius: 99999,
   overflow: "hidden",
   position: "relative",
-  border: "3px solid $gray8",
+  boxShadow: "$2",
 });
 
 const Layout = styled(Flex, {
@@ -518,7 +518,7 @@ function Footer() {
       }
     }
 
-    // clean up! timer
+    // clean up! timer if set
     if (timer) {
       return () => {
         clearTimeout(timer);
@@ -820,7 +820,7 @@ function About({ setActiveRoute, activeRoute }) {
           His primary machine is Lenovo Ideapad running Fedora Linux. His editor
           of choice, Vim, always hacking the juices out of it.
         </Text>
-        <Heading css={{mb: 0}}>Other Interests</Heading>
+        <Heading css={{ mb: 0 }}>Other Interests</Heading>
         <Text>Aside programming here are other areas of his interest:</Text>
         <Text>
           <Strong>Teaching: </Strong>
@@ -833,7 +833,7 @@ function About({ setActiveRoute, activeRoute }) {
           He loves and has been gaming since he was 5, playing SEGA. He
           currently owns a PS4 Console and enjoys playing FIFA.
         </Text>
-        <Heading css={{mb: 0}}>Get in touch</Heading>
+        <Heading css={{ mb: 0 }}>Get in touch</Heading>
         <Text>
           You can contact him via{" "}
           <Link onClick={handleRouteToggle}>contact page</Link>. He is happy to
@@ -920,7 +920,7 @@ function ArticlesFilter({ activeFilter, setActiveFilter }) {
               key={idx}
               css={{
                 bgcolor: isActive ? "white" : "$gray5",
-                boxShadow: isActive ? "$2" : "none"
+                boxShadow: isActive ? "$2" : "none",
               }}
               onClick={() => setActiveFilter(filter)}
             >
@@ -970,9 +970,17 @@ function FilteredEntries({ entry, handleIsReading }) {
 
   return (
     <Box>
-      <Heading css={{ m: 0, fontSize: "$6" }}>
-        {entry[0]}
-      </Heading>
+        <Heading
+        css={{
+          m: 0,
+            fontSize: "calc($6 * 1.5)",
+            color: "$gray11",
+            letterSpacing: 1 
+          }}
+        >
+          {entry[0]}
+        </Heading>
+      <Box />
       <Box css={{ my: "$4" }}>
         {entry[1].map((field, idx) => {
           const { published, title } = field;
@@ -1033,15 +1041,7 @@ function Article({ post, handleIsReading }) {
         {title}
       </Text>
       <Text>{summary}</Text>
-      <Pill
-        css={{
-          mb: 0,
-          maxWidth: "max-content",
-          "&:hover, &:active": { bgcolor: "$gray6" },
-        }}
-      >
-        Read on
-      </Pill>
+      <Text css={{ m: 0, fontSize: "$3", color: "$gray11" }}>Read more</Text>
     </Card>
   );
 }
@@ -1193,7 +1193,7 @@ function Articles({ handleIsReading }) {
                   handleIsReading={handleIsReading}
                 />
                 {/** spacer */}
-                <Box css={{my: "$8"}}/>{" "}
+                <Box css={{ my: "$8" }} />{" "}
               </Fragment>
             ))}
           {!isFetchingLatest &&
@@ -1350,7 +1350,7 @@ function Resume() {
   );
 }
 
-function PostContent({post}) {
+function PostContent({ post }) {
   let { body, title, published } = post;
   const content = useRemarkable(body);
 
