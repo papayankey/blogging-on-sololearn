@@ -229,6 +229,12 @@ const Title = styled("h2", {
   letterSpacing: "2px",
 });
 
+const SubTitle = styled("h3", {
+  mt: "$4",
+  fontSize: "calc($6 - 4px)",
+  fontFamily: "$title",
+});
+
 const Strong = styled("strong", {
   color: "$text0",
 });
@@ -300,19 +306,14 @@ const Time = styled("time", {
 const Heading = styled("h3", {
   fontFamily: "$title",
   my: "$5",
-  fontSize: "$5",
+  fontSize: "$6"
 });
 
-const SubHeading = styled(Heading, {
-  m: 0,
+const SubHeading = styled("h4", {
+  mt: "$4",
+  fontSize: "calc($6 - 4px)",
   fontFamily: "$title",
-  color: "$gray11",
 });
-
-// const Image = styled("img", {
-//   size: "100%",
-//   objectFit: "cover",
-// });
 
 const ImageWrapper = styled(Box, {
   margin: "0 auto",
@@ -320,7 +321,7 @@ const ImageWrapper = styled(Box, {
   borderRadius: 99999,
   overflow: "hidden",
   position: "relative",
-  boxShadow: "$2",
+  boxShadow: "$3",
 });
 
 const Layout = styled(Flex, {
@@ -346,14 +347,14 @@ const MarkdownContent = styled("article", {
     lineHeight: "$4",
   },
   "h3,h4": {
-    fontFamily: "$title",
+    fontFamily: "$fonts$title",
     margin: "$8 0 $4",
   },
   "h3 + h4": {
     mt: "$1",
   },
   pre: {
-    fontSize: "$3",
+    // fontSize: "$4",
     p: "$5",
     lineHeight: "$2",
     color: "white",
@@ -366,12 +367,10 @@ const MarkdownContent = styled("article", {
     zIndex: "$1",
   },
   mark: {
-    fontWeight: "$bold",
-    p: "2px",
-    borderRadius: "2px",
+    bgcolor: "$gray7",
     "& code": {
-      fontFamily: "$body",
-    },
+      p: 3
+    }
   },
   "& #post-img": {
     my: "$8",
@@ -400,8 +399,9 @@ const Card = styled(Flex, {
   borderRadius: "4px",
 });
 
-const ResumeCard = styled(Card, {
-  mb: "$4",
+const CardTitle = styled("h4", {
+  fontSize: "$4",
+  color: "$gray12"
 });
 
 const Pill = styled(Box, {
@@ -674,11 +674,11 @@ function NavigationBar({
   };
 
   return (
-    <Box as="header" css={{ boxShadow: "$gray8" }}>
+    <Box as="header" css={{ boxShadow: "$2" }}>
       <TopBar
         css={{
           position: isReading ? "fixed" : "static",
-          boxShadow: isReading ? "$2" : "none",
+          boxShadow: "$2",
         }}
       >
         <Container>
@@ -719,7 +719,7 @@ function NavigationBar({
           css={{
             justify: "center",
             items: "center",
-            height: 50,
+            height: "auto",
             overflowX: "auto",
             bgcolor: "$gray2",
           }}
@@ -729,10 +729,12 @@ function NavigationBar({
               key={i}
               onClick={() => toggleRoute(v)}
               css={{
+                fontFamily: "$title",
                 fontSize: "$3",
                 textTransform: "uppercase",
                 letterSpacing: "1.5px",
                 p: "$2",
+                py: "$3",
                 "&:hover, &:active": {
                   bgcolor: "$gray4",
                 },
@@ -778,15 +780,16 @@ function Home({ setActiveRoute }) {
           <Heading css={{ m: 0, fontSize: "$6", letterSpacing: "1.2px" }}>
             BENNETH YANKEY
           </Heading>
-          <SubHeading>Software Engineer</SubHeading>
+          <SubHeading css={{ m: 0 }}>Software Engineer</SubHeading>
           <Text css={{ textAlign: "center" }}>
-            I created this site to share and document everything I have learned
-            and learning with you and the world!
+            Welcome to my space and garden on the internet, where I keep notes,
+            and documents everything I have learned and learning with you and
+            the world!
           </Text>
           <Link
             href="#"
             css={{ mx: "auto" }}
-            onClick={() => setActiveRoute(Routes.CONTACT)}
+            onClick={() => setActiveRoute(Routes.ABOUT)}
           >
             Get to know me better
           </Link>
@@ -820,7 +823,7 @@ function About({ setActiveRoute, activeRoute }) {
           His primary machine is Lenovo Ideapad running Fedora Linux. His editor
           of choice, Vim, always hacking the juices out of it.
         </Text>
-        <Heading css={{ mb: 0 }}>Other Interests</Heading>
+        <SubTitle>Other Interests</SubTitle>
         <Text>Aside programming here are other areas of his interest:</Text>
         <Text>
           <Strong>Teaching: </Strong>
@@ -833,10 +836,10 @@ function About({ setActiveRoute, activeRoute }) {
           He loves and has been gaming since he was 5, playing SEGA. He
           currently owns a PS4 Console and enjoys playing FIFA.
         </Text>
-        <Heading css={{ mb: 0 }}>Get in touch</Heading>
+        <SubTitle>Get in touch</SubTitle>
         <Text>
           You can contact him via{" "}
-          <Link onClick={handleRouteToggle}>contact page</Link>. He is happy to
+          <Link href="#" onClick={handleRouteToggle}>contact page</Link>. He is happy to
           respond to projects discussion, collaborations and corrections or
           suggestions of any material.
         </Text>
@@ -853,11 +856,11 @@ function Contact() {
         <Text css={{ m: 0 }}>
           Thanks for your interest in getting in touch with me.
         </Text>
-        <Text css={{ m: 0 }}>
+        <Text>
           Please contact me via the appropriate medium, but keep in mind that
           I'll only respond to legit messages.
         </Text>
-        <Heading css={{ mb: 0 }}>Email</Heading>
+        <SubTitle>Email</SubTitle>
         <Text>
           My email address is{" "}
           <Link href="mailto: yankeybenneth@gmail.com">
@@ -865,7 +868,7 @@ function Contact() {
           </Link>
           . This is the best way to grab my attention in minute literally.
         </Text>
-        <Heading css={{ mb: 0 }}>Instagram</Heading>
+        <SubTitle>Instagram</SubTitle>
         <Text>
           I use instagram primarily to share things including tips and tricks
           with the tech community. Kindly follow me{" "}
@@ -873,13 +876,13 @@ function Contact() {
           want to ask a question, Instagram is the right medium and will
           definitely respond ASAP.
         </Text>
-        <Heading css={{ mb: 0 }}>What I will respond to</Heading>
+        <SubTitle>What I will respond to</SubTitle>
         <Text>
           I will definitely respond and be very happy to discuss with you on
           projects and collaborations. Any questions about contents produced on
           this blog will also get a response.
         </Text>
-        <Heading css={{ mb: 0 }}>What I won't respond to</Heading>
+        <SubTitle>What I won't respond to</SubTitle>
         <Text>I won't respond if message is unclear enough.</Text>
       </Container>
     </Wrapper>
@@ -935,14 +938,12 @@ function ArticlesFilter({ activeFilter, setActiveFilter }) {
 
 // formats date
 const formatDate = (dateString) => {
-  // create formater
   let formatter = new Intl.DateTimeFormat("en", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
 
-  // transform formater
   return formatter
     .formatToParts(new Date(dateString))
     .map(({ type, value }) => {
@@ -1153,7 +1154,7 @@ function Articles({ handleIsReading }) {
       as="section"
       css={{
         minHeight: "calc(100vh - 300px)",
-        justify: "flex-start",
+        justify: isFetchingLatest ? "center" : "flex-start",
         direction: "column",
         pt: "$5",
         pb: "$9",
@@ -1219,10 +1220,11 @@ function Articles({ handleIsReading }) {
             css={{
               mt: "$2",
               justify: "center",
+              color: "$blue11"
             }}
             onClick={refetchArticles}
           >
-            Try Again
+            Try again
           </Button>
         </Box>
       )}
@@ -1235,8 +1237,8 @@ function Resume() {
     <Wrapper>
       <Container>
         <Title>Resume</Title>
-        <Heading>Work Experience</Heading>
-        <ResumeCard>
+        <SubTitle>Work Experience</SubTitle>
+        <Card css={{ my: "$4" }}>
           <Text
             css={{
               fontSize: "$2",
@@ -1248,15 +1250,15 @@ function Resume() {
           >
             2019 &middot; Present
           </Text>
-          <SubHeading css={{ color: "$gray12" }}>Content Creator</SubHeading>
+          <CardTitle>Content Creator</CardTitle>
           <Text css={{ m: 0, mt: "$2" }}>
             I create concise programming articles, code snippets, tips and
             tricks in wide variety of languages, libraries and tools
           </Text>
-        </ResumeCard>
-        <Heading>Technical Skills</Heading>
-        <ResumeCard>
-          <SubHeading>Proficient in</SubHeading>
+        </Card>
+        <SubTitle>Technical Skills</SubTitle>
+        <Card css={{ my: "$4" }}>
+          <CardTitle>Proficient in</CardTitle>
           <Flex
             css={{
               mt: "$4",
@@ -1267,17 +1269,17 @@ function Resume() {
               "Javascript",
               "Typescript",
               "React",
-              "HTML",
-              "CSS",
+              "HTML5",
+              "CSS3",
               "Styled-Component",
               "Material-UI",
             ].map((item, idx) => (
               <Pill key={idx}>{item}</Pill>
             ))}
           </Flex>
-        </ResumeCard>
-        <ResumeCard>
-          <SubHeading>Experienced in</SubHeading>
+        </Card>
+        <Card css={{ my: "$4" }}>
+          <CardTitle>Experienced in</CardTitle>
           <Flex
             css={{
               mt: "$4",
@@ -1299,24 +1301,30 @@ function Resume() {
               <Pill key={idx}>{item}</Pill>
             ))}
           </Flex>
-        </ResumeCard>
-        <ResumeCard>
-          <SubHeading>Familiar with</SubHeading>
+        </Card>
+        <Card css={{ my: "$4" }}>
+          <CardTitle>Familiar with</CardTitle>
           <Flex
             css={{
               mt: "$4",
               flexWrap: "wrap",
             }}
           >
-            {["Java", "MongoDB", "Webpack", "Eslint", "SSH", "Prettier"].map(
-              (item, idx) => (
-                <Pill key={idx}>{item}</Pill>
-              )
-            )}
+            {[
+              "Java",
+              "Golang",
+              "MongoDB",
+              "Webpack",
+              "Eslint",
+              "SSH",
+              "Prettier",
+            ].map((item, idx) => (
+              <Pill key={idx}>{item}</Pill>
+            ))}
           </Flex>
-        </ResumeCard>
-        <Heading>Education</Heading>
-        <ResumeCard>
+        </Card>
+        <SubTitle>Education</SubTitle>
+        <Card css={{ my: "$4" }}>
           <Text
             css={{
               fontSize: "$2",
@@ -1328,15 +1336,13 @@ function Resume() {
           >
             2008 &middot; 2012
           </Text>
-          <SubHeading css={{ color: "$gray12" }}>
-            University of Cape Coast
-          </SubHeading>
+          <CardTitle>University of Cape Coast</CardTitle>
           <Text css={{ m: 0, mt: "$2" }}>
             Department of Molecular Biology & Biotechnology
           </Text>
-        </ResumeCard>
-        <Heading>Hobbies</Heading>
-        <ResumeCard>
+        </Card>
+        <SubTitle>Hobbies</SubTitle>
+        <Card css={{ my: "$4" }}>
           <Flex css={{ direction: "row" }}>
             {["Teaching", "Gaming", "Reading"].map((item, idx) => (
               <Pill css={{ mb: 0 }} key={idx}>
@@ -1344,7 +1350,7 @@ function Resume() {
               </Pill>
             ))}
           </Flex>
-        </ResumeCard>
+        </Card>
       </Container>
     </Wrapper>
   );
@@ -1374,9 +1380,9 @@ function PostContent({ post }) {
             css={{
               m: 0,
               mt: "$2",
-              letterSpacing: "1.2px",
-              textTransform: "uppercase",
+              letterSpacing: 1,
               textAlign: "center",
+              fontSize: "$6"
             }}
           >
             {title}
@@ -1450,10 +1456,12 @@ export default function App() {
     }
   };
 
+  // adds global styles
+  globalStyles();
+
   return (
     <AppContext.Provider value={{ cached }}>
       <Layout as="main">
-        {globalStyles()}
         <NavigationBar {...getNavbarProps()} />
         {isReading && <PostContent post={post} />}
         {!isReading && router(activeRoute)}
