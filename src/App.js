@@ -37,11 +37,12 @@ const config = {
     fonts: {
       fallback:
         "-apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
-      title: "Lato, $fallback",
-      body: "Roboto, $fallback",
+      sans: "Roboto, $fallback",
     },
     fontWeights: {
+      light: 300,
       normal: 400,
+      medium: 500,
       bold: 700,
     },
     colors: {
@@ -69,6 +70,15 @@ const config = {
       blue10: "rgb(0, 120, 241)",
       blue11: "rgb(0, 106, 220)",
       blue12: "rgb(0, 37, 77)",
+
+      // semantic names
+      bg0: "$gray3",
+      bg1: "white",
+      bg2: "$gray5",
+      bg3: "$gray7",
+      text0: "$gray12",
+      text1: "$gray11",
+      text2: "$blue11",
     },
     space: {
       1: "5px",
@@ -89,9 +99,9 @@ const config = {
       4: 1.75,
     },
     shadows: {
-      1: "0 1px 2px $colors$gray7",
-      2: "0 2px 4px $colors$gray7",
-      3: "0 4px 8px $colors$gray7",
+      1: "1px 1px 0 $colors$bg3, -1px -1px 0 $colors$bg3",
+      2: "1.2px 1.2px 0 $colors$bg3, -1.2px -1.2px 0 $colors$bg3",
+      3: "1.4px 1.4px 0 $colors$bg3, -1.4px -1.4px 0 $colors$bg3",
     },
     fontSizes: {
       1: "10px",
@@ -138,24 +148,27 @@ const config = {
     justify: () => (value) => ({ justifyContent: value }),
     items: () => (value) => ({ alignItems: value }),
   },
-  media: {
-    bp1: "(min-width: 640px)",
-  },
 };
 
 const { styled, keyframes, global, theme } = createCss(config);
 
 // dark theme
 const darkTheme = theme("dark-ui", {
-  colors: {},
+  colors: {
+    bg0: "rgb(21, 23, 24)",
+    bg1: "rgb(32, 36, 37)",
+    bg2: "rgb(43, 47, 49)",
+    bg3: "rgb(26, 29, 30)",
+    text0: "rgb(236, 237, 238)",
+    text1: "rgb(155, 161, 166)",
+    // text2: "$blue11",
+  },
 });
 
 // global styles
 const globalStyles = global({
   ":root": {
     boxSizing: "border-box",
-    fontFamily: "$body",
-    fontWeight: "$normal",
     "-webkit-font-smoothing": "antialiased",
     "-moz-osx-font-smoothing": "grayscale",
   },
@@ -173,10 +186,11 @@ const globalStyles = global({
     },
   body: {
     lineHeight: "$3",
-    color: "$gray12",
+    color: "$text0",
     fontSize: "$4",
-    fontFamily: "$body",
-    bgcolor: "$gray3",
+    fontFamily: "$sans",
+    fontWeight: "$normal",
+    bgcolor: "$bg0",
   },
   "nav ul": {
     listStyle: "none",
@@ -232,7 +246,7 @@ const Title = styled("h2", {
 const SubTitle = styled("h3", {
   mt: "$4",
   fontSize: "calc($6 - 4px)",
-  fontFamily: "$title",
+  letterSpacing: 1,
 });
 
 const Strong = styled("strong", {
@@ -240,15 +254,10 @@ const Strong = styled("strong", {
 });
 
 const Container = styled(Box, {
-  size: "100%",
+  width: "100%",
+  maxWidth: 375, // iphoneX-galaxyS9
   margin: "0 auto",
   px: "$3",
-  "@bp1": {
-    "&": {
-      width: "70%",
-      p: 0,
-    },
-  },
 });
 
 const ActivityWrapper = styled(Flex, {
@@ -273,38 +282,34 @@ const Loader = styled(Box, {
 
 const FooterWrapper = styled("footer", {
   width: "100vw",
-  fontSize: "0.85rem",
   textAlign: "center",
   px: 0,
   py: "$4",
-  bgcolor: "white",
-  boxShadow: "0 -2px 4px $colors$gray7",
+  bgcolor: "$bg1",
+  boxShadow: "$1",
 });
 
 const Link = styled("a", {
-  color: "$blue11",
+  color: "$text2",
 });
 
 const Brand = styled("h3", {
-  fontFamily: "$title",
-  fontWeight: "$bold",
-  letterSpacing: "1px",
+  fontWeight: "$medium",
+  letterSpacing: 1
 });
 
 const Wrapper = styled(Flex, {
-  minHeight: `calc(100vh - ${NAVBAR_HEIGHT})`,
+  direction: "column",
   py: "$9",
-  bgcolor: "$bg0",
+  px: "$3"
 });
 
 const Time = styled("time", {
-  fontFamily: "$title",
   fontSize: "$2",
-  color: "$gray11",
+  color: "$text1",
 });
 
 const Heading = styled("h3", {
-  fontFamily: "$title",
   my: "$5",
   fontSize: "$6"
 });
@@ -312,7 +317,6 @@ const Heading = styled("h3", {
 const SubHeading = styled("h4", {
   mt: "$4",
   fontSize: "calc($6 - 4px)",
-  fontFamily: "$title",
 });
 
 const ImageWrapper = styled(Box, {
@@ -321,17 +325,12 @@ const ImageWrapper = styled(Box, {
   borderRadius: 99999,
   overflow: "hidden",
   position: "relative",
-  boxShadow: "$3",
-});
-
-const Layout = styled(Flex, {
-  direction: "column",
-  minHeight: "100vh",
+  boxShadow: "0 4px 8px $colors$bg3",
 });
 
 const TopBar = styled(Box, {
   minWidth: "100%",
-  bgcolor: "white",
+  bgcolor: "$bg1",
   left: 0,
   top: 0,
   zIndex: "$3",
@@ -347,18 +346,16 @@ const MarkdownContent = styled("article", {
     lineHeight: "$4",
   },
   "h3,h4": {
-    fontFamily: "$fonts$title",
     margin: "$8 0 $4",
   },
   "h3 + h4": {
     mt: "$1",
   },
   pre: {
-    // fontSize: "$4",
     p: "$5",
     lineHeight: "$2",
     color: "white",
-    bgcolor: "$gray12",
+    bgcolor: "$bg1",
     margin: "$4 0",
     borderRadius: "8px",
     width: "100%",
@@ -367,7 +364,7 @@ const MarkdownContent = styled("article", {
     zIndex: "$1",
   },
   mark: {
-    bgcolor: "$gray7",
+    bgcolor: "$bg2",
     "& code": {
       p: 3
     }
@@ -383,9 +380,9 @@ const MarkdownContent = styled("article", {
     top: "-2.2em",
   },
   "& .info": {
-    border: "1px solid $colors$blue11",
+    border: "1px solid $colors$text2",
     borderRadius: "4px",
-    color: "$blue11",
+    color: "$text2",
     padding: "$3",
     position: "relative",
   },
@@ -393,21 +390,21 @@ const MarkdownContent = styled("article", {
 
 const Card = styled(Flex, {
   direction: "column",
-  bgcolor: "white",
+  bgcolor: "$bg1",
   p: "$3",
-  boxShadow: "$2",
-  borderRadius: "4px",
+  boxShadow: "$1",
+  borderRadius: 4
 });
 
 const CardTitle = styled("h4", {
   fontSize: "$4",
-  color: "$gray12"
+  color: "$gray11"
 });
 
 const Pill = styled(Box, {
   px: "$2",
   py: "$1",
-  bgcolor: "$gray5",
+  bgcolor: "$bg2",
   borderRadius: "99999px",
   mb: "$2",
   "&:not(:last-of-type)": {
@@ -416,11 +413,7 @@ const Pill = styled(Box, {
 });
 
 const Social = styled(Link, {
-  my: 0,
   color: "$gray9",
-  "&:not(:last-of-type)": {
-    mr: "$4",
-  },
   "& *": {
     size: 24,
   },
@@ -566,9 +559,9 @@ function Footer() {
         <Flex
           css={{
             justify: "center",
-            my: "$4",
+            my: "$5",
             "& *:not(:last-of-type)": {
-              mr: "$5",
+              mr: "$3",
             },
           }}
         >
@@ -597,10 +590,10 @@ function Footer() {
             <FaTwitter />
           </Social>
         </Flex>
-        <Text css={{ my: 0, fontSize: "$3", color: "$gray11" }}>
+        <Text css={{ my: 0, fontSize: "$3", color: "$text1" }}>
           Built with React & Stitches JS
         </Text>
-        <Text css={{ my: 0, fontSize: "$3", color: "$gray11" }}>
+        <Text css={{ my: 0, fontSize: "$3", color: "$text1" }}>
           &copy; 2019 &ndash; {new Date().getFullYear()} &middot; Benneth Yankey
         </Text>
       </Container>
@@ -721,7 +714,8 @@ function NavigationBar({
             items: "center",
             height: "auto",
             overflowX: "auto",
-            bgcolor: "$gray2",
+            bgcolor: "$bg1",
+            borderTop: "2px solid $bg0",
           }}
         >
           {navItems.map((v, i) => (
@@ -729,7 +723,6 @@ function NavigationBar({
               key={i}
               onClick={() => toggleRoute(v)}
               css={{
-                fontFamily: "$title",
                 fontSize: "$3",
                 textTransform: "uppercase",
                 letterSpacing: "1.5px",
@@ -750,52 +743,33 @@ function NavigationBar({
 }
 
 function Home({ setActiveRoute }) {
-  const [height, setHeight] = useState(0);
-
-  useEffect(() => {
-    setHeight(window.innerHeight);
-  }, []);
-
   return (
-    <Flex
-      as="section"
+    <Wrapper
+      as="main"
       css={{
-        minHeight:
-          height >= MEDIUM_SCREEN_HEIGHT
-            ? 0
-            : `calc(100vh - ${NAVBAR_HEIGHT} - 120px)`,
+        minHeight: `calc(100vh - 375px)`,
+        py: 0,
+        justify: "center",
         items: "center",
-        bgcolor: "$bg0",
-        flex: height >= MEDIUM_SCREEN_HEIGHT ? 1 : "none",
       }}
     >
-      <Container>
-        <Flex
-          css={{
-            direction: "column",
-            items: "center",
-          }}
-        >
-          <Text css={{ m: 0 }}>Hi, I'm</Text>
-          <Heading css={{ m: 0, fontSize: "$6", letterSpacing: "1.2px" }}>
-            BENNETH YANKEY
-          </Heading>
-          <SubHeading css={{ m: 0 }}>Software Engineer</SubHeading>
-          <Text css={{ textAlign: "center" }}>
-            Welcome to my space and garden on the internet, where I keep notes,
-            and documents everything I have learned and learning with you and
-            the world!
-          </Text>
-          <Link
-            href="#"
-            css={{ mx: "auto" }}
-            onClick={() => setActiveRoute(Routes.ABOUT)}
-          >
-            Get to know me better
-          </Link>
-        </Flex>
-      </Container>
-    </Flex>
+      <Text css={{ m: 0 }}>Hi, I'm</Text>
+      <Heading css={{ m: 0, fontSize: "$6", letterSpacing: "1.2px" }}>
+        BENNETH YANKEY
+      </Heading>
+      <SubHeading css={{ m: 0 }}>Software Engineer</SubHeading>
+      <Text css={{ textAlign: "center" }}>
+        Welcome to my space and garden on the internet, where I keep notes, and
+        documents everything I have learned and learning with you and the world!
+      </Text>
+      <Link
+        href="#"
+        css={{ mx: "auto" }}
+        onClick={() => setActiveRoute(Routes.ABOUT)}
+      >
+        Get to know me better
+      </Link>
+    </Wrapper>
   );
 }
 
@@ -922,8 +896,8 @@ function ArticlesFilter({ activeFilter, setActiveFilter }) {
             <Pill
               key={idx}
               css={{
-                bgcolor: isActive ? "white" : "$gray5",
-                boxShadow: isActive ? "$2" : "none",
+                bgcolor: isActive ? "$bg1" : "$bg2",
+                // boxShadow: isActive ? "$2" : "none",
               }}
               onClick={() => setActiveFilter(filter)}
             >
@@ -946,16 +920,15 @@ const formatDate = (dateString) => {
 
   return formatter
     .formatToParts(new Date(dateString))
-    .map(({ type, value }) => {
-      switch (type) {
-        case "day":
-          let number = Number(value);
-          return number < 10 ? `0${number}` : number;
-        case "month":
-          return value.toUpperCase();
-        default:
-          return value;
+    .map(({type, value}) => {
+      if (type === "day") {
+        let number = Number(value);
+        return number < 10 ? `0${number}` : number;
       }
+      if (type === "month") {
+        return value.toUpperCase();
+      }
+      return value;
     })
     .join("");
 };
@@ -971,16 +944,16 @@ function FilteredEntries({ entry, handleIsReading }) {
 
   return (
     <Box>
-        <Heading
+      <Heading
         css={{
           m: 0,
-            fontSize: "calc($6 * 1.5)",
-            color: "$gray11",
-            letterSpacing: 1 
-          }}
-        >
-          {entry[0]}
-        </Heading>
+          fontSize: "calc($6 * 1.5)",
+          color: "$text1",
+          letterSpacing: 1,
+        }}
+      >
+        {entry[0]}
+      </Heading>
       <Box />
       <Box css={{ my: "$4" }}>
         {entry[1].map((field, idx) => {
@@ -1022,27 +995,25 @@ function Article({ post, handleIsReading }) {
       <Text
         css={{
           m: 0,
-          letterSpacing: "0.5px",
+          letterSpacing: 0.5,
           fontSize: "$2",
-          color: "$gray11",
-          fontFamily: "$title",
+          color: "$text1",
         }}
       >
-        {date.toUpperCase()}
+        {date}
       </Text>
       <Text
         css={{
           m: 0,
-          fontFamily: "$title",
-          fontWeight: "$bold",
-          letterSpacing: "0.8px",
+          fontWeight: "$medium",
+          letterSpacing: 0.8,
           fontSize: "$5",
         }}
       >
         {title}
       </Text>
       <Text>{summary}</Text>
-      <Text css={{ m: 0, fontSize: "$3", color: "$gray11" }}>Read more</Text>
+      <Text css={{ m: 0, fontSize: "$3", color: "$text1" }}>Read more</Text>
     </Card>
   );
 }
@@ -1055,8 +1026,7 @@ function ActivityIndicator() {
   );
 }
 
-// Aricles displays recent articles and also
-// filters all articles by tags
+
 function Articles({ handleIsReading }) {
   const { cached } = useAppContext();
   const [isFetchingLatest, setIsFetchingLatest] = useState(false);
@@ -1220,10 +1190,10 @@ function Articles({ handleIsReading }) {
             css={{
               mt: "$2",
               justify: "center",
-              color: "$blue11"
+              color: "$text2"
             }}
             onClick={refetchArticles}
-          >
+         >
             Try again
           </Button>
         </Box>
@@ -1244,8 +1214,7 @@ function Resume() {
               fontSize: "$2",
               m: 0,
               mb: "$1",
-              color: "$gray11",
-              fontFamily: "$title",
+              color: "$text1",
             }}
           >
             2019 &middot; Present
@@ -1330,8 +1299,7 @@ function Resume() {
               fontSize: "$2",
               m: 0,
               mb: "$1",
-              color: "$gray11",
-              fontFamily: "$title",
+              color: "$text1",
             }}
           >
             2008 &middot; 2012
@@ -1409,19 +1377,24 @@ export default function App() {
   let activeFilter = useRef(Filters.New);
   let pageYOffset = useRef(0);
 
+  const [isSunset, setIsSunset] = useState(() => {
+    let hrs = new Date().getHours();
+    if (hrs > 7 && hrs < 19) {
+      return true;
+    }
+    return false;
+  });
+
+  // automatic theme toggle
+  useEffect(() => {
+    if (!isSunset) {
+      document.body.classList.add(darkTheme);
+    }
+  }, [isSunset]);
+
   const handleIsReading = (post) => {
     setPost(post);
     setIsReading(true);
-  };
-
-  // cached contents
-  const cached = {
-    previousRoute,
-    profileImage,
-    latestRef,
-    sortedRef,
-    activeFilter,
-    pageYOffset,
   };
 
   const getArticlesProps = () => ({
@@ -1438,35 +1411,50 @@ export default function App() {
     isPortfolio,
     setIsPortfolio,
   });
-
-  const router = (route) => {
-    switch (route) {
-      case Routes.ARTICLES:
-        return <Articles {...getArticlesProps()} />;
-      case Routes.RESUME:
-        return <Resume />;
-      case Routes.ABOUT:
-        return (
-          <About activeRoute={activeRoute} setActiveRoute={setActiveRoute} />
-        );
-      case Routes.CONTACT:
-        return <Contact />;
-      default:
-        return <Home {...getArticlesProps()} />;
-    }
-  };
+ 
 
   // adds global styles
   globalStyles();
 
   return (
-    <AppContext.Provider value={{ cached }}>
-      <Layout as="main">
+    <AppContext.Provider
+      value={{
+        cached: {
+          previousRoute,
+          profileImage,
+          latestRef,
+          sortedRef,
+          activeFilter,
+          pageYOffset,
+        },
+        setIsSunset,
+        isSunset,
+      }}
+    >
         <NavigationBar {...getNavbarProps()} />
         {isReading && <PostContent post={post} />}
-        {!isReading && router(activeRoute)}
+        {!isReading &&
+            (function (route) {
+              switch (route) {
+                case Routes.ARTICLES:
+                  return <Articles {...getArticlesProps()} />;
+                case Routes.RESUME:
+                  return <Resume />;
+                case Routes.ABOUT:
+                  return (
+                    <About
+                      activeRoute={activeRoute}
+                      setActiveRoute={setActiveRoute}
+                    />
+                  );
+                case Routes.CONTACT:
+                  return <Contact />;
+                default:
+                  return <Home {...getArticlesProps()} />;
+              }
+            })(activeRoute)}
         <Footer activeRoute={activeRoute} />
-      </Layout>
     </AppContext.Provider>
   );
 }
+
