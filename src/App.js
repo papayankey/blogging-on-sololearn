@@ -45,30 +45,30 @@ const config = {
       bold: 700,
     },
     colors: {
-      brown1: "hsl(30 40.0% 99.1%)",
-      brown2: "hsl(30 50.0% 97.6%)",
-      brown3: "hsl(30 52.5% 94.6%)",
-      brown4: "hsl(30 53.0% 91.2%)",
-      brown5: "hsl(29 52.9% 86.8%)",
-      brown6: "hsl(29 52.5% 80.9%)",
-      brown7: "hsl(29 51.5% 72.8%)",
-      brown8: "hsl(28 50.0% 63.1%)",
-      brown9: "hsl(28 34.0% 51.0%)",
-      brown10: "hsl(27 31.8% 47.6%)",
-      brown11: "hsl(25 30.0% 41.0%)",
-      brown12: "hsl(20 30.0% 19.0%)",
-      // gray1: "rgb(252, 252, 252)",
-      // gray2: "rgb(248, 248, 248)",
-      // gray3: "rgb(243, 243, 243)",
-      // gray4: "rgb(237, 237, 237)",
-      // gray5: "rgb(232, 232, 232)",
-      // gray6: "rgb(226, 226, 226)",
-      // gray7: "rgb(219, 219, 219)",
-      // gray8: "rgb(199, 199, 199)",
-      // gray9: "rgb(143, 143, 143)",
-      // gray10: "rgb(133, 133, 133)",
-      // gray11: "rgb(111, 111, 111)",
-      gray12: "rgb(23, 23, 23)",
+      blue1: "hsl(206 100% 99.2%)",
+      blue2: "hsl(210 100% 98.0%)",
+      blue3: "hsl(209 100% 96.5%)",
+      blue4: "hsl(210 98.8% 94.0%)",
+      blue5: "hsl(209 95.0% 90.1%)",
+      blue6: "hsl(209 81.2% 84.5%)",
+      blue7: "hsl(208 77.5% 76.9%)",
+      blue8: "hsl(206 81.9% 65.3%)",
+      blue9: "hsl(206 100% 50.0%)",
+      blue10: "hsl(208 100% 47.3%)",
+      blue11: "hsl(211 100% 43.2%)",
+      blue12: "hsl(211 100% 15.0%)",
+      slate1: "hsl(206 30.0% 98.8%)",
+      slate2: "hsl(210 16.7% 97.6%)",
+      slate3: "hsl(209 13.3% 95.3%)",
+      slate4: "hsl(209 12.2% 93.2%)",
+      slate5: "hsl(208 11.7% 91.1%)",
+      slate6: "hsl(208 11.3% 88.9%)",
+      slate7: "hsl(207 11.1% 85.9%)",
+      slate8: "hsl(205 10.7% 78.0%)",
+      slate9: "hsl(206 6.0% 56.1%)",
+      slate10: "hsl(206 5.8% 52.3%)",
+      slate11: "hsl(206 6.0% 43.5%)",
+      slate12: "hsl(206 24.0% 9.0%)",
     },
     space: {
       1: "5px",
@@ -89,9 +89,9 @@ const config = {
       4: 1.75,
     },
     shadows: {
-      1: "1px 1px 0 $colors$bg3, -1px -1px 0 $colors$bg3",
-      2: "1.2px 1.2px 0 $colors$bg3, -1.2px -1.2px 0 $colors$bg3",
-      3: "1.4px 1.4px 0 $colors$bg3, -1.4px -1.4px 0 $colors$bg3",
+      1: "1px 1px 0 $colors$slate3, -1px -1px 0 $colors$slate3",
+      2: "1.2px 1.2px 0 $colors$slate6, -1.2px -1.2px 0 $colors$slate6",
+      3: "1.4px 1.4px 0 $colors$slate6, -1.4px -1.4px 0 $colors$slate6",
     },
     fontSizes: {
       1: "10px",
@@ -161,13 +161,16 @@ const globalStyles = global({
       verticalAlign: "baseline",
       background: "transparent",
     },
+  "h1, h2, h3, h4, h5, h6": {
+    fontWeight: "$normal",
+  },
   body: {
     lineHeight: "$3",
-    color: "$brown12",
     fontSize: "$4",
     fontFamily: "$sans",
     fontWeight: "$normal",
-    bgcolor: "$brown3",
+    color: "$slate12",
+    bgcolor: "$slate3",
   },
   "nav ul": {
     listStyle: "none",
@@ -197,15 +200,13 @@ const Flex = styled(Box, {
 
 const Button = styled("button", {
   appearance: "none",
-  border: "none",
-  bgcolor: "transparent",
-  fontSize: "$3",
+  border: "1px solid $colors$blue10",
+  borderRadius: 9999,
+  bgcolor: "$blue3",
+  fontSize: "100%",
+  p: "$2",
   m: 0,
-  py: "$1",
-  pl: 0,
-  pr: "$2",
-  color: "$text3",
-  textAlign: "left",
+  color: "$blue10",
 });
 
 const Text = styled("p", {
@@ -220,11 +221,11 @@ const Title = styled("h2", {
   letterSpacing: 1.5,
 });
 
-const SubTitle = styled("h3", {
+const SubTitle = styled("h4", {
   pl: "$3",
   mt: "$4",
-  fontSize: "calc($6 - 4px)",
-  letterSpacing: 1,
+  letterSpacing: 1.5,
+  textTransform: "uppercase",
 });
 
 const Strong = styled("strong", {
@@ -251,10 +252,10 @@ const rotate = keyframes({
 const ActivityIndicator = styled(Box, {
   size: 30,
   borderRadius: 99999,
-  border: "3px solid $colors$brown4",
-  borderTopColor: "$colors$brown7",
-  borderBottomColor: "$colors$brown7",
-  borderRightColor: "$colors$brown7",
+  border: "3px solid $colors$slate3",
+  borderTopColor: "$colors$slate7",
+  borderBottomColor: "$colors$slate7",
+  borderRightColor: "$colors$slate7",
   animation: `${rotate} 1s linear infinite`,
 });
 
@@ -263,13 +264,13 @@ const FooterWrapper = styled("footer", {
   textAlign: "center",
   px: 0,
   py: "$4",
-  bgcolor: "$brown4",
+  bgcolor: "$slate6",
   boxShadow: "$1",
   position: "relative",
 });
 
 const Link = styled("a", {
-  color: "$text2",
+  color: "$blue9",
 });
 
 const Wrapper = styled(Flex, {
@@ -280,7 +281,7 @@ const Wrapper = styled(Flex, {
 
 const Time = styled("time", {
   fontSize: "$1",
-  color: "$brown11",
+  color: "$slate11",
   letterSpacing: 1,
 });
 
@@ -295,14 +296,14 @@ const SubHeading = styled("h4", {
 });
 
 const ImageWrapper = styled(Box, {
-  margin: "0 auto",
+  m: "0 auto",
   size: 80,
   borderRadius: 99999,
   overflow: "hidden",
   position: "absolute",
   top: "-40px",
   left: "calc(50vw - 40px)",
-  boxShadow: "0 0 0 6px $colors$brown3",
+  boxShadow: "0 0 0 8px $colors$slate3",
 });
 
 const MarkdownContent = styled("article", {
@@ -362,20 +363,22 @@ const Card = styled(Flex, {
   direction: "column",
   px: "$3",
   py: "$5",
-  mb: "$1",
-  bgcolor: "$brown5",
+  mb: "$3",
+  boxShadow: "0 2px 2px $colors$slate7",
+  bgcolor: "white",
 });
 
 const CardTitle = styled("h4", {
-  fontSize: "$4",
-  letterSpacing: 0.5,
-  color: "$brown11",
+  color: "$slate11",
+  fontWeight: "$bold",
 });
 
 const Pill = styled(Box, {
   px: "$2",
   py: "$1",
-  bgcolor: "$brown6",
+  fontSize: "$3",
+  bgcolor: "$slate5",
+  border: "1px solid $colors$slate8",
   borderRadius: 99999,
   mb: "$2",
   "&:not(:last-of-type)": {
@@ -384,7 +387,7 @@ const Pill = styled(Box, {
 });
 
 const Social = styled(Link, {
-  color: "$gray9",
+  color: "$slate9",
   "& *": {
     size: 24,
   },
@@ -499,7 +502,7 @@ function Footer() {
     >
       <ImageWrapper>
         {imageStatus === IMAGE_STATUS.LOADING && (
-          <ActivityWrapper css={{ bgcolor: "$brown4" }}>
+          <ActivityWrapper css={{ bgcolor: "$slate3" }}>
             <ActivityIndicator />
           </ActivityWrapper>
         )}
@@ -509,7 +512,7 @@ function Footer() {
             position: "absolute",
             top: 0,
             left: 0,
-            // bgcolor: "$brown4",
+            bgcolor: "$slate6",
           }}
         >
           {imageStatus === IMAGE_STATUS.FAILED && (
@@ -525,7 +528,7 @@ function Footer() {
               css={{
                 size: "100%",
                 objectFit: "cover",
-                bgcolor: "$brown4",
+                bgcolor: "$slate3",
               }}
             />
           )}
@@ -566,10 +569,10 @@ function Footer() {
           <FaTwitter />
         </Social>
       </Flex>
-      <Text css={{ my: 0, fontSize: "$2", color: "$gray11" }}>
+      <Text css={{ my: 0, fontSize: "$2", color: "$slate11" }}>
         Built with React & Stitches JS
       </Text>
-      <Text css={{ my: 0, fontSize: "$2", color: "$gray11" }}>
+      <Text css={{ my: 0, fontSize: "$2", color: "$slate11" }}>
         &copy; 2019 &ndash; {new Date().getFullYear()} &middot; Benneth Yankey
       </Text>
     </FooterWrapper>
@@ -615,8 +618,8 @@ function AppBar({
         justify: postIsActive ? "flex-start" : "center",
         items: "center",
         height: NAVBAR_HEIGHT,
-        bgcolor: postIsActive ? "transparent" : "$brown4",
-        boxShadow: "0 1px 4px $colors$gray6",
+        bgcolor: postIsActive ? "transparent" : "white",
+        boxShadow: "0 1px 4px $colors$slate6",
         zIndex: "$3",
       }}
     >
@@ -633,8 +636,6 @@ function AppBar({
               textTransform: "uppercase",
               letterSpacing: 1.2,
               px: "$2",
-              fontWeight: "$bold",
-              color: activeRoute === v ? "$brown7" : "inherit",
             }}
           >
             <Box />
@@ -642,8 +643,8 @@ function AppBar({
             <Box
               css={{
                 width: "100%",
-                height: 4,
-                backgroundColor: activeRoute === v ? "$brown7" : "transparent",
+                height: 3,
+                backgroundColor: activeRoute === v ? "$blue9" : "transparent",
                 borderTopLeftRadius: 99999,
                 borderTopRightRadius: 99999,
               }}
@@ -729,17 +730,22 @@ function About({ setActiveRoute, activeRoute }) {
       </Text>
       <SubTitle css={{ px: 0 }}>Other Interests</SubTitle>
       <Text>Aside programming here are other areas of his interest:</Text>
-      <Text>
-        <Strong>Teaching: </Strong>
-        He likes to share and impact knowledge. He has been teaching Biology to
-        high school pupils for past 5 years and counting. He aids pupils to
-        understand and appreciate the beauty of nature.
-      </Text>
-      <Text>
-        <Strong>Gaming: </Strong>
-        He loves and has been gaming since he was 5, playing SEGA. He currently
-        owns a PS4 Console and enjoys playing FIFA.
-      </Text>
+      <Box>
+        <Text css={{ color: "$slate11" }}>Teaching</Text>
+        <Text>
+          He likes to share and impact knowledge. He has been teaching Biology
+          to high school pupils for past 5 years and counting. He aids pupils to
+          understand and appreciate the beauty of nature.
+        </Text>
+      </Box>
+      <Box>
+        <Text css={{ color: "$slate11" }}>Gaming</Text>
+        <Text>
+          {" "}
+          He loves and has been gaming since he was 5, playing SEGA. He
+          currently owns a PS4 Console and enjoys playing FIFA.
+        </Text>
+      </Box>
       <SubTitle css={{ px: 0 }}>Get in touch</SubTitle>
       <Text>
         You can contact him via{" "}
@@ -809,7 +815,7 @@ const Filters = {
   "Computer Science": "computer science",
 };
 
-function ArticlesFilter({ activeFilter, setActiveFilter }) {
+function ArticlesFilter({ setActiveFilter }) {
   useEffect(() => {
     // feather.replace();
   }, []);
@@ -822,13 +828,10 @@ function ArticlesFilter({ activeFilter, setActiveFilter }) {
       }}
     >
       {Object.values(Filters).map((filter, idx) => {
-        let isActive = activeFilter === filter;
         return (
           <Pill
             key={idx}
-            css={{
-              bgcolor: isActive ? "$brown5" : "$brown6",
-            }}
+            css={{ bgcolor: "$slate10", color: "white", borderRadius: 0 }}
             onClick={() => setActiveFilter(filter)}
           >
             {filter}
@@ -862,7 +865,12 @@ const formatDate = (dateString) => {
     .join("");
 };
 
-function FilteredEntries({ entry, setReaderMode }) {
+function FilteredEntries({
+  activeFilter,
+  sortedEntries,
+  latestEntries,
+  setReaderMode,
+}) {
   useEffect(() => {
     // feather.replace();
   });
@@ -873,51 +881,65 @@ function FilteredEntries({ entry, setReaderMode }) {
 
   return (
     <Box css={{ mb: "$5" }}>
-      <Heading
-        css={{
-          m: 0,
-          pl: "$3",
-          fontSize: "calc($6 * 1.5)",
-          letterSpacing: 1,
-        }}
-      >
-        {entry[0]}
-      </Heading>
       <Box css={{ mt: "$4" }}>
-        {entry[1].map((field, idx) => {
-          const { published, title } = field;
-          return (
-            <Card key={idx}>
-              <Time dateTime={published}>{formatDate(published)}</Time>
-              <Text onClick={() => handleOpenArticle(field)} css={{ m: 0 }}>
-                {title}
-              </Text>
-            </Card>
-          );
-        })}
+        {activeFilter === Filters.New
+          ? latestEntries.map((entry) => {
+              const { id, published, title, summary } = entry;
+              return (
+                <Card key={id} onClick={() => setReaderMode(entry)}>
+                  <Time dateTime={published}>{formatDate(published)}</Time>
+                  <Text
+                    css={{
+                      m: 0,
+                      color: "$slate10",
+                      textTransform: "uppercase",
+                      fontWeight: "$bold",
+                    }}
+                  >
+                    {title}
+                  </Text>
+                  <Text>{summary}</Text>
+                  <Text css={{ my: 0, fontSize: "$3", color: "$blue10" }}>
+                    Read More . . .
+                  </Text>
+                </Card>
+              );
+            })
+          : sortedEntries.map((entries, idx) => {
+              return (
+                <Fragment key={idx}>
+                  <Heading
+                    css={{
+                      pl: "$3",
+                      fontSize: "$6",
+                      letterSpacing: 1,
+                      color: "$slate10",
+                      fontWeight: "$bold",
+                    }}
+                  >
+                    {entries[0]}
+                  </Heading>
+                  {entries[1].map((e) => {
+                    const { id, published, title } = e;
+                    return (
+                      <Card key={id}>
+                        <Time dateTime={published}>
+                          {formatDate(published)}
+                        </Time>
+                        <Text
+                          onClick={() => handleOpenArticle(e)}
+                          css={{ m: 0 }}
+                        >
+                          {title}
+                        </Text>
+                      </Card>
+                    );
+                  })}
+                </Fragment>
+              );
+            })}
       </Box>
     </Box>
-  );
-}
-
-function Article({ post, setReaderMode }) {
-  const { title, summary, published } = post;
-
-  return (
-    <Card onClick={() => setReaderMode(post)}>
-      <Time dateTime={published}>{formatDate(published)}</Time>
-      <Text
-        css={{
-          m: 0,
-          fontSize: "$5",
-          fontWeight: "$bold",
-        }}
-      >
-        {title}
-      </Text>
-      <Text>{summary}</Text>
-      <Text css={{ m: 0, fontSize: "$3", color: "$text1" }}>Read more...</Text>
-    </Card>
   );
 }
 
@@ -1039,55 +1061,46 @@ function Articles({ setReaderMode }) {
             activeFilter={activeFilter}
             setActiveFilter={getEntriesByTag}
           />
-          <SubHeading css={{ my: "$8" }}>
-            {activeFilter === Filters.New ? (
-              <Fragment>Latest Articles</Fragment>
-            ) : (
-              <Fragment>All articles in {capitalize(activeFilter)}?</Fragment>
-            )}
-          </SubHeading>
+          <Flex css={{ my: "$6", direction: "column", items: "center" }}>
+            <Text css={{ m: 0 }}>{capitalize(activeFilter)}</Text>
+            <Box
+              css={{
+                width: 20,
+                height: 5,
+                bgcolor: "$blue10",
+                borderRadius: 9999,
+              }}
+            />
+          </Flex>
         </Container>
       )}
-      {isFetchingByTag && (
+      {isFetchingByTag ? (
         <ActivityWrapper>
           <ActivityIndicator />
         </ActivityWrapper>
+      ) : (
+        <FilteredEntries
+          activeFilter={activeFilter}
+          setReaderMode={setReaderMode}
+          sortedEntries={sortedEntries}
+          latestEntries={latestEntries}
+        />
       )}
-      {!isFetchingByTag &&
-        activeFilter !== Filters.New &&
-        sortedEntries.map((entry) => (
-          <FilteredEntries
-            key={entry[0]}
-            entry={entry}
-            setReaderMode={setReaderMode}
-          />
-        ))}
-      {!isFetchingLatest &&
-        !isFetchingByTag &&
-        activeFilter === Filters.New &&
-        latestEntries.map((entry) => {
-          return (
-            <Article
-              key={entry.id}
-              post={entry}
-              setReaderMode={setReaderMode}
-            />
-          );
-        })}
-      {/* offline content */}
       {hasError && (
         <Box css={{ textAlign: "center" }}>
-          <Strong css={{ my: 0 }}>Oops, unable to fetch articles</Strong>
-          <Text css={{ my: 0 }}>The request could not be completed</Text>
+          <Text css={{ my: 0 }}>Oops, unable to fetch articles</Text>
+          <Text css={{ my: 0, color: "$slate11" }}>
+            The request could not be completed
+          </Text>
           <Button
             css={{
-              mt: "$2",
-              justify: "center",
-              color: "$text2",
+              mt: "$3",
+              fontSize: "$3",
+              letterSpacing: 1.2,
             }}
             onClick={refetchArticles}
           >
-            Try again
+            TRY AGAIN
           </Button>
         </Box>
       )}
@@ -1111,7 +1124,7 @@ function Resume() {
             fontSize: "$1",
             m: 0,
             mb: "$1",
-            color: "$text1",
+            color: "$slate11",
           }}
         >
           2019 &middot; PRESENT
@@ -1223,7 +1236,6 @@ function Resume() {
 function PostContent({ post }) {
   let { body, title, published } = post;
   const content = useRemarkable(body);
-  const docRef = useRef();
 
   // reset layout scroll to top
   useLayoutEffect(() => {
@@ -1231,21 +1243,25 @@ function PostContent({ post }) {
   }, []);
 
   return (
-    <Wrapper ref={docRef} css={{ pb: "$12", px: "$3" }}>
-      <Time dateTime={published} css={{ fontSize: "$1" }}>
-        {formatDate(published).toUpperCase()}
-      </Time>
-      <Heading
-        as="h2"
+    <Wrapper css={{ pb: 0 }}>
+      <Container>
+        <Time dateTime={published} css={{ fontSize: "$1" }}>
+          {formatDate(published).toUpperCase()}
+        </Time>
+      </Container>
+      <h2 style={{ paddingLeft: "$3" }}>{title}</h2>
+      <Box
         css={{
-          m: 0,
-          letterSpacing: 1,
-          fontSize: "$6",
+          mt: "$6",
+          bgcolor: "white",
+          borderTopLeftRadius: 30,
+          borderTopRightRadius: 30,
         }}
       >
-        {title}
-      </Heading>
-      <MarkdownContent dangerouslySetInnerHTML={{ __html: content }} />
+        <Container>
+          <MarkdownContent dangerouslySetInnerHTML={{ __html: content }} />
+        </Container>
+      </Box>
     </Wrapper>
   );
 }
