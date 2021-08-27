@@ -37,11 +37,12 @@ const config = {
     fonts: {
       fallback:
         "-apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
-      sans: "Poppins, $fallback",
+      default: "'Source Sans Pro', $fallback",
     },
     fontWeights: {
       light: 300,
-      normal: 400,
+      regular: 400,
+      semiBold: 600,
       bold: 700,
     },
     colors: {
@@ -142,7 +143,8 @@ const config = {
 
 const { styled, keyframes, global } = createCss(config);
 
-// global styles
+// =============== GLOBALS ================= //
+
 const globalStyles = global({
   ":root": {
     boxSizing: "border-box",
@@ -167,7 +169,7 @@ const globalStyles = global({
   body: {
     lineHeight: "$3",
     fontSize: "$4",
-    fontFamily: "$sans",
+    fontFamily: "$default",
     fontWeight: "$normal",
     color: "$slate12",
     bgcolor: "$slate3",
@@ -186,7 +188,9 @@ const globalStyles = global({
   },
 });
 
-// navbar height
+// =============== END GLOBALS ================= //
+
+// Navbar height
 const NAVBAR_HEIGHT = 60;
 const MEDIUM_SCREEN_HEIGHT = "720";
 
@@ -210,12 +214,12 @@ const Button = styled("button", {
 });
 
 const Text = styled("p", {
-  fontSize: "$4",
   my: "$3",
 });
 
 const Title = styled("h2", {
   mb: "$4",
+  fontWeight: "$bold",
   textAlign: "center",
   textTransform: "uppercase",
   letterSpacing: 1.5,
@@ -224,12 +228,14 @@ const Title = styled("h2", {
 const SubTitle = styled("h4", {
   pl: "$3",
   mt: "$4",
-  letterSpacing: 1.5,
+  letterSpacing: 1.2,
   textTransform: "uppercase",
 });
 
-const Strong = styled("strong", {
-  color: "$gray11",
+const SubTitleBold = styled(SubTitle, {
+  px: 0,
+  color: "$slate12",
+  fontWeight: "$semiBold",
 });
 
 const Container = styled(Box, {
@@ -307,7 +313,6 @@ const ImageWrapper = styled(Box, {
 });
 
 const MarkdownContent = styled("article", {
-  mt: "$4",
   pb: "calc($12 * 3)",
   "p + p": {
     mt: "$3",
@@ -315,6 +320,9 @@ const MarkdownContent = styled("article", {
   "ul,ol": {
     ml: "$3",
     lineHeight: "$4",
+  },
+  "h3": {
+    fontWeight: "$bold",
   },
   "h3, h4": {
     margin: "$8 0 $4",
@@ -326,15 +334,13 @@ const MarkdownContent = styled("article", {
     p: "$3",
     lineHeight: "$2",
     color: "white",
-    bgcolor: "$gray12",
+    bgcolor: "$slate12",
     margin: "$4 0",
     width: "100%",
     overflow: "auto",
-    position: "relative",
-    zIndex: "$1",
   },
   mark: {
-    bgcolor: "$gray1",
+    // bgcolor: "$gray1", // TODO
     px: "$1",
     borderRadius: 4,
   },
@@ -342,8 +348,7 @@ const MarkdownContent = styled("article", {
     my: "$8",
     "& img": {
       width: "100%",
-      boxShadow:
-        "0 0 12px $colors$brown6, 0 0 10px $colors$brown5, 0 0 8px $colors$brown4",
+      boxShadow: "0 0 4px $colors$slate9",
     },
   },
   "& #post-img-title": {
@@ -364,20 +369,21 @@ const Card = styled(Flex, {
   px: "$3",
   py: "$5",
   mb: "$3",
-  boxShadow: "0 2px 2px $colors$slate7",
+  boxShadow: "0 0 0 1px $colors$slate6",
   bgcolor: "white",
 });
 
-const CardTitle = styled("h4", {
-  color: "$slate11",
-  fontWeight: "$bold",
+const CardTitle = styled(SubTitleBold, {
+  m: 0,
+  textTransform: "capitalize",
+  fontWeight: "$semiBold",
 });
 
 const Pill = styled(Box, {
   px: "$2",
   py: "$1",
   fontSize: "$3",
-  bgcolor: "$slate5",
+  bgcolor: "$slate4",
   border: "1px solid $colors$slate8",
   borderRadius: 99999,
   mb: "$2",
@@ -395,7 +401,9 @@ const Social = styled(Link, {
 
 // =============== END STITCHES COMPONENTS ================ //
 
-// useRemarkable converts markdown to html contents
+// =============== HOOKS ================ //
+
+// Parse markdown contents to html
 function useRemarkable(props) {
   const md = new Remarkable({
     html: true,
@@ -413,26 +421,46 @@ function useRemarkable(props) {
       return "";
     },
   });
-  // enable more capabilities
+  // enable features
   md.inline.ruler.enable(["footnote_inline", "ins", "mark", "sub", "sup"]);
   return md.render(props);
 }
 
-// keeps track of page scrolls
-function usePageScroll() {
-  const [offsetTop, setOffsetTop] = useState(0);
+// =============== END HOOKS ================ //
 
-  useEffect(() => {
-    const handleOffsetTop = () => {
-      setOffsetTop(window.pageYOffset);
-    };
+// =============== COMMON  ================ //
 
-    window.addEventListener("scroll", handleOffsetTop);
-    return () => window.removeEventListener("scroll", handleOffsetTop);
-  }, [offsetTop]);
+// Formats date
+const formatDate = (dateString) => {
+  let formatter = new Intl.DateTimeFormat("en", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
-  return offsetTop;
-}
+  return formatter
+    .formatToParts(new Date(dateString))
+    .map(({ type, value }) => {
+      if (type === "day") {
+        let number = Number(value);
+        return number < 10 ? `0${number}` : number;
+      }
+      if (type === "month") {
+        return value.toUpperCase();
+      }
+      return value;
+    })
+    .join("");
+};
+
+// Capitalize first
+const capitalize = (v) => {
+  return v[0].toUpperCase() + v.slice(1);
+};
+
+// =============== END COMMON  ================ //
+
+// =============== REACT COMPONENTS ================ //
 
 const IMAGE_ASSETS = "2dmBvE3pqzChaplVyTqdtw";
 const IMAGE_STATUS = {
@@ -441,7 +469,8 @@ const IMAGE_STATUS = {
   FAILED: "failed",
 };
 
-function Footer() {
+// Footer
+function Footer({ postIsActive }) {
   const { cached } = useAppContext();
   const [image, setImage] = useState(() => cached.profileImage.current);
   const [imageStatus, setImageStatus] = useState(IMAGE_STATUS.LOADING);
@@ -468,7 +497,7 @@ function Footer() {
     setImageStatus(IMAGE_STATUS.FAILED);
   };
 
-  // get profile image
+  // fetch profile image
   useEffect(() => {
     if (imageStatus === IMAGE_STATUS.LOADING) {
       fetchProfilePic();
@@ -500,7 +529,7 @@ function Footer() {
         px: "$3",
       }}
     >
-      <ImageWrapper>
+      <ImageWrapper css={{ boxShadow: postIsActive && "0 0 0 8px white" }}>
         {imageStatus === IMAGE_STATUS.LOADING && (
           <ActivityWrapper css={{ bgcolor: "$slate3" }}>
             <ActivityIndicator />
@@ -579,9 +608,7 @@ function Footer() {
   );
 }
 
-const capitalize = (v) => {
-  return v[0].toUpperCase() + v.slice(1);
-};
+// Navigation
 
 var Routes = {
   HOME: "home",
@@ -591,7 +618,7 @@ var Routes = {
   CONTACT: "contact",
 };
 
-// navigation list
+// Navigation items
 const navItems = [Routes.ARTICLES, Routes.RESUME, Routes.ABOUT, Routes.CONTACT];
 
 function AppBar({
@@ -618,8 +645,8 @@ function AppBar({
         justify: postIsActive ? "flex-start" : "center",
         items: "center",
         height: NAVBAR_HEIGHT,
-        bgcolor: postIsActive ? "transparent" : "white",
-        boxShadow: "0 1px 4px $colors$slate6",
+        bgcolor: "white",
+        boxShadow: "0 0 0 1px $colors$slate6",
         zIndex: "$3",
       }}
     >
@@ -656,20 +683,21 @@ function AppBar({
           css={{
             ml: "$3",
             items: "center",
-            bgcolor: "$brown7",
-            px: "$1",
+            // px: "$1",
             py: "calc($1 / 2)",
             borderRadius: 2,
           }}
           onClick={() => setPostIsActive(false)}
         >
           <FiArrowLeft size={24} />
+          <Text css={{ pl: "$1" }}>Back</Text>
         </Flex>
       )}
     </Flex>
   );
 }
 
+// Home
 function Home({ setActiveRoute }) {
   return (
     <Wrapper
@@ -701,6 +729,7 @@ function Home({ setActiveRoute }) {
   );
 }
 
+// About
 function About({ setActiveRoute, activeRoute }) {
   const { cached } = useAppContext();
 
@@ -728,10 +757,10 @@ function About({ setActiveRoute, activeRoute }) {
         His primary machine is Lenovo Ideapad running Fedora Linux. His editor
         of choice, Vim, always hacking the juices out of it.
       </Text>
-      <SubTitle css={{ px: 0 }}>Other Interests</SubTitle>
+      <SubTitleBold>Other Interests</SubTitleBold>
       <Text>Aside programming here are other areas of his interest:</Text>
       <Box>
-        <Text css={{ color: "$slate11" }}>Teaching</Text>
+        <Text css={{fontWeight: "$semiBold"}}>Teaching</Text>
         <Text>
           He likes to share and impact knowledge. He has been teaching Biology
           to high school pupils for past 5 years and counting. He aids pupils to
@@ -739,14 +768,14 @@ function About({ setActiveRoute, activeRoute }) {
         </Text>
       </Box>
       <Box>
-        <Text css={{ color: "$slate11" }}>Gaming</Text>
+        <Text css={{ fontWeight: "$semiBold" }}>Gaming</Text>
         <Text>
           {" "}
           He loves and has been gaming since he was 5, playing SEGA. He
           currently owns a PS4 Console and enjoys playing FIFA.
         </Text>
       </Box>
-      <SubTitle css={{ px: 0 }}>Get in touch</SubTitle>
+      <SubTitleBold>Get in touch</SubTitleBold>
       <Text>
         You can contact him via{" "}
         <Link href="#" onClick={handleRouteToggle}>
@@ -759,6 +788,7 @@ function About({ setActiveRoute, activeRoute }) {
   );
 }
 
+// Contact
 function Contact() {
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
@@ -774,7 +804,7 @@ function Contact() {
         Please contact me via the appropriate medium, but keep in mind that I'll
         only respond to legit messages.
       </Text>
-      <SubTitle css={{ px: 0 }}>Email</SubTitle>
+      <SubTitleBold>Email</SubTitleBold>
       <Text>
         My email address is{" "}
         <Link href="mailto: yankeybenneth@gmail.com">
@@ -782,7 +812,7 @@ function Contact() {
         </Link>
         . This is the best way to grab my attention in minute literally.
       </Text>
-      <SubTitle css={{ px: 0 }}>Linkedin</SubTitle>
+      <SubTitleBold>Linkedin</SubTitleBold>
       <Text>
         I use Linkedin primarily to share things including tips and tricks with
         the tech community. Kindly connect with me{" "}
@@ -792,17 +822,19 @@ function Contact() {
         . If you want to ask a question, Linkedin is the right medium and will
         definitely respond ASAP.
       </Text>
-      <SubTitle css={{ px: 0 }}>What I will respond to</SubTitle>
+      <SubTitleBold>What I will respond to</SubTitleBold>
       <Text>
         I will definitely respond and be very happy to discuss with you on
         projects and collaborations. Any questions about contents produced on
         this blog will also get a response.
       </Text>
-      <SubTitle css={{ px: 0 }}>What I won't respond to</SubTitle>
+      <SubTitleBold>What I won't respond to</SubTitleBold>
       <Text>I won't respond if message is unclear enough.</Text>
     </Wrapper>
   );
 }
+
+// Articles filter
 
 const Filters = {
   New: "new",
@@ -815,7 +847,7 @@ const Filters = {
   "Computer Science": "computer science",
 };
 
-function ArticlesFilter({ setActiveFilter }) {
+function ArticleFilter({ setActiveFilter }) {
   useEffect(() => {
     // feather.replace();
   }, []);
@@ -842,29 +874,7 @@ function ArticlesFilter({ setActiveFilter }) {
   );
 }
 
-// formats date
-const formatDate = (dateString) => {
-  let formatter = new Intl.DateTimeFormat("en", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-
-  return formatter
-    .formatToParts(new Date(dateString))
-    .map(({ type, value }) => {
-      if (type === "day") {
-        let number = Number(value);
-        return number < 10 ? `0${number}` : number;
-      }
-      if (type === "month") {
-        return value.toUpperCase();
-      }
-      return value;
-    })
-    .join("");
-};
-
+// Filter entries
 function FilteredEntries({
   activeFilter,
   sortedEntries,
@@ -891,9 +901,7 @@ function FilteredEntries({
                   <Text
                     css={{
                       m: 0,
-                      color: "$slate10",
-                      textTransform: "uppercase",
-                      fontWeight: "$bold",
+                      fontWeight: "$semiBold",
                     }}
                   >
                     {title}
@@ -913,7 +921,6 @@ function FilteredEntries({
                       pl: "$3",
                       fontSize: "$6",
                       letterSpacing: 1,
-                      color: "$slate10",
                       fontWeight: "$bold",
                     }}
                   >
@@ -943,6 +950,7 @@ function FilteredEntries({
   );
 }
 
+// Articles
 function Articles({ setReaderMode }) {
   const { cached } = useAppContext();
   const [isFetchingLatest, setIsFetchingLatest] = useState(false);
@@ -1047,33 +1055,34 @@ function Articles({ setReaderMode }) {
         pb: "calc($12 * 3)",
       }}
     >
-      {isFetchingLatest && !hasError && (
-        <Container>
-          <ActivityWrapper>
-            <ActivityIndicator />
-          </ActivityWrapper>
-          <Text css={{ textAlign: "center" }}>Fetching articles...</Text>
-        </Container>
-      )}
-      {!isFetchingLatest && !hasError && latestEntries.length !== 0 && (
-        <Container>
-          <ArticlesFilter
-            activeFilter={activeFilter}
-            setActiveFilter={getEntriesByTag}
-          />
-          <Flex css={{ my: "$6", direction: "column", items: "center" }}>
-            <Text css={{ m: 0 }}>{capitalize(activeFilter)}</Text>
-            <Box
-              css={{
-                width: 20,
-                height: 5,
-                bgcolor: "$blue10",
-                borderRadius: 9999,
-              }}
+      <Container>
+        {isFetchingLatest && !hasError ? (
+          <Fragment>
+            <ActivityWrapper>
+              <ActivityIndicator />
+            </ActivityWrapper>
+            <Text css={{ textAlign: "center" }}>Fetching articles...</Text>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <ArticleFilter
+              activeFilter={activeFilter}
+              setActiveFilter={getEntriesByTag}
             />
-          </Flex>
-        </Container>
-      )}
+            <Flex css={{ my: "$6", direction: "column", items: "center" }}>
+              <Text css={{ m: 0 }}>{capitalize(activeFilter)}</Text>
+              <Box
+                css={{
+                  width: 20,
+                  height: 5,
+                  bgcolor: "$blue10",
+                  borderRadius: 9999,
+                }}
+              />
+            </Flex>
+          </Fragment>
+        )}
+      </Container>
       {isFetchingByTag ? (
         <ActivityWrapper>
           <ActivityIndicator />
@@ -1108,6 +1117,7 @@ function Articles({ setReaderMode }) {
   );
 }
 
+// Resume
 function Resume() {
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
@@ -1116,7 +1126,7 @@ function Resume() {
   return (
     <Wrapper>
       <Title>Resume</Title>
-      <SubTitle>Work Experience</SubTitle>
+      <SubTitle>Experience</SubTitle>
       <Card css={{ my: "$4" }}>
         <Text
           css={{
@@ -1135,7 +1145,7 @@ function Resume() {
           in wide variety of languages, libraries and tools
         </Text>
       </Card>
-      <SubTitle css={{ pl: "$3" }}>Technical Skills</SubTitle>
+      <SubTitle css={{ pl: "$3" }}>Skills</SubTitle>
       <Card css={{ mt: "$4" }}>
         <CardTitle>Proficient in</CardTitle>
         <Flex
@@ -1193,7 +1203,7 @@ function Resume() {
             "NoSQL",
             "MongoDB",
             "Webpack",
-            "Eslint",
+            "ESLint",
             "SSH",
             "Prettier",
           ].map((item, idx) => (
@@ -1233,14 +1243,15 @@ function Resume() {
   );
 }
 
+// Post contents
 function PostContent({ post }) {
   let { body, title, published } = post;
+  console.log(post);
   const content = useRemarkable(body);
 
-  // reset layout scroll to top
-  useLayoutEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    useLayoutEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
 
   return (
     <Wrapper css={{ pb: 0 }}>
@@ -1248,25 +1259,25 @@ function PostContent({ post }) {
         <Time dateTime={published} css={{ fontSize: "$1" }}>
           {formatDate(published).toUpperCase()}
         </Time>
+        <Heading css={{ mt: 0, fontSize: "calc($5 + 4px)" }}>{title}</Heading>
       </Container>
-      <h2 style={{ paddingLeft: "$3" }}>{title}</h2>
       <Box
         css={{
-          mt: "$6",
+          px: "$3",
+          mt: "calc($5 * 4)",
           bgcolor: "white",
           borderTopLeftRadius: 30,
           borderTopRightRadius: 30,
+          boxShadow: "0 0 0 1px $colors$slate6",
         }}
       >
-        <Container>
-          <MarkdownContent dangerouslySetInnerHTML={{ __html: content }} />
-        </Container>
+        <MarkdownContent dangerouslySetInnerHTML={{ __html: content }} />
       </Box>
     </Wrapper>
   );
 }
 
-// Root app
+// Main / Root App
 export default function App() {
   const [post, setPost] = useState(null);
   const [postIsActive, setPostIsActive] = useState(false);
@@ -1350,7 +1361,7 @@ export default function App() {
                 );
             }
           })(activeRoute)}
-        <Footer activeRoute={activeRoute} />
+        <Footer postIsActive={postIsActive} activeRoute={activeRoute} />
       </Flex>
     </AppContext.Provider>
   );
