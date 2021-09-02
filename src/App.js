@@ -12,7 +12,7 @@ import { createClient } from "contentful";
 import { createCss } from "@stitches/react";
 import { Remarkable } from "remarkable";
 import hljs from "highlight.js";
-import "highlight.js/styles/agate.css";
+import "highlight.js/styles/vs.css";
 
 // icons
 import { FiArrowLeft } from "react-icons/fi";
@@ -240,7 +240,7 @@ const SubTitleBold = styled(SubTitle, {
 
 const Container = styled(Box, {
   width: "100%",
-  maxWidth: 375,
+  maxWidth: 680,
   margin: "0 auto",
   px: "$3",
 });
@@ -321,7 +321,7 @@ const MarkdownContent = styled("article", {
     ml: "$3",
     lineHeight: "$4",
   },
-  "h3": {
+  h3: {
     fontWeight: "$bold",
   },
   "h3, h4": {
@@ -333,11 +333,12 @@ const MarkdownContent = styled("article", {
   pre: {
     p: "$3",
     lineHeight: "$2",
-    color: "white",
-    bgcolor: "$slate12",
+    color: "$slate12",
+    bgcolor: "$slate3",
     margin: "$4 0",
     width: "100%",
     overflow: "auto",
+    borderRadius: 4,
   },
   mark: {
     // bgcolor: "$gray1", // TODO
@@ -368,9 +369,9 @@ const Card = styled(Flex, {
   direction: "column",
   px: "$3",
   py: "$5",
-  mb: "$3",
   boxShadow: "0 0 0 1px $colors$slate6",
   bgcolor: "white",
+  borderRadius: 4,
 });
 
 const CardTitle = styled(SubTitleBold, {
@@ -627,11 +628,6 @@ function AppBar({
   setPostIsActive,
   postIsActive,
 }) {
-  // Activate feather icons
-  useEffect(() => {
-    // feather.replace();
-  }, []);
-
   const toggleRoute = (route) => {
     setActiveRoute(route);
   };
@@ -743,47 +739,50 @@ function About({ setActiveRoute, activeRoute }) {
   });
 
   return (
-    <Wrapper css={{ px: "$3" }}>
-      <Title>About me</Title>
-      <Text>
-        This is a tech blog of <Link href="#">Benneth Yankey</Link>, a software
-        engineer and high school biology teacher from Accra, Ghana.
-      </Text>
-      <Text>
-        He is passionate about software development and solving problems. He
-        programs mostly in JavaScript (TypeScript), Go and Java.
-      </Text>
-      <Text>
-        His primary machine is Lenovo Ideapad running Fedora Linux. His editor
-        of choice, Vim, always hacking the juices out of it.
-      </Text>
-      <SubTitleBold>Other Interests</SubTitleBold>
-      <Text>Aside programming here are other areas of his interest:</Text>
-      <Box>
-        <Text css={{fontWeight: "$semiBold"}}>Teaching</Text>
+    <Wrapper>
+      <Container>
+        <Title>About me</Title>
         <Text>
-          He likes to share and impact knowledge. He has been teaching Biology
-          to high school pupils for past 5 years and counting. He aids pupils to
-          understand and appreciate the beauty of nature.
+          This is a tech blog of <Link href="#">Benneth Yankey</Link>, a
+          software engineer and high school biology teacher from Accra, Ghana.
         </Text>
-      </Box>
-      <Box>
-        <Text css={{ fontWeight: "$semiBold" }}>Gaming</Text>
         <Text>
-          {" "}
-          He loves and has been gaming since he was 5, playing SEGA. He
-          currently owns a PS4 Console and enjoys playing FIFA.
+          He is passionate about software development and solving problems. He
+          programs mostly in JavaScript (TypeScript), Go and Java.
         </Text>
-      </Box>
-      <SubTitleBold>Get in touch</SubTitleBold>
-      <Text>
-        You can contact him via{" "}
-        <Link href="#" onClick={handleRouteToggle}>
-          contact page
-        </Link>
-        . He is happy to respond to projects discussion, collaborations and
-        corrections or suggestions of any material.
-      </Text>
+        <Text>
+          His primary machine is Lenovo Ideapad running Fedora Linux. His editor
+          of choice, Vim, always hacking the juices out of it.
+        </Text>
+        <SubTitleBold>Other Interests</SubTitleBold>
+        <Text>Aside programming here are other areas of his interest:</Text>
+        <Box>
+          <Text css={{ fontWeight: "$semiBold" }}>Teaching</Text>
+          <Text>
+            {" "}
+            He likes to share and impact knowledge. He has been teaching Biology
+            to high school pupils for past 5 years and counting. He aids pupils
+            to understand and appreciate the beauty of nature.
+          </Text>
+        </Box>
+        <Box>
+          <Text css={{ fontWeight: "$semiBold" }}>Gaming</Text>
+          <Text>
+            {" "}
+            He loves and has been gaming since he was 5, playing SEGA. He
+            currently owns a PS4 Console and enjoys playing FIFA.
+          </Text>
+        </Box>
+        <SubTitleBold>Get in touch</SubTitleBold>
+        <Text>
+          You can contact him via{" "}
+          <Link href="#" onClick={handleRouteToggle}>
+            contact page
+          </Link>
+          . He is happy to respond to projects discussion, collaborations and
+          corrections or suggestions of any material.
+        </Text>
+      </Container>
     </Wrapper>
   );
 }
@@ -795,41 +794,43 @@ function Contact() {
   });
 
   return (
-    <Wrapper css={{ px: "$3" }}>
-      <Title>Contact me</Title>
-      <Text css={{ m: 0 }}>
-        Thanks for your interest in getting in touch with me.
-      </Text>
-      <Text>
-        Please contact me via the appropriate medium, but keep in mind that I'll
-        only respond to legit messages.
-      </Text>
-      <SubTitleBold>Email</SubTitleBold>
-      <Text>
-        My email address is{" "}
-        <Link href="mailto: yankeybenneth@gmail.com">
-          yankeybenneth@gmail.com
-        </Link>
-        . This is the best way to grab my attention in minute literally.
-      </Text>
-      <SubTitleBold>Linkedin</SubTitleBold>
-      <Text>
-        I use Linkedin primarily to share things including tips and tricks with
-        the tech community. Kindly connect with me{" "}
-        <Link href="https://www.linkedin.com/in/benneth-yankey-23201232/">
-          here
-        </Link>
-        . If you want to ask a question, Linkedin is the right medium and will
-        definitely respond ASAP.
-      </Text>
-      <SubTitleBold>What I will respond to</SubTitleBold>
-      <Text>
-        I will definitely respond and be very happy to discuss with you on
-        projects and collaborations. Any questions about contents produced on
-        this blog will also get a response.
-      </Text>
-      <SubTitleBold>What I won't respond to</SubTitleBold>
-      <Text>I won't respond if message is unclear enough.</Text>
+    <Wrapper>
+      <Container>
+        <Title>Contact me</Title>
+        <Text css={{ m: 0 }}>
+          Thanks for your interest in getting in touch with me.
+        </Text>
+        <Text>
+          Please contact me via the appropriate medium, but keep in mind that
+          I'll only respond to legit messages.
+        </Text>
+        <SubTitleBold>Email</SubTitleBold>
+        <Text>
+          My email address is{" "}
+          <Link href="mailto: yankeybenneth@gmail.com">
+            yankeybenneth@gmail.com
+          </Link>
+          . This is the best way to grab my attention in minute literally.
+        </Text>
+        <SubTitleBold>Linkedin</SubTitleBold>
+        <Text>
+          I use Linkedin primarily to share things including tips and tricks
+          with the tech community. Kindly connect with me{" "}
+          <Link href="https://www.linkedin.com/in/benneth-yankey-23201232/">
+            here
+          </Link>
+          . If you want to ask a question, Linkedin is the right medium and will
+          definitely respond ASAP.
+        </Text>
+        <SubTitleBold>What I will respond to</SubTitleBold>
+        <Text>
+          I will definitely respond and be very happy to discuss with you on
+          projects and collaborations. Any questions about contents produced on
+          this blog will also get a response.
+        </Text>
+        <SubTitleBold>What I won't respond to</SubTitleBold>
+        <Text>I won't respond if message is unclear enough.</Text>
+      </Container>
     </Wrapper>
   );
 }
@@ -848,10 +849,6 @@ const Filters = {
 };
 
 function ArticleFilter({ setActiveFilter }) {
-  useEffect(() => {
-    // feather.replace();
-  }, []);
-
   return (
     <Flex
       css={{
@@ -881,71 +878,66 @@ function FilteredEntries({
   latestEntries,
   setReaderMode,
 }) {
-  useEffect(() => {
-    // feather.replace();
-  });
-
   const handleOpenArticle = (article) => {
     setReaderMode(article);
   };
 
   return (
-    <Box css={{ mb: "$5" }}>
-      <Box css={{ mt: "$4" }}>
-        {activeFilter === Filters.New
-          ? latestEntries.map((entry) => {
-              const { id, published, title, summary } = entry;
-              return (
-                <Card key={id} onClick={() => setReaderMode(entry)}>
-                  <Time dateTime={published}>{formatDate(published)}</Time>
-                  <Text
-                    css={{
-                      m: 0,
-                      fontWeight: "$semiBold",
-                    }}
-                  >
-                    {title}
-                  </Text>
-                  <Text>{summary}</Text>
-                  <Text css={{ my: 0, fontSize: "$3", color: "$blue10" }}>
-                    Read More . . .
-                  </Text>
-                </Card>
-              );
-            })
-          : sortedEntries.map((entries, idx) => {
-              return (
-                <Fragment key={idx}>
-                  <Heading
-                    css={{
-                      pl: "$3",
-                      fontSize: "$6",
-                      letterSpacing: 1,
-                      fontWeight: "$bold",
-                    }}
-                  >
-                    {entries[0]}
-                  </Heading>
-                  {entries[1].map((e) => {
-                    const { id, published, title } = e;
-                    return (
-                      <Card key={id}>
-                        <Time dateTime={published}>
-                          {formatDate(published)}
-                        </Time>
-                        <Text
-                          onClick={() => handleOpenArticle(e)}
-                          css={{ m: 0 }}
-                        >
-                          {title}
-                        </Text>
-                      </Card>
-                    );
-                  })}
-                </Fragment>
-              );
-            })}
-      </Box>
+    <Box
+      css={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+        gap: "$3",
+      }}
+    >
+      {activeFilter === Filters.New
+        ? latestEntries.map((entry) => {
+            const { id, published, title } = entry;
+            return (
+              <Card
+                key={id}
+                onClick={() => setReaderMode(entry)}
+                css={{ textAlign: "center"}}
+              >
+                <Time dateTime={published}>{formatDate(published)}</Time>
+                <Text
+                  css={{
+                    m: 0,
+                    lineHeight: "$2",
+                  }}
+                >
+                  {title}
+                </Text>
+              </Card>
+            );
+          })
+        : sortedEntries.map((entries, idx) => {
+            return (
+              <Fragment key={idx}>
+                <Heading
+                  css={{
+                    pl: "$3",
+                    fontSize: "$6",
+                    letterSpacing: 1,
+                    fontWeight: "$bold",
+                  }}
+                >
+                  {entries[0]}
+                </Heading>
+                {entries[1].map((e) => {
+                  const { id, published, title } = e;
+                  return (
+                    <Card key={id}>
+                      <Time dateTime={published}>{formatDate(published)}</Time>
+                      <Text onClick={() => handleOpenArticle(e)} css={{ m: 0 }}>
+                        {title}
+                      </Text>
+                    </Card>
+                  );
+                })}
+              </Fragment>
+            );
+          })}
     </Box>
   );
 }
@@ -966,9 +958,9 @@ function Articles({ setReaderMode }) {
     cached.sortedRef.current.get(activeFilter)
   );
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  // useEffect(() => {
+  //   window.scrollTo(0, 0);
+  // }, []);
 
   const getLatestEntries = useCallback(async () => {
     setIsFetchingLatest(true);
@@ -1082,163 +1074,172 @@ function Articles({ setReaderMode }) {
             </Flex>
           </Fragment>
         )}
+        {isFetchingByTag ? (
+          <ActivityWrapper>
+            <ActivityIndicator />
+          </ActivityWrapper>
+        ) : (
+          <FilteredEntries
+            activeFilter={activeFilter}
+            setReaderMode={setReaderMode}
+            sortedEntries={sortedEntries}
+            latestEntries={latestEntries}
+          />
+        )}
+        {hasError && (
+          <Box css={{ textAlign: "center" }}>
+            <Text css={{ my: 0 }}>Oops, unable to fetch articles</Text>
+            <Text css={{ my: 0, color: "$slate11" }}>
+              The request could not be completed
+            </Text>
+            <Button
+              css={{
+                mt: "$3",
+                fontSize: "$3",
+                letterSpacing: 1.2,
+              }}
+              onClick={refetchArticles}
+            >
+              TRY AGAIN
+            </Button>
+          </Box>
+        )}
       </Container>
-      {isFetchingByTag ? (
-        <ActivityWrapper>
-          <ActivityIndicator />
-        </ActivityWrapper>
-      ) : (
-        <FilteredEntries
-          activeFilter={activeFilter}
-          setReaderMode={setReaderMode}
-          sortedEntries={sortedEntries}
-          latestEntries={latestEntries}
-        />
-      )}
-      {hasError && (
-        <Box css={{ textAlign: "center" }}>
-          <Text css={{ my: 0 }}>Oops, unable to fetch articles</Text>
-          <Text css={{ my: 0, color: "$slate11" }}>
-            The request could not be completed
-          </Text>
-          <Button
-            css={{
-              mt: "$3",
-              fontSize: "$3",
-              letterSpacing: 1.2,
-            }}
-            onClick={refetchArticles}
-          >
-            TRY AGAIN
-          </Button>
-        </Box>
-      )}
     </Flex>
   );
 }
 
 // Resume
 function Resume() {
-  useLayoutEffect(() => {
-    window.scrollTo(0, 0);
-  });
+  // useLayoutEffect(() => {
+  //   window.scrollTo(0, 0);
+  // });
 
   return (
     <Wrapper>
-      <Title>Resume</Title>
-      <SubTitle>Experience</SubTitle>
-      <Card css={{ my: "$4" }}>
-        <Text
-          css={{
-            letterSpacing: 1,
-            fontSize: "$1",
-            m: 0,
-            mb: "$1",
-            color: "$slate11",
-          }}
-        >
-          2019 &middot; PRESENT
-        </Text>
-        <CardTitle>Content Creator</CardTitle>
-        <Text css={{ m: 0, mt: "$2" }}>
-          I create concise programming articles, code snippets, tips and tricks
-          in wide variety of languages, libraries and tools
-        </Text>
-      </Card>
-      <SubTitle css={{ pl: "$3" }}>Skills</SubTitle>
-      <Card css={{ mt: "$4" }}>
-        <CardTitle>Proficient in</CardTitle>
-        <Flex
-          css={{
-            mt: "$4",
-            flexWrap: "wrap",
-          }}
-        >
-          {[
-            "Javascript",
-            "Typescript",
-            "React",
-            "HTML5",
-            "CSS3",
-            "Styled-Component",
-            "Material-UI",
-          ].map((item, idx) => (
-            <Pill key={idx}>{item}</Pill>
-          ))}
-        </Flex>
-      </Card>
-      <Card css={{ mt: "$1" }}>
-        <CardTitle>Experienced in</CardTitle>
-        <Flex
-          css={{
-            mt: "$4",
-            flexWrap: "wrap",
-          }}
-        >
-          {[
-            "SQL",
-            "Node",
-            "Git & Github",
-            "Bootstrap",
-            "Tailwind",
-            "Postgres",
-            "SQLite",
-            "SASS",
-          ].map((item, idx) => (
-            <Pill key={idx}>{item}</Pill>
-          ))}
-        </Flex>
-      </Card>
-      <Card css={{ mt: "$1" }}>
-        <CardTitle>Familiar with</CardTitle>
-        <Flex
-          css={{
-            mt: "$4",
-            flexWrap: "wrap",
-          }}
-        >
-          {[
-            "Java",
-            "Golang",
-            "NoSQL",
-            "MongoDB",
-            "Webpack",
-            "ESLint",
-            "SSH",
-            "Prettier",
-          ].map((item, idx) => (
-            <Pill key={idx}>{item}</Pill>
-          ))}
-        </Flex>
-      </Card>
-      <SubTitle>Education</SubTitle>
-      <Card css={{ my: "$4" }}>
-        <Text
-          css={{
-            m: 0,
-            fontSize: "$1",
-            letterSpacing: 1,
-            mb: "$1",
-            color: "$gray11",
-          }}
-        >
-          2008 &middot; 2012
-        </Text>
-        <CardTitle>University of Cape Coast</CardTitle>
-        <Text css={{ m: 0, mt: "$2" }}>
-          Department of Molecular Biology & Biotechnology
-        </Text>
-      </Card>
-      <SubTitle>Hobbies</SubTitle>
-      <Card css={{ my: "$4" }}>
-        <Flex css={{ direction: "row" }}>
-          {["Teaching", "Gaming", "Reading"].map((item, idx) => (
-            <Pill css={{ mb: 0 }} key={idx}>
-              {item}
-            </Pill>
-          ))}
-        </Flex>
-      </Card>
+      <Container>
+        <Title>Resume</Title>
+        <SubTitle>Experience</SubTitle>
+        <Card css={{ my: "$4" }}>
+          <Text
+            css={{
+              letterSpacing: 1,
+              fontSize: "$1",
+              m: 0,
+              mb: "$1",
+              color: "$slate11",
+            }}
+          >
+            2019 &middot; PRESENTjk
+          </Text>
+          <CardTitle>Content Creator</CardTitle>
+          <Text css={{ m: 0, mt: "$2" }}>
+            I create concise programming articles, code snippets, tips and
+            tricks in wide variety of languages, libraries and tools
+          </Text>
+        </Card>
+        <SubTitle css={{ pl: "$3" }}>Skills</SubTitle>
+        <Box css={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+          gap: "$3",
+          mt: "$4"
+        }}>
+          <Card>
+            <CardTitle>Proficient in</CardTitle>
+            <Flex
+              css={{
+                mt: "$4",
+                flexWrap: "wrap",
+              }}
+            >
+              {[
+                "Javascript",
+                "Typescript",
+                "React",
+                "HTML5",
+                "CSS3",
+                "Styled-Component",
+                "Material-UI",
+              ].map((item, idx) => (
+                <Pill key={idx}>{item}</Pill>
+              ))}
+            </Flex>
+          </Card>
+          <Card>
+            <CardTitle>Experienced in</CardTitle>
+            <Flex
+              css={{
+                mt: "$4",
+                flexWrap: "wrap",
+              }}
+            >
+              {[
+                "SQL",
+                "Node",
+                "Git & Github",
+                "Bootstrap",
+                "Tailwind",
+                "Postgres",
+                "SQLite",
+                "SASS",
+              ].map((item, idx) => (
+                <Pill key={idx}>{item}</Pill>
+              ))}
+            </Flex>
+          </Card>
+          <Card>
+            <CardTitle>Familiar with</CardTitle>
+            <Flex
+              css={{
+                mt: "$4",
+                flexWrap: "wrap",
+              }}
+            >
+              {[
+                "Java",
+                "Golang",
+                "NoSQL",
+                "MongoDB",
+                "Webpack",
+                "ESLint",
+                "SSH",
+                "Prettier",
+              ].map((item, idx) => (
+                <Pill key={idx}>{item}</Pill>
+              ))}
+            </Flex>
+          </Card>
+        </Box>
+        <SubTitle>Education</SubTitle>
+        <Card css={{ my: "$4" }}>
+          <Text
+            css={{
+              m: 0,
+              fontSize: "$1",
+              letterSpacing: 1,
+              mb: "$1",
+              color: "$gray11",
+            }}
+          >
+            2008 &middot; 2012
+          </Text>
+          <CardTitle>University of Cape Coast</CardTitle>
+          <Text css={{ m: 0, mt: "$2" }}>
+            Department of Molecular Biology & Biotechnology
+          </Text>
+        </Card>
+        <SubTitle>Hobbies</SubTitle>
+        <Card css={{ my: "$4" }}>
+          <Flex css={{ direction: "row" }}>
+            {["Teaching", "Gaming", "Reading"].map((item, idx) => (
+              <Pill css={{ mb: 0 }} key={idx}>
+                {item}
+              </Pill>
+            ))}
+          </Flex>
+        </Card>
+      </Container>
     </Wrapper>
   );
 }
@@ -1246,12 +1247,11 @@ function Resume() {
 // Post contents
 function PostContent({ post }) {
   let { body, title, published } = post;
-  console.log(post);
   const content = useRemarkable(body);
 
-    useLayoutEffect(() => {
-      window.scrollTo(0, 0);
-    }, []);
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <Wrapper css={{ pb: 0 }}>
@@ -1291,8 +1291,8 @@ export default function App() {
   let activeFilter = useRef(Filters.New);
   let pageYOffset = useRef(0);
 
-  const setReaderMode = (post) => {
-    setPost(post);
+  const setReaderMode = (content) => {
+    setPost(content);
     setPostIsActive(true);
   };
 
