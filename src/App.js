@@ -18,6 +18,7 @@ import "highlight.js/styles/vs.css";
 import { FiArrowLeft } from "react-icons/fi";
 import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 
+import { data } from "./Data";
 // ======================================================= //
 
 // app_context
@@ -109,35 +110,38 @@ const config = {
     },
   },
   utils: {
-    mt: () => (value) => ({ marginTop: value }),
-    mb: () => (value) => ({ marginBottom: value }),
-    ml: () => (value) => ({ marginLeft: value }),
-    mr: () => (value) => ({ marginRight: value }),
-    mx: () => (value) => ({ marginLeft: value, marginRight: value }),
-    my: () => (value) => ({ marginTop: value, marginBottom: value }),
-    m: () => (value) => ({
-      marginTop: value,
-      marginBottom: value,
-      marginLeft: value,
-      marginRight: value,
+    mt: () => (v) => ({ marginTop: v }),
+    mb: () => (v) => ({ marginBottom: v }),
+    ml: () => (v) => ({ marginLeft: v }),
+    mr: () => (v) => ({ marginRight: v }),
+    mx: () => (v) => ({ marginLeft: v, marginRight: v }),
+    my: () => (v) => ({ marginTop: v, marginBottom: v }),
+    m: () => (v) => ({
+      marginTop: v,
+      marginBottom: v,
+      marginLeft: v,
+      marginRight: v,
     }),
-    pt: () => (value) => ({ paddingTop: value }),
-    pb: () => (value) => ({ paddingBottom: value }),
-    pl: () => (value) => ({ paddingLeft: value }),
-    pr: () => (value) => ({ paddingRight: value }),
-    px: () => (value) => ({ paddingLeft: value, paddingRight: value }),
-    py: () => (value) => ({ paddingTop: value, paddingBottom: value }),
-    p: () => (value) => ({
-      paddingTop: value,
-      paddingBottom: value,
-      paddingLeft: value,
-      paddingRight: value,
+    pt: () => (v) => ({ paddingTop: v }),
+    pb: () => (v) => ({ paddingBottom: v }),
+    pl: () => (v) => ({ paddingLeft: v }),
+    pr: () => (v) => ({ paddingRight: v }),
+    px: () => (v) => ({ paddingLeft: v, paddingRight: v }),
+    py: () => (v) => ({ paddingTop: v, paddingBottom: v }),
+    p: () => (v) => ({
+      paddingTop: v,
+      paddingBottom: v,
+      paddingLeft: v,
+      paddingRight: v,
     }),
-    bgcolor: () => (value) => ({ backgroundColor: value }),
-    size: () => (value) => ({ width: value, height: value }),
-    direction: () => (value) => ({ flexDirection: value }),
-    justify: () => (value) => ({ justifyContent: value }),
-    items: () => (value) => ({ alignItems: value }),
+    bgcolor: () => (v) => ({ backgroundColor: v }),
+    size: () => (v) => ({ width: v, height: v }),
+    direction: () => (v) => ({ flexDirection: v }),
+    justify: () => (v) => ({ justifyContent: v }),
+    items: () => (v) => ({ alignItems: v }),
+  },
+  media: {
+    bp1: "(min-width: 640px)",
   },
 };
 
@@ -203,11 +207,12 @@ const Flex = styled(Box, {
 });
 
 const Button = styled("button", {
+  fontFamily: "$default",
+  fontSize: "$4",
   appearance: "none",
   border: "1px solid $colors$blue10",
   borderRadius: 9999,
   bgcolor: "$blue3",
-  fontSize: "100%",
   p: "$2",
   m: 0,
   color: "$blue10",
@@ -226,7 +231,6 @@ const Title = styled("h2", {
 });
 
 const SubTitle = styled("h4", {
-  pl: "$3",
   mt: "$4",
   letterSpacing: 1.2,
   textTransform: "uppercase",
@@ -367,8 +371,7 @@ const MarkdownContent = styled("article", {
 
 const Card = styled(Flex, {
   direction: "column",
-  px: "$3",
-  py: "$5",
+  p: "$3",
   boxShadow: "0 0 0 1px $colors$slate6",
   bgcolor: "white",
   borderRadius: 4,
@@ -378,14 +381,19 @@ const CardTitle = styled(SubTitleBold, {
   m: 0,
   textTransform: "capitalize",
   fontWeight: "$semiBold",
+  color: "$slate11",
+});
+
+const Pills = styled(Flex, {
+  mt: "$4",
+  flexWrap: "wrap",
 });
 
 const Pill = styled(Box, {
   px: "$2",
   py: "$1",
-  fontSize: "$3",
-  bgcolor: "$slate4",
-  border: "1px solid $colors$slate8",
+  bgcolor: "$slate3",
+  border: "1px solid $colors$slate7",
   borderRadius: 99999,
   mb: "$2",
   "&:not(:last-of-type)": {
@@ -447,7 +455,7 @@ const formatDate = (dateString) => {
         return number < 10 ? `0${number}` : number;
       }
       if (type === "month") {
-        return value.toUpperCase();
+        return value.substring(0, 3).toUpperCase();
       }
       return value;
     })
@@ -530,41 +538,41 @@ function Footer({ postIsActive }) {
         px: "$3",
       }}
     >
-      <ImageWrapper css={{ boxShadow: postIsActive && "0 0 0 8px white" }}>
-        {imageStatus === IMAGE_STATUS.LOADING && (
-          <ActivityWrapper css={{ bgcolor: "$slate3" }}>
-            <ActivityIndicator />
-          </ActivityWrapper>
-        )}
-        <Flex
-          css={{
-            size: "100%",
-            position: "absolute",
-            top: 0,
-            left: 0,
-            bgcolor: "$slate6",
-          }}
-        >
-          {imageStatus === IMAGE_STATUS.FAILED && (
-            <Text css={{ m: "auto" }}>YANKEY</Text>
-          )}
-          {imageStatus === IMAGE_STATUS.LOADED && (
-            <Box
-              as="img"
-              src={`https:${image}`}
-              alt="YANKEY"
-              onLoad={onImageLoaded}
-              onError={onImageError}
-              css={{
-                size: "100%",
-                objectFit: "cover",
-                bgcolor: "$slate3",
-              }}
-            />
-          )}
-        </Flex>
-      </ImageWrapper>
-      <Box css={{ mt: "$8" }} />
+      {/* <ImageWrapper css={{ boxShadow: postIsActive && "0 0 0 8px white" }}> */}
+      {/*   {imageStatus === IMAGE_STATUS.LOADING && ( */}
+      {/*     <ActivityWrapper css={{ bgcolor: "$slate3" }}> */}
+      {/*       <ActivityIndicator /> */}
+      {/*     </ActivityWrapper> */}
+      {/*   )} */}
+      {/*   <Flex */}
+      {/*     css={{ */}
+      {/*       size: "100%", */}
+      {/*       position: "absolute", */}
+      {/*       top: 0, */}
+      {/*       left: 0, */}
+      {/*       bgcolor: "$slate6", */}
+      {/*     }} */}
+      {/*   > */}
+      {/*     {imageStatus === IMAGE_STATUS.FAILED && ( */}
+      {/*       <Text css={{ m: "auto" }}>YANKEY</Text> */}
+      {/*     )} */}
+      {/*     {imageStatus === IMAGE_STATUS.LOADED && ( */}
+      {/*       <Box */}
+      {/*         as="img" */}
+      {/*         src={`https:${image}`} */}
+      {/*         alt="YANKEY" */}
+      {/*         onLoad={onImageLoaded} */}
+      {/*         onError={onImageError} */}
+      {/*         css={{ */}
+      {/*           size: "100%", */}
+      {/*           objectFit: "cover", */}
+      {/*           bgcolor: "$slate3", */}
+      {/*         }} */}
+      {/*       /> */}
+      {/*     )} */}
+      {/*   </Flex> */}
+      {/* </ImageWrapper> */}
+      <Text>Learning, Building & Mentoring</Text>
       <Flex
         css={{
           mb: "$3",
@@ -699,28 +707,76 @@ function Home({ setActiveRoute }) {
     <Wrapper
       as="main"
       css={{
-        px: "$3",
         py: 0,
-        justify: "center",
-        items: "center",
       }}
     >
-      <Text css={{ m: 0 }}>Hi, I'm</Text>
-      <Heading css={{ m: 0, fontSize: "$6", letterSpacing: 1.2 }}>
-        BENNETH YANKEY
-      </Heading>
-      <SubHeading css={{ m: 0 }}>Software Engineer</SubHeading>
-      <Text css={{ textAlign: "center" }}>
-        Welcome to my space and garden on the internet, where I keep notes, and
-        documents everything I have learned and learning with you and the world!
-      </Text>
-      <Link
-        href="#"
-        css={{ mx: "auto" }}
-        onClick={() => setActiveRoute(Routes.ABOUT)}
+      <Container
+        css={{
+          "@bp1": {
+            maxWidth: 540,
+          },
+        }}
       >
-        Get to know me better
-      </Link>
+        <Box
+          css={{
+            display: "grid",
+            gridTemplateColumns: "1fr",
+            gridTemplateRows: "1fr 1fr",
+            gap: "$2",
+            "@bp1": {
+              gridTemplateColums: "1fr 1fr",
+              gridTemplateRows: "1fr",
+              gap: "$5",
+              alignItems: "center",
+            },
+          }}
+        >
+          <Flex
+            css={{
+              height: "100%",
+              width: "100%",
+              justify: "center",
+              items: "center",
+              "@bp1": {
+                gridColumn: "1/2",
+                gridRow: "1/1",
+              },
+            }}
+          >
+            <Box
+              css={{
+                width: 125,
+                height: 125,
+                borderRadius: 99999,
+                bgcolor: "$slate6",
+              }}
+            />
+          </Flex>
+          <Box
+            css={{
+              "@bp1": {
+                gridColumn: "2/3",
+                gridRow: "1/1",
+              },
+            }}
+          >
+            <Text
+              css={{
+                textAlign: "center",
+                m: 0,
+                "@bp1": {
+                  textAlign: "start",
+                },
+              }}
+            >
+              Hi, I'm Benneth Yankey, a Software Enginner in Ghana.
+              Welcome to my space and garden on the internet, where I keep
+              notes, and documents everything I have learned and learning with
+              you and the world!
+            </Text>
+          </Box>
+        </Box>
+      </Container>
     </Wrapper>
   );
 }
@@ -838,33 +894,56 @@ function Contact() {
 // Articles filter
 
 const Filters = {
-  New: "new",
-  React: "react",
-  Node: "node",
   CSS: "css",
-  Go: "golang",
+  React: "react",
   Javascript: "javascript",
+  Go: "golang",
   Typescript: "typescript",
-  "Computer Science": "computer science",
+  Java: "java",
 };
 
+const cardStripes = {
+  javascript: "hsl(39 100% 57.0%)",
+  react: "hsl(206 100% 50.0%)",
+  go: "hsl(252 56.0% 57.5%)",
+  typescript: "hsl(193 98.0% 70.0%)",
+  java: "hsl(131 41.0% 46.5%)",
+};
+
+// Tags
 function ArticleFilter({ setActiveFilter }) {
   return (
     <Flex
       css={{
-        flexWrap: "wrap",
         mt: "$4",
+        flexWrap: "wrap",
+        justify: "center",
       }}
     >
       {Object.values(Filters).map((filter, idx) => {
         return (
-          <Pill
+          <Box
             key={idx}
-            css={{ bgcolor: "$slate10", color: "white", borderRadius: 0 }}
+            css={{
+              fontSize: "$3",
+              letterSpacing: 1.1,
+              border: "1px solid $colors$slate8",
+              bgcolor: "$slate4",
+              borderRadius: 99999,
+              px: "$2",
+              py: "$1",
+              mb: "$2",
+              "&:not(:last-of-type)": {
+                mr: "$2",
+              },
+              "&:hover": {
+                bgcolor: "$slate5",
+              },
+            }}
             onClick={() => setActiveFilter(filter)}
           >
-            {filter}
-          </Pill>
+            {filter.toUpperCase()}
+          </Box>
         );
       })}
     </Flex>
@@ -873,71 +952,97 @@ function ArticleFilter({ setActiveFilter }) {
 
 // Filter entries
 function FilteredEntries({
-  activeFilter,
-  sortedEntries,
-  latestEntries,
+  // activeFilter,
+  posts,
+  // sortedEntries,
+  // latestEntries,
   setReaderMode,
 }) {
-  const handleOpenArticle = (article) => {
-    setReaderMode(article);
-  };
+  // const handleOpenArticle = (article) => {
+  //   setReaderMode(article);
+  // };
 
   return (
-    <Box
-      css={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-        gap: "$3",
-      }}
-    >
-      {activeFilter === Filters.New
-        ? latestEntries.map((entry) => {
-            const { id, published, title } = entry;
-            return (
-              <Card
-                key={id}
-                onClick={() => setReaderMode(entry)}
-                css={{ textAlign: "center"}}
+    <Box>
+      {Object.entries(posts).map(({ 0: tag, 1: entries }) => {
+        return (
+          <Box>
+            <Flex
+              css={{
+                my: "$7",
+                mt: "calc($5 * 2)",
+                direction: "column",
+                items: "center",
+              }}
+            >
+              <Text css={{ m: 0, fontSize: "$5" }}>{tag.toUpperCase()}</Text>
+              <Box
+                css={{
+                  width: 15,
+                  height: 3,
+                  bgcolor: cardStripes[tag],
+                  borderRadius: 9999,
+                }}
+              />
+            </Flex>
+            <Box
+              css={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                gap: "$3",
+              }}
+            >
+              {entries.slice(0, 6).map((entry) => {
+                const { id, published, title } = entry;
+                return (
+                  <Card
+                    key={id}
+                    onClick={() => setReaderMode(entry)}
+                    css={{
+                      textAlign: "center",
+                      borderLeft: "3px solid",
+                      borderLeftColor: `${cardStripes[tag]}`,
+                    }}
+                  >
+                    <Time dateTime={published}>{formatDate(published)}</Time>
+                    <Text
+                      css={{
+                        m: 0,
+                        lineHeight: "$2",
+                      }}
+                    >
+                      {title}
+                    </Text>
+                  </Card>
+                );
+              })}
+            </Box>
+            <Flex
+              css={{
+                direction: "row",
+                justify: "center",
+                mt: "calc($5 * 1.2)",
+              }}
+            >
+              <Button
+                css={{
+                  borderColor: "$slate8",
+                  borderRadius: 99999,
+                  color: "$slate12",
+                  bgcolor: "transparent",
+                  px: "$2",
+                  py: "$1",
+                  "&:hover": {
+                    bgcolor: "$slate3",
+                  },
+                }}
               >
-                <Time dateTime={published}>{formatDate(published)}</Time>
-                <Text
-                  css={{
-                    m: 0,
-                    lineHeight: "$2",
-                  }}
-                >
-                  {title}
-                </Text>
-              </Card>
-            );
-          })
-        : sortedEntries.map((entries, idx) => {
-            return (
-              <Fragment key={idx}>
-                <Heading
-                  css={{
-                    pl: "$3",
-                    fontSize: "$6",
-                    letterSpacing: 1,
-                    fontWeight: "$bold",
-                  }}
-                >
-                  {entries[0]}
-                </Heading>
-                {entries[1].map((e) => {
-                  const { id, published, title } = e;
-                  return (
-                    <Card key={id}>
-                      <Time dateTime={published}>{formatDate(published)}</Time>
-                      <Text onClick={() => handleOpenArticle(e)} css={{ m: 0 }}>
-                        {title}
-                      </Text>
-                    </Card>
-                  );
-                })}
-              </Fragment>
-            );
-          })}
+                View More
+              </Button>
+            </Flex>
+          </Box>
+        );
+      })}
     </Box>
   );
 }
@@ -945,95 +1050,114 @@ function FilteredEntries({
 // Articles
 function Articles({ setReaderMode }) {
   const { cached } = useAppContext();
-  const [isFetchingLatest, setIsFetchingLatest] = useState(false);
-  const [isFetchingByTag, setIsFetchingByTag] = useState(false);
+  // const [isFetchingLatest, setIsFetchingLatest] = useState(false);
+  // const [isFetchingByTag, setIsFetchingByTag] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [activeFilter, setActiveFilter] = useState(
     () => cached.activeFilter.current
   );
-  const [latestEntries, setLatestEntries] = useState(
-    () => cached.latestRef.current
-  );
-  const [sortedEntries, setSortedEntries] = useState(() =>
-    cached.sortedRef.current.get(activeFilter)
-  );
+  const [posts, setPosts] = useState({});
+  // const [latestEntries, setLatestEntries] = useState(
+  //   () => cached.latestRef.current
+  // );
+  // const [sortedEntries, setSortedEntries] = useState(() =>
+  //   cached.sortedRef.current.get(activeFilter)
+  // );
 
   // useEffect(() => {
   //   window.scrollTo(0, 0);
   // }, []);
 
-  const getLatestEntries = useCallback(async () => {
-    setIsFetchingLatest(true);
-    let source = [];
-    try {
-      const entries = await client.getEntries({
-        content_type: "blogPost",
-        order: "-fields.published",
-        limit: 5,
-      });
-      entries.items.forEach((entry) => source.push(entry.fields));
-      setLatestEntries(source);
-      cached.latestRef.current = source;
-      setIsFetchingLatest(false);
-    } catch (error) {
-      setHasError(true);
-    }
-  }, [cached.latestRef]);
+  // const getLatestEntries = useCallback(async () => {
+  //   setIsFetchingLatest(true);
+  //   let source = [];
+  //   try {
+  //     const entries = await client.getEntries({
+  //       content_type: "blogPost",
+  //       order: "-fields.published",
+  //       limit: 5,
+  //     });
+  //     entries.items.forEach((entry) => source.push(entry.fields));
+  //     console.log(source);
+  //     setLatestEntries(source);
+  //     cached.latestRef.current = source;
+  //     setIsFetchingLatest(false);
+  //   } catch (error) {
+  //     setHasError(true);
+  //   }
+  // }, [cached.latestRef]);
 
-  // get recent articles
-  useEffect(() => {
-    if (!cached.latestRef.current.length) {
-      getLatestEntries();
-    }
-  }, [getLatestEntries, cached.latestRef]);
+  // // get recent articles
+  // useEffect(() => {
+  //   if (!cached.latestRef.current.length) {
+  //     getLatestEntries();
+  //   }
+  // }, [getLatestEntries, cached.latestRef]);
 
-  // sort article tag by year
-  function sortEntriesByYear(entries, tag) {
-    const sorted = entries.reduce((accum, curr) => {
-      const pubYear = new Date(curr.published).getFullYear();
-      if (!accum[pubYear]) {
-        accum[pubYear] = [];
+  function sortPostsByTag(posts) {
+    let sorted = posts.reduce((accum, curr) => {
+      let tag = curr.tag;
+      if (!accum[tag]) {
+        accum[tag] = [];
       }
-      accum[pubYear].push(curr);
+      accum[tag].push(curr);
       return accum;
     }, {});
-    const sortedInDescOrder = Object.entries(sorted).reverse();
-    setSortedEntries(sortedInDescOrder);
-    cached.sortedRef.current.set(tag, sortedInDescOrder);
-    setIsFetchingByTag(false);
+    setPosts(sorted);
   }
 
-  // TODO: add pagination
-  const getEntriesByTag = async (tag) => {
-    let isSorted = cached.sortedRef.current.get(tag) || null;
-    if (isSorted) {
-      if (tag === Filters.new) {
-        setLatestEntries(cached.latestRef.current);
-      } else {
-        setSortedEntries(cached.sortedRef.current.get(tag));
-        setActiveFilter(tag);
-        cached.activeFilter.current = tag;
-      }
-    } else {
-      setIsFetchingByTag(true);
-      let data = [];
-      try {
-        const entries = await client.getEntries({
-          content_type: "blogPost",
-          "metadata.tags.sys.id[all]": `${tag}`,
-          order: "-fields.published",
-        });
-        entries.items.forEach((entry) => data.push(entry.fields));
-        sortEntriesByYear(data, tag);
-        setActiveFilter(tag);
-        cached.activeFilter.current = tag;
-      } catch (error) {}
-    }
-  };
+  useEffect(() => {
+    sortPostsByTag(data);
+  }, []);
+
+  // sort article tag by year
+  // function sortEntriesByYear(entries, tag) {
+  //   const sorted = entries.reduce((accum, curr) => {
+  //     const pubYear = new Date(curr.published).getFullYear();
+  //     if (!accum[pubYear]) {
+  //       accum[pubYear] = [];
+  //     }
+  //     accum[pubYear].push(curr);
+  //     return accum;
+  //   }, {});
+  //   const sortedInDescOrder = Object.entries(sorted).reverse();
+  //   setSortedEntries(sortedInDescOrder);
+  //   cached.sortedRef.current.set(tag, sortedInDescOrder);
+  //   setIsFetchingByTag(false);
+  // }
+
+  // // TODO: add pagination
+  // const getEntriesByTag = async (tag) => {
+  //   let isSorted = cached.sortedRef.current.get(tag) || null;
+  //   if (isSorted) {
+  //     if (tag === Filters.new) {
+  //       setLatestEntries(cached.latestRef.current);
+  //     } else {
+  //       setSortedEntries(cached.sortedRef.current.get(tag));
+  //       setActiveFilter(tag);
+  //       cached.activeFilter.current = tag;
+  //     }
+  //   } else {
+  //     setIsFetchingByTag(true);
+  //     let data = [];
+  //     try {
+  //       const entries = await client.getEntries({
+  //         content_type: "blogPost",
+  //         "metadata.tags.sys.id[all]": `${tag}`,
+  //         order: "-fields.published",
+  //       });
+  //       entries.items.forEach((entry) => data.push(entry.fields));
+  //       sortEntriesByYear(data, tag);
+  //       setActiveFilter(tag);
+  //       cached.activeFilter.current = tag;
+  //     } catch (error) {}
+  //   }
+  // };
 
   const refetchArticles = () => {
     setHasError(false);
-    getLatestEntries();
+    // getLatestEntries();
   };
 
   return (
@@ -1041,14 +1165,14 @@ function Articles({ setReaderMode }) {
       as="section"
       css={{
         flex: 1,
-        justify: isFetchingLatest ? "center" : "flex-start",
+        justify: isFetching ? "center" : "flex-start",
         direction: "column",
         pt: "$5",
         pb: "calc($12 * 3)",
       }}
     >
       <Container>
-        {isFetchingLatest && !hasError ? (
+        {isFetching && !hasError ? (
           <Fragment>
             <ActivityWrapper>
               <ActivityIndicator />
@@ -1057,33 +1181,24 @@ function Articles({ setReaderMode }) {
           </Fragment>
         ) : (
           <Fragment>
+            <Text css={{ textAlign: "center", fontSize: "$5" }}>TAGS</Text>
             <ArticleFilter
               activeFilter={activeFilter}
-              setActiveFilter={getEntriesByTag}
+              // setActiveFilter={getEntriesByTag}
             />
-            <Flex css={{ my: "$6", direction: "column", items: "center" }}>
-              <Text css={{ m: 0 }}>{capitalize(activeFilter)}</Text>
-              <Box
-                css={{
-                  width: 20,
-                  height: 5,
-                  bgcolor: "$blue10",
-                  borderRadius: 9999,
-                }}
-              />
-            </Flex>
           </Fragment>
         )}
-        {isFetchingByTag ? (
+        {isFetching ? (
           <ActivityWrapper>
             <ActivityIndicator />
           </ActivityWrapper>
         ) : (
           <FilteredEntries
-            activeFilter={activeFilter}
+            // activeFilter={activeFilter}
             setReaderMode={setReaderMode}
-            sortedEntries={sortedEntries}
-            latestEntries={latestEntries}
+            posts={posts}
+            // sortedEntries={sortedEntries}
+            // latestEntries={latestEntries}
           />
         )}
         {hasError && (
@@ -1126,54 +1241,45 @@ function Resume() {
               letterSpacing: 1,
               fontSize: "$1",
               m: 0,
-              mb: "$1",
               color: "$slate11",
             }}
           >
-            2019 &middot; PRESENTjk
+            2019 &middot; PRESENT
           </Text>
           <CardTitle>Content Creator</CardTitle>
-          <Text css={{ m: 0, mt: "$2" }}>
+          <Text css={{ m: 0, mt: "$1" }}>
             I create concise programming articles, code snippets, tips and
             tricks in wide variety of languages, libraries and tools
           </Text>
         </Card>
-        <SubTitle css={{ pl: "$3" }}>Skills</SubTitle>
-        <Box css={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-          gap: "$3",
-          mt: "$4"
-        }}>
+        <SubTitle>Skills</SubTitle>
+        <Box
+          css={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+            gap: "$3",
+            mt: "$4",
+          }}
+        >
           <Card>
             <CardTitle>Proficient in</CardTitle>
-            <Flex
-              css={{
-                mt: "$4",
-                flexWrap: "wrap",
-              }}
-            >
+            <Pills>
               {[
                 "Javascript",
                 "Typescript",
                 "React",
                 "HTML5",
                 "CSS3",
-                "Styled-Component",
                 "Material-UI",
+                "Styled-Component",
               ].map((item, idx) => (
                 <Pill key={idx}>{item}</Pill>
               ))}
-            </Flex>
+            </Pills>
           </Card>
           <Card>
             <CardTitle>Experienced in</CardTitle>
-            <Flex
-              css={{
-                mt: "$4",
-                flexWrap: "wrap",
-              }}
-            >
+            <Pills>
               {[
                 "SQL",
                 "Node",
@@ -1186,16 +1292,11 @@ function Resume() {
               ].map((item, idx) => (
                 <Pill key={idx}>{item}</Pill>
               ))}
-            </Flex>
+            </Pills>
           </Card>
           <Card>
             <CardTitle>Familiar with</CardTitle>
-            <Flex
-              css={{
-                mt: "$4",
-                flexWrap: "wrap",
-              }}
-            >
+            <Pills>
               {[
                 "Java",
                 "Golang",
@@ -1208,7 +1309,7 @@ function Resume() {
               ].map((item, idx) => (
                 <Pill key={idx}>{item}</Pill>
               ))}
-            </Flex>
+            </Pills>
           </Card>
         </Box>
         <SubTitle>Education</SubTitle>
@@ -1217,27 +1318,25 @@ function Resume() {
             css={{
               m: 0,
               fontSize: "$1",
-              letterSpacing: 1,
-              mb: "$1",
-              color: "$gray11",
+              color: "$slate11",
             }}
           >
             2008 &middot; 2012
           </Text>
           <CardTitle>University of Cape Coast</CardTitle>
-          <Text css={{ m: 0, mt: "$2" }}>
+          <Text css={{ m: 0, mt: "$1" }}>
             Department of Molecular Biology & Biotechnology
           </Text>
         </Card>
         <SubTitle>Hobbies</SubTitle>
         <Card css={{ my: "$4" }}>
-          <Flex css={{ direction: "row" }}>
+          <Pills css={{ mt: 0 }}>
             {["Teaching", "Gaming", "Reading"].map((item, idx) => (
               <Pill css={{ mb: 0 }} key={idx}>
                 {item}
               </Pill>
             ))}
-          </Flex>
+          </Pills>
         </Card>
       </Container>
     </Wrapper>
